@@ -1,4 +1,4 @@
-import { MarketAsset, CoreModule, KeyPillar } from '../types';
+import { MarketAsset, CoreModule, KeyPillar, AssetClassInfo } from '../types';
 
 export const KEY_PILLARS: KeyPillar[] = [
   {
@@ -478,3 +478,208 @@ export const CORE_MODULES: CoreModule[] = [
     },
   },
 ];
+
+export const ASSET_CLASSES: AssetClassInfo[] = [
+  {
+    id: 'KRYPTO',
+    name: 'Krypto',
+    color: '#F9BF21', // AIF Gold
+    description: 'Dezentrale Vermögenswerte, Smart Contracts & Web3-Ökosysteme',
+    subclasses: [
+      {
+        id: 'krypto-defi',
+        name: 'DeFi (Decentralized Finance)',
+        shortDesc: 'Liquiditätsprotokolle, automatisierte Market Maker & dezentrale Kreditmärkte.',
+        examples: ['UNI', 'AAVE', 'MKR', 'LDO'],
+        trending: '+4,8%',
+      },
+      {
+        id: 'krypto-memecoins',
+        name: 'Memecoins & Community Tokens',
+        shortDesc: 'Community-getriebene Viralität, Social Sentiment & dynamische Liquiditätswellen.',
+        examples: ['DOGE', 'SHIB', 'PEPE', 'BONK'],
+        trending: '+12,4%',
+      },
+      {
+        id: 'krypto-privacy',
+        name: 'Datenschutz & Privacy Coins',
+        shortDesc: 'Kryptografische Anonymität, Zero-Knowledge-Proofs & vertrauliche Transaktionen.',
+        examples: ['XMR', 'ZEC', 'ROSE', 'SCRT'],
+        trending: '+2,1%',
+      },
+      {
+        id: 'krypto-branch',
+        name: 'Branch / Layer-1 & Infra',
+        shortDesc: 'Basis-Blockchains, Konsensprotokolle, modulare Datenverfügbarkeit & Skalierung.',
+        examples: ['BTC', 'ETH', 'SOL', 'AVAX', 'ATOM'],
+        trending: '+3,5%',
+      },
+      {
+        id: 'krypto-gaming',
+        name: 'Gaming & Metaverse',
+        shortDesc: 'In-Game Ökonomien, NFT-Infrastruktur & virtuelle Entertainment-Welten.',
+        examples: ['IMX', 'GALA', 'SAND', 'BEAM'],
+        trending: '+6,2%',
+      },
+      {
+        id: 'krypto-ai-depin',
+        name: 'KI & DePIN (Hardware-Netze)',
+        shortDesc: 'Dezentrale Rechenleistung, GPU-Cluster & künstliche Intelligenz auf der Chain.',
+        examples: ['TAO', 'RNDR', 'FET', 'HNT'],
+        trending: '+8,9%',
+      },
+    ],
+  },
+  {
+    id: 'AKTIEN',
+    name: 'Aktien',
+    color: '#44DE88', // Emerald
+    description: 'Globale Unternehmensanteile mit Dividenden, Wachstums- & Value-Profilen',
+    subclasses: [
+      {
+        id: 'aktien-tech-ai',
+        name: 'Technologie & KI-Halbleiter',
+        shortDesc: 'Hardware-Pioniere, Cloud-Giganten & generative KI-Infrastruktur.',
+        examples: ['NVDA', 'AAPL', 'MSFT', 'TSM', 'AMD'],
+        trending: '+3,9%',
+      },
+      {
+        id: 'aktien-finance',
+        name: 'Finanzwesen & Banking',
+        shortDesc: 'Globale Investmentbanken, Zahlungsnetzwerke & Vermögensverwalter.',
+        examples: ['JPM', 'V', 'ALV', 'BRK.B'],
+        trending: '+1,1%',
+      },
+      {
+        id: 'aktien-health',
+        name: 'Gesundheit & Pharma-Biotech',
+        shortDesc: 'Megatrend GLP-1, medizinische Innovationen & krisensichere Cashflows.',
+        examples: ['NOVO', 'LLY', 'PFE', 'ROG'],
+        trending: '+1,8%',
+      },
+      {
+        id: 'aktien-industry',
+        name: 'Industrie, Energie & Mobilität',
+        shortDesc: 'Automatisierung, E-Mobilität, Infrastruktur & traditionelle Industrie.',
+        examples: ['SIE', 'TSLA', 'RHM', 'CAT'],
+        trending: '+2,3%',
+      },
+      {
+        id: 'aktien-consumer',
+        name: 'Konsumgüter & Luxus',
+        shortDesc: 'Starke Preissetzungsmacht, weltweite Markenloyalität & Konsumresilienz.',
+        examples: ['MC (LVMH)', 'AMZN', 'KO', 'RMS'],
+        trending: '+0,8%',
+      },
+    ],
+  },
+  {
+    id: 'INDIZIES',
+    name: 'Indizies',
+    color: '#8D26FF', // Purple
+    description: 'Marktbreite Körbe, Benchmark-Indikatoren & Sektor-Barometer',
+    subclasses: [
+      {
+        id: 'indizies-us',
+        name: 'US-Leitindizes',
+        shortDesc: 'Die weltweiten Benchmark-Schwergewichte für Markttrend & Risikobereitschaft.',
+        examples: ['S&P 500', 'Nasdaq 100', 'Dow Jones', 'Russell 2000'],
+        trending: '+1,4%',
+      },
+      {
+        id: 'indizies-europe',
+        name: 'Europa & DACH-Region',
+        shortDesc: 'Führende Börsenbarometer der europäischen Volkswirtschaften.',
+        examples: ['DAX 40', 'Euro Stoxx 50', 'SMI', 'CAC 40'],
+        trending: '+0,8%',
+      },
+      {
+        id: 'indizies-asia',
+        name: 'Asien & Pazifik',
+        shortDesc: 'Wirtschaftskraft in Fernost: Hightech, Fertigung & Schwellenland-Dynamik.',
+        examples: ['Nikkei 225', 'Hang Seng', 'CSI 300', 'Nifty 50'],
+        trending: '+1,2%',
+      },
+      {
+        id: 'indizies-sector',
+        name: 'Themen- & Sektorindizes',
+        shortDesc: 'Gezielte Branchenindizes für Halbleiter, Clean Energy & Welt-ETFs.',
+        examples: ['SOX Halbleiter', 'MSCI World', 'Stoxx 600 Banks'],
+        trending: '+2,5%',
+      },
+    ],
+  },
+  {
+    id: 'FOREX',
+    name: 'Forex',
+    color: '#E879F9', // Purple-Pink Accent
+    description: 'Weltweiter Devisenmarkt mit 24h-Liquidität und Zinsarbitrage',
+    subclasses: [
+      {
+        id: 'forex-majors',
+        name: 'Majors (Hauptwährungspaare)',
+        shortDesc: 'Höchste Marktliquidität gegen den US-Dollar mit engsten Spreads.',
+        examples: ['EUR/USD', 'GBP/USD', 'USD/JPY', 'USD/CHF'],
+        trending: '+0,2%',
+      },
+      {
+        id: 'forex-crosses',
+        name: 'Minors & Währungskreuze',
+        shortDesc: 'Liquiditätspaare ohne US-Dollar-Beteiligung für relative Konjunkturwetten.',
+        examples: ['EUR/GBP', 'EUR/JPY', 'GBP/JPY', 'EUR/CHF'],
+        trending: '+0,4%',
+      },
+      {
+        id: 'forex-commodity',
+        name: 'Rohstoffwährungen (Commdollars)',
+        shortDesc: 'Währungen von Nationen mit massiven Rohstoffexporten.',
+        examples: ['AUD/USD', 'USD/CAD', 'NZD/USD', 'USD/NOK'],
+        trending: '+0,6%',
+      },
+      {
+        id: 'forex-em',
+        name: 'Emerging Markets FX',
+        shortDesc: 'Höhere Zinsdifferenzen bei ausgeprägter Volatilität in Schwellenländern.',
+        examples: ['USD/TRY', 'USD/BRL', 'USD/ZAR', 'USD/MXN'],
+        trending: '-0,3%',
+      },
+    ],
+  },
+  {
+    id: 'ROHSTOFFE',
+    name: 'Rohstoffe',
+    color: '#F9BF21', // AIF Gold
+    description: 'Physische Primärgüter: Energie, Metalle & Agrarressourcen',
+    subclasses: [
+      {
+        id: 'rohstoffe-precious',
+        name: 'Edelmetalle & Wertspeicher',
+        shortDesc: 'Historischer Krisenschutz gegen Währungsabwertung und Inflation.',
+        examples: ['Gold (XAU)', 'Silber (XAG)', 'Platin', 'Palladium'],
+        trending: '+1,1%',
+      },
+      {
+        id: 'rohstoffe-energy',
+        name: 'Energie & Fossile Brennstoffe',
+        shortDesc: 'Treibstoff der Weltwirtschaft, bestimmt durch Geopolitik & OPEC+.',
+        examples: ['Brent Rohöl', 'WTI Öl', 'Erdgas (Henry Hub)', 'Uran'],
+        trending: '+1,6%',
+      },
+      {
+        id: 'rohstoffe-industrial',
+        name: 'Industriemetalle & Energiewende',
+        shortDesc: 'Unverzichtbare Rohstoffe für E-Mobilität, Stromnetze & Bauwirtschaft.',
+        examples: ['Kupfer', 'Lithium', 'Aluminium', 'Nickel'],
+        trending: '+2,8%',
+      },
+      {
+        id: 'rohstoffe-agrar',
+        name: 'Agrarrohstoffe (Softs & Grains)',
+        shortDesc: 'Lebensmittel- und Genussmittel-Futures unter Witterungseinflüssen.',
+        examples: ['Kakao', 'Kaffee', 'Weizen', 'Sojabohnen'],
+        trending: '+4,2%',
+      },
+    ],
+  },
+];
+

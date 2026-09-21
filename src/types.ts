@@ -1,5 +1,21 @@
 export type MainCategory = 'KRYPTO' | 'AKTIEN' | 'INDIZIES' | 'FOREX' | 'ROHSTOFFE';
 
+export interface AssetSubclass {
+  id: string;
+  name: string;
+  shortDesc: string;
+  examples: string[];
+  trending?: string;
+}
+
+export interface AssetClassInfo {
+  id: MainCategory;
+  name: string;
+  color: string;
+  description: string;
+  subclasses: AssetSubclass[];
+}
+
 export interface MarketAsset {
   id: string;
   name: string;

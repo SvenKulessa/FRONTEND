@@ -1,7 +1,24 @@
 import React from 'react';
 import { BrandLogo } from './BrandLogo';
+import { trackEvent } from '../utils/analytics';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  onNavigate?: (path: string) => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+  const handleNavClick = (e: React.MouseEvent, path: string, label: string) => {
+    e.preventDefault();
+    trackEvent('footer_nav_click', {
+      category: 'navigation',
+      label,
+      destination: path,
+    });
+    if (onNavigate) {
+      onNavigate(path);
+    }
+  };
+
   return (
     <footer className="mt-8 px-5 pb-8 pt-4 text-center">
       {/* Thin elegant separator with golden center glow */}
@@ -12,20 +29,54 @@ export const Footer: React.FC = () => {
         <BrandLogo variant="inline" size="sm" />
       </div>
 
-      {/* Slogan from brand architecture */}
-      <p className="text-[10px] sm:text-[11px] font-medium tracking-[0.24em] text-slate-400 uppercase select-none">
-        GLOBALE INTELLIGENZ. EINE BESSERE ZUKUNFT.
+      {/* Professional FinTech Slogan */}
+      <p className="text-[10px] sm:text-[11px] font-semibold tracking-[0.22em] text-slate-400 uppercase select-none">
+        MARKET INTELLIGENCE • NEXT-GEN QUANT TERMINAL
       </p>
 
-      {/* Small copyright / brand info */}
-      <div className="mt-3 text-[10px] text-slate-500 flex items-center justify-center gap-3">
+      {/* Small copyright & legal navigation with dedicated routing paths */}
+      <div className="mt-3 text-[11px] text-slate-400 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5">
         <span>© {new Date().getFullYear()} Capital-AI</span>
-        <span>•</span>
-        <span className="hover:text-slate-300 transition-colors cursor-pointer">Impressum</span>
-        <span>•</span>
-        <span className="hover:text-slate-300 transition-colors cursor-pointer">Datenschutz</span>
-        <span>•</span>
-        <span className="hover:text-slate-300 transition-colors cursor-pointer">Manifest v6.0</span>
+        <span className="text-slate-600">•</span>
+        <a
+          id="footer-nav-impressum"
+          href="/impressum"
+          onClick={(e) => handleNavClick(e, '/impressum', 'impressum')}
+          className="hover:text-amber-400 transition-colors cursor-pointer text-slate-400 font-medium hover:underline underline-offset-4"
+          data-analytics="footer-impressum"
+        >
+          Impressum
+        </a>
+        <span className="text-slate-600">•</span>
+        <a
+          id="footer-nav-agb"
+          href="/agb"
+          onClick={(e) => handleNavClick(e, '/agb', 'agb')}
+          className="hover:text-pink-400 transition-colors cursor-pointer text-slate-400 font-medium hover:underline underline-offset-4"
+          data-analytics="footer-agb"
+        >
+          AGB
+        </a>
+        <span className="text-slate-600">•</span>
+        <a
+          id="footer-nav-datenschutz"
+          href="/datenschutz"
+          onClick={(e) => handleNavClick(e, '/datenschutz', 'datenschutz')}
+          className="hover:text-emerald-400 transition-colors cursor-pointer text-slate-400 font-medium hover:underline underline-offset-4"
+          data-analytics="footer-datenschutz"
+        >
+          Datenschutz
+        </a>
+        <span className="text-slate-600">•</span>
+        <a
+          id="footer-nav-faq"
+          href="/faq"
+          onClick={(e) => handleNavClick(e, '/faq', 'faq')}
+          className="hover:text-amber-400 transition-colors cursor-pointer text-amber-300 font-bold hover:underline underline-offset-4 flex items-center gap-1"
+          data-analytics="footer-faq"
+        >
+          FAQ
+        </a>
       </div>
 
       {/* Mobile iOS Home Indicator Bar */}
@@ -33,3 +84,4 @@ export const Footer: React.FC = () => {
     </footer>
   );
 };
+

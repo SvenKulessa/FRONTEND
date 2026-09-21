@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Search, TrendingUp, TrendingDown } from 'lucide-react';
 import { motion } from 'motion/react';
 import { MARKET_ASSETS } from '../data/mockData';
@@ -8,6 +8,7 @@ interface AllMarketsModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelectAsset: (asset: MarketAsset) => void;
+  initialCategory?: 'ALLE' | MainCategory;
 }
 
 type CategoryFilter = 'ALLE' | MainCategory;
@@ -21,9 +22,20 @@ const CATEGORIES: { id: CategoryFilter; label: string; color: string }[] = [
   { id: 'ROHSTOFFE', label: 'Rohstoffe', color: '#F9BF21' },
 ];
 
-export const AllMarketsModal: React.FC<AllMarketsModalProps> = ({ isOpen, onClose, onSelectAsset }) => {
-  const [selectedCat, setSelectedCat] = useState<CategoryFilter>('ALLE');
+export const AllMarketsModal: React.FC<AllMarketsModalProps> = ({
+  isOpen,
+  onClose,
+  onSelectAsset,
+  initialCategory,
+}) => {
+  const [selectedCat, setSelectedCat] = useState<CategoryFilter>(initialCategory || 'ALLE');
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (initialCategory) {
+      setSelectedCat(initialCategory);
+    }
+  }, [initialCategory, isOpen]);
 
   if (!isOpen) return null;
 

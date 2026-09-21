@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Smartphone, Monitor, Sparkles, RefreshCw } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Smartphone, Monitor } from 'lucide-react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { KeyPillars } from './components/KeyPillars';
@@ -7,21 +7,139 @@ import { MarketOverview } from './components/MarketOverview';
 import { CoreModules } from './components/CoreModules';
 import { Footer } from './components/Footer';
 import { StatusBar } from './components/StatusBar';
+import { LoginPage } from './components/LoginPage';
 import { AnalysisModal } from './components/AnalysisModal';
 import { ProductTourModal } from './components/ProductTourModal';
 import { AssetDetailModal } from './components/AssetDetailModal';
 import { ModuleDetailModal } from './components/ModuleDetailModal';
 import { AllMarketsModal } from './components/AllMarketsModal';
-import { MarketAsset, CoreModule } from './types';
+import { SubclassDetailModal } from './components/SubclassDetailModal';
+import { LegalAndFaqPages, LegalRoute } from './components/LegalAndFaqPages';
+import { MarketAsset, CoreModule, MainCategory, AssetSubclass } from './types';
 import { CORE_MODULES } from './data/mockData';
+import { initGoogleAnalytics, trackPageView, updatePageSEO } from './utils/analytics';
+
+const LEGAL_ROUTES: LegalRoute[] = ['/faq', '/datenschutz', '/agb', '/impressum'];
 
 export default function App() {
+  const [currentRoute, setCurrentRoute] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname.toLowerCase();
+      if (path === '/login') return '/login';
+      if (LEGAL_ROUTES.includes(path as LegalRoute)) return path;
+    }
+    return '/';
+  });
+
   const [viewMode, setViewMode] = useState<'mockup' | 'fullscreen'>('mockup');
   const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
   const [isProductTourOpen, setIsProductTourOpen] = useState(false);
   const [isAllMarketsOpen, setIsAllMarketsOpen] = useState(false);
+  const [marketCategoryFilter, setMarketCategoryFilter] = useState<'ALLE' | MainCategory>('ALLE');
   const [selectedAsset, setSelectedAsset] = useState<MarketAsset | null>(null);
   const [selectedModule, setSelectedModule] = useState<CoreModule | null>(null);
+  const [selectedSubclass, setSelectedSubclass] = useState<{
+    subclass: AssetSubclass;
+    category: MainCategory;
+  } | null>(null);
+
+  // Initialize Analytics & handle popstate browser routing
+  useEffect(() => {
+    initGoogleAnalytics();
+
+    const handlePopState = () => {
+      const path = window.location.pathname.toLowerCase();
+      if (path === '/login') {
+        setCurrentRoute('/login');
+      } else if (LEGAL_ROUTES.includes(path as LegalRoute)) {
+        setCurrentRoute(path);
+      } else {
+        setCurrentRoute('/');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // Update SEO metadata & GA pageview whenever route changes
+  useEffect(() => {
+    if (currentRoute === '/login') {
+      const title = 'Capital-AI | Terminal Anmeldung & Login';
+      const description =
+        'Sicherer Zugang zum Capital-AI Terminal: KI-gestützte Echtzeit-Marktdaten, automatisierte Portfolio-Analysen und institutionelles Scoring.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/login',
+      });
+      trackPageView('/login', title);
+    } else if (currentRoute === '/faq') {
+      const title = 'Capital-AI | Häufig gestellte Fragen (FAQ)';
+      const description =
+        'Fragen und Antworten zu Capital-AI: Funktionsweise des KI-Scorings, Datenfeeds, Latenzen, unterstützte Assetklassen und Sicherheit.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/faq',
+      });
+      trackPageView('/faq', title);
+    } else if (currentRoute === '/datenschutz') {
+      const title = 'Capital-AI | Datenschutzerklärung';
+      const description =
+        'Datenschutzrichtlinie der Capital-AI Intelligence Plattform: DSGVO-Konformität, 256-Bit TLS-Verschlüsselung und Rechenzentren in der EU.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/datenschutz',
+      });
+      trackPageView('/datenschutz', title);
+    } else if (currentRoute === '/agb') {
+      const title = 'Capital-AI | Allgemeine Geschäftsbedingungen (AGB)';
+      const description =
+        'Nutzungsbedingungen und WpHG-Risikohinweise für die Nutzung der Capital-AI Marktanalyse-Plattform.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/agb',
+      });
+      trackPageView('/agb', title);
+    } else if (currentRoute === '/impressum') {
+      const title = 'Capital-AI | Impressum';
+      const description =
+        'Impressum und Anbieterkennzeichnung gemäß § 5 TMG / DDG der Capital-AI Technologies GmbH.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/impressum',
+      });
+      trackPageView('/impressum', title);
+    } else {
+      const title = 'Capital-AI | AI-Driven Market Intelligence';
+      const description =
+        'Marktdaten verstehen. Chancen besser erkennen. Capital-AI vereint Echtzeit-Marktdaten, KI-gestütztes Scoring und fundierte Analysen.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/',
+      });
+      trackPageView('/', title);
+    }
+  }, [currentRoute]);
+
+  const navigateTo = (path: string) => {
+    const normalized = path.toLowerCase();
+    const targetRoute =
+      normalized === '/login' || LEGAL_ROUTES.includes(normalized as LegalRoute)
+        ? normalized
+        : '/';
+
+    if (window.location.pathname !== targetRoute) {
+      window.history.pushState({}, '', targetRoute);
+    }
+    setCurrentRoute(targetRoute);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleOpenModuleById = (moduleId: string) => {
     const found = CORE_MODULES.find((m) => m.id === moduleId);
@@ -85,50 +203,81 @@ export default function App() {
         </div>
       </div>
 
-      {/* Main Landing Page Container */}
+      {/* Main Container */}
       <main
         className={`w-full relative z-10 transition-all duration-300 ${
-          viewMode === 'mockup'
+          currentRoute !== '/'
+            ? 'max-w-4xl bg-[#02050e]'
+            : viewMode === 'mockup'
             ? 'sm:my-6 sm:max-w-[412px] sm:rounded-[52px] sm:border-[8px] sm:border-[#2a2f3e] sm:ring-1 sm:ring-amber-500/20 sm:shadow-[0_25px_70px_rgba(0,0,0,0.8),0_0_50px_rgba(245,176,20,0.15)] bg-[#02050e] overflow-hidden'
             : 'max-w-md bg-[#02050e]'
         }`}
       >
-        {/* Smartphone Hardware Elements (Only visible in mockup mode on larger screens) */}
-        {viewMode === 'mockup' && (
+        {/* Smartphone Hardware Elements (Only visible in mockup mode on main landing page on larger screens) */}
+        {currentRoute === '/' && viewMode === 'mockup' && (
           <div className="hidden sm:block">
             <StatusBar />
           </div>
         )}
 
-        {/* Header */}
-        <Header
-          onOpenAnalysis={() => setIsAnalysisOpen(true)}
-          onOpenModule={handleOpenModuleById}
-        />
+        {currentRoute === '/login' ? (
+          /* Dedicated Login Terminal View */
+          <LoginPage
+            onBackToHome={() => navigateTo('/')}
+            onNavigateFaq={() => navigateTo('/faq')}
+          />
+        ) : LEGAL_ROUTES.includes(currentRoute as LegalRoute) ? (
+          /* Dedicated Legal & FAQ View (/faq, /datenschutz, /agb, /impressum) */
+          <LegalAndFaqPages
+            route={currentRoute as LegalRoute}
+            onNavigate={navigateTo}
+          />
+        ) : (
+          /* Main Landing Page Experience */
+          <>
+            {/* Header */}
+            <Header
+              onOpenAnalysis={() => setIsAnalysisOpen(true)}
+              onOpenModule={handleOpenModuleById}
+              onNavigateLogin={() => navigateTo('/login')}
+              onNavigate={navigateTo}
+              onSelectSubclass={(subclass, category) => {
+                setSelectedSubclass({ subclass, category });
+              }}
+              onViewAllMarkets={() => {
+                setMarketCategoryFilter('ALLE');
+                setIsAllMarketsOpen(true);
+              }}
+            />
 
-        {/* Hero Section */}
-        <Hero
-          onStartAnalysis={() => setIsAnalysisOpen(true)}
-          onExploreProduct={() => setIsProductTourOpen(true)}
-        />
+            {/* Hero Section */}
+            <Hero
+              onStartAnalysis={() => setIsAnalysisOpen(true)}
+              onExploreProduct={() => setIsProductTourOpen(true)}
+            />
 
-        {/* 4 Feature Key Pillars */}
-        <KeyPillars />
+            {/* 4 Feature Key Pillars */}
+            <KeyPillars />
 
-        {/* Global Markets Overview */}
-        <MarketOverview
-          onSelectAsset={(asset) => setSelectedAsset(asset)}
-          onViewAllMarkets={() => setIsAllMarketsOpen(true)}
-        />
+            {/* Global Markets Overview */}
+            <MarketOverview
+              onSelectAsset={(asset) => setSelectedAsset(asset)}
+              onViewAllMarkets={() => {
+                setMarketCategoryFilter('ALLE');
+                setIsAllMarketsOpen(true);
+              }}
+            />
 
-        {/* Core Modules ("Unsere Kernmodule") */}
-        <CoreModules
-          onSelectModule={(module) => setSelectedModule(module)}
-          onViewAllModules={() => handleOpenModuleById('enterprise-scorer')}
-        />
+            {/* Core Modules ("Unsere Kernmodule") */}
+            <CoreModules
+              onSelectModule={(module) => setSelectedModule(module)}
+              onViewAllModules={() => handleOpenModuleById('enterprise-scorer')}
+            />
 
-        {/* Footer with Slogan & Home Indicator */}
-        <Footer />
+            {/* Footer with Slogan & Dedicated Routing Links */}
+            <Footer onNavigate={navigateTo} />
+          </>
+        )}
       </main>
 
       {/* Interactive Modals */}
@@ -160,9 +309,28 @@ export default function App() {
         }}
       />
 
+      <SubclassDetailModal
+        isOpen={!!selectedSubclass}
+        onClose={() => setSelectedSubclass(null)}
+        subclass={selectedSubclass ? selectedSubclass.subclass : null}
+        category={selectedSubclass ? selectedSubclass.category : null}
+        onOpenAnalysis={() => {
+          setSelectedSubclass(null);
+          setIsAnalysisOpen(true);
+        }}
+        onExploreMarkets={() => {
+          if (selectedSubclass) {
+            setMarketCategoryFilter(selectedSubclass.category);
+            setSelectedSubclass(null);
+            setIsAllMarketsOpen(true);
+          }
+        }}
+      />
+
       <AllMarketsModal
         isOpen={isAllMarketsOpen}
         onClose={() => setIsAllMarketsOpen(false)}
+        initialCategory={marketCategoryFilter}
         onSelectAsset={(asset) => {
           setIsAllMarketsOpen(false);
           setSelectedAsset(asset);
