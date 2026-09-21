@@ -28,9 +28,10 @@ import { trackEvent } from '../utils/analytics';
 interface LoginPageProps {
   onBackToHome: () => void;
   onNavigateFaq?: () => void;
+  onNavigateLegal?: (path: string) => void;
 }
 
-export const LoginPage: React.FC<LoginPageProps> = ({ onBackToHome, onNavigateFaq }) => {
+export const LoginPage: React.FC<LoginPageProps> = ({ onBackToHome, onNavigateFaq, onNavigateLegal }) => {
   const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
 
   // Login form state
@@ -527,8 +528,28 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToHome, onNavigateFa
                     />
                     <span>
                       Ich akzeptiere die{' '}
-                      <span className="text-slate-200 underline">Nutzungsbedingungen (AGB)</span> und die{' '}
-                      <span className="text-slate-200 underline">Datenschutzrichtlinie</span> von Capital-AI.
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          onNavigateLegal?.('/agb');
+                        }}
+                        className="text-slate-200 underline hover:text-amber-400 cursor-pointer"
+                      >
+                        Nutzungsbedingungen (AGB)
+                      </button>{' '}
+                      und die{' '}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          onNavigateLegal?.('/datenschutz');
+                        }}
+                        className="text-slate-200 underline hover:text-emerald-400 cursor-pointer"
+                      >
+                        Datenschutzrichtlinie
+                      </button>{' '}
+                      von Capital-AI.
                     </span>
                   </label>
                 </div>
@@ -732,6 +753,41 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onBackToHome, onNavigateFa
           >
             <span>Ausführliche FAQ aufrufen</span>
             <ArrowRight className="w-3 h-3 text-amber-400" />
+          </button>
+        </div>
+
+        {/* Legal Route Links in Login Footer */}
+        <div className="mt-4 pt-3 border-t border-slate-900/90 flex flex-wrap items-center justify-center gap-3 text-[11px] text-slate-500">
+          <button
+            type="button"
+            onClick={() => onNavigateLegal?.('/impressum')}
+            className="hover:text-slate-300 cursor-pointer"
+          >
+            Impressum
+          </button>
+          <span>•</span>
+          <button
+            type="button"
+            onClick={() => onNavigateLegal?.('/agb')}
+            className="hover:text-slate-300 cursor-pointer"
+          >
+            AGB
+          </button>
+          <span>•</span>
+          <button
+            type="button"
+            onClick={() => onNavigateLegal?.('/datenschutz')}
+            className="hover:text-slate-300 cursor-pointer"
+          >
+            Datenschutz
+          </button>
+          <span>•</span>
+          <button
+            type="button"
+            onClick={() => (onNavigateFaq ? onNavigateFaq() : onNavigateLegal?.('/faq'))}
+            className="hover:text-amber-400 cursor-pointer text-amber-400/80 font-medium"
+          >
+            FAQ
           </button>
         </div>
       </motion.div>

@@ -19,14 +19,54 @@ import { MarketAsset, CoreModule, MainCategory, AssetSubclass } from './types';
 import { CORE_MODULES } from './data/mockData';
 import { initGoogleAnalytics, trackPageView, updatePageSEO } from './utils/analytics';
 
-const LEGAL_ROUTES: LegalRoute[] = ['/faq', '/datenschutz', '/agb', '/impressum'];
+export const LEGAL_ROUTES: LegalRoute[] = ['/faq', '/datenschutz', '/agb', '/impressum'];
+
+/**
+ * Robust route normalizer supporting case-insensitivity, trailing slashes,
+ * and German/English aliases (/Datenschutz, /AGB, /privacy, /terms, /imprint, etc.)
+ */
+export function resolveAppRoute(rawPath: string): string {
+  if (!rawPath) return '/';
+  const clean = rawPath.trim().toLowerCase().replace(/\/+$/, '') || '/';
+
+  if (clean === '/login' || clean === '/anmelden' || clean === '/signin') {
+    return '/login';
+  }
+  if (clean === '/faq' || clean === '/hilfe' || clean === '/questions') {
+    return '/faq';
+  }
+  if (
+    clean === '/datenschutz' ||
+    clean === '/privacy' ||
+    clean === '/privacy-policy' ||
+    clean === '/datenschutzerklaerung'
+  ) {
+    return '/datenschutz';
+  }
+  if (
+    clean === '/agb' ||
+    clean === '/terms' ||
+    clean === '/nutzungsbedingungen' ||
+    clean === '/tos' ||
+    clean === '/conditions'
+  ) {
+    return '/agb';
+  }
+  if (
+    clean === '/impressum' ||
+    clean === '/imprint' ||
+    clean === '/anbieterkennzeichnung' ||
+    clean === '/legal'
+  ) {
+    return '/impressum';
+  }
+  return '/';
+}
 
 export default function App() {
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
     if (typeof window !== 'undefined') {
-      const path = window.location.pathname.toLowerCase();
-      if (path === '/login') return '/login';
-      if (LEGAL_ROUTES.includes(path as LegalRoute)) return path;
+      return resolveAppRoute(window.location.pathname);
     }
     return '/';
   });
@@ -48,14 +88,8 @@ export default function App() {
     initGoogleAnalytics();
 
     const handlePopState = () => {
-      const path = window.location.pathname.toLowerCase();
-      if (path === '/login') {
-        setCurrentRoute('/login');
-      } else if (LEGAL_ROUTES.includes(path as LegalRoute)) {
-        setCurrentRoute(path);
-      } else {
-        setCurrentRoute('/');
-      }
+      const resolved = resolveAppRoute(window.location.pathname);
+      setCurrentRoute(resolved);
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -128,13 +162,9 @@ export default function App() {
   }, [currentRoute]);
 
   const navigateTo = (path: string) => {
-    const normalized = path.toLowerCase();
-    const targetRoute =
-      normalized === '/login' || LEGAL_ROUTES.includes(normalized as LegalRoute)
-        ? normalized
-        : '/';
+    const targetRoute = resolveAppRoute(path);
 
-    if (window.location.pathname !== targetRoute) {
+    if (window.location.pathname.toLowerCase() !== targetRoute) {
       window.history.pushState({}, '', targetRoute);
     }
     setCurrentRoute(targetRoute);
@@ -225,6 +255,7 @@ export default function App() {
           <LoginPage
             onBackToHome={() => navigateTo('/')}
             onNavigateFaq={() => navigateTo('/faq')}
+            onNavigateLegal={navigateTo}
           />
         ) : LEGAL_ROUTES.includes(currentRoute as LegalRoute) ? (
           /* Dedicated Legal & FAQ View (/faq, /datenschutz, /agb, /impressum) */
