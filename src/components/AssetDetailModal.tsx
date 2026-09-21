@@ -27,15 +27,18 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({ asset, onClo
         <div className="flex items-start justify-between pb-4 border-b border-slate-800">
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold px-2 py-0.5 rounded bg-amber-400/15 text-amber-300">
-                {asset.category}
+              <span className="text-xs font-bold px-2 py-0.5 rounded bg-[#F9BF21]/15 text-[#F9BF21] border border-[#F9BF21]/30 font-mono">
+                {asset.mainCategory}
               </span>
+              <span className="text-xs text-slate-400">{asset.category}</span>
               <span className="text-xs text-slate-400 font-mono">{asset.symbol}</span>
             </div>
             <h3 className="text-2xl font-bold text-white mt-1">{asset.name}</h3>
             <div className="flex items-baseline gap-2 mt-1">
               <span className="text-3xl font-extrabold text-white tracking-tight">{asset.value}</span>
-              <span className="text-sm font-semibold text-emerald-400">{asset.change} (Heute)</span>
+              <span className={`text-sm font-semibold ${asset.isPositive ? 'text-emerald-400' : 'text-red-400'}`}>
+                {asset.change} (Heute)
+              </span>
             </div>
           </div>
           <button

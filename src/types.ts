@@ -1,3 +1,5 @@
+export type MainCategory = 'KRYPTO' | 'AKTIEN' | 'INDIZIES' | 'FOREX' | 'ROHSTOFFE';
+
 export interface MarketAsset {
   id: string;
   name: string;
@@ -5,7 +7,8 @@ export interface MarketAsset {
   value: string;
   change: string;
   isPositive: boolean;
-  iconType: 'trend' | 'bitcoin' | 'gold' | 'forex';
+  mainCategory: MainCategory;
+  iconType: 'trend' | 'bitcoin' | 'gold' | 'forex' | 'stock' | 'crypto' | 'commodity' | 'index';
   sparklinePath: string;
   glowColor: string;
   borderColor: string;
