@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Play, CheckCircle2, ChevronRight, ArrowRight, Shield, Zap, Globe } from 'lucide-react';
+import { X, Play, CheckCircle2, ChevronRight, ArrowRight, Shield, Zap, Globe, Newspaper } from 'lucide-react';
 import { motion } from 'motion/react';
 import { BrandLogo } from './BrandLogo';
 
@@ -15,7 +15,7 @@ const TOUR_STEPS = [
     title: 'Multi-Börsen Datenfeed',
     desc: 'Live-Aggregation von über 50 Börsen, Krypto-Exchanges und Devisenmärkten in sub-sekündlicher Präzision.',
     icon: Globe,
-    color: 'text-amber-400',
+    color: 'text-[#F9BF21]',
     highlight: '50+ Börsen vernetzt',
   },
   {
@@ -23,7 +23,7 @@ const TOUR_STEPS = [
     title: 'Transparente KI-Scoring Engine',
     desc: 'Kombiniert Graham/Buffett-Value-Faktoren mit moderner Sentiment- und Momentum-Analyse.',
     icon: Zap,
-    color: 'text-purple-400',
+    color: 'text-[#8D26FF]',
     highlight: 'Keine Blackbox',
   },
   {
@@ -31,8 +31,16 @@ const TOUR_STEPS = [
     title: 'Risiko- & Portfolioabsicherung',
     desc: 'Automatisierte Warnsignale bei überbewerteten Assets oder abrupten Trendwechseln.',
     icon: Shield,
-    color: 'text-emerald-400',
+    color: 'text-[#44DE88]',
     highlight: 'Frühzeitige Schutzsignale',
+  },
+  {
+    step: 4,
+    title: 'AI Newsfeed & Sentiment Pulse',
+    desc: 'Echtzeit-Aggregation von 4.200+ globalen Finanzquellen mit semantischem Impact-Scoring für Ihr Portfolio.',
+    icon: Newspaper,
+    color: 'text-[#F87171]',
+    highlight: '4.200+ Quellen/min',
   },
 ];
 

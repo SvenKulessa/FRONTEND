@@ -13,30 +13,33 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ onSelectAsset, o
   const renderAssetIcon = (type: string) => {
     switch (type) {
       case 'trend':
+        // Emerald (#44DE88 - Brand Success)
         return (
-          <div className="w-6 h-6 rounded-md bg-cyan-500/15 flex items-center justify-center">
-            <TrendingUp className="w-3.5 h-3.5 text-cyan-400" />
+          <div className="w-6 h-6 rounded-md bg-[#44DE88]/15 border border-[#44DE88]/30 flex items-center justify-center shadow-[0_0_8px_rgba(68,222,136,0.25)]">
+            <TrendingUp className="w-3.5 h-3.5 text-[#44DE88]" />
           </div>
         );
       case 'bitcoin':
+        // AIF Gold (#F9BF21) Bitcoin node
         return (
-          <div className="w-6 h-6 rounded-full bg-[#F7931A] flex items-center justify-center font-bold text-[12px] text-white shadow-sm">
+          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-amber-300 to-[#F9BF21] border border-[#F9BF21]/50 flex items-center justify-center font-bold text-[12px] text-black shadow-[0_0_8px_rgba(249,191,33,0.3)]">
             ₿
           </div>
         );
       case 'gold':
+        // AIF Gold (#F9BF21) Ingot
         return (
-          <div className="w-6 h-6 rounded-md bg-amber-500/20 flex items-center justify-center">
-            {/* Gold bar ingot icon */}
-            <svg className="w-4 h-4 text-[#F5B014]" viewBox="0 0 24 24" fill="currentColor">
+          <div className="w-6 h-6 rounded-md bg-[#F9BF21]/20 border border-[#F9BF21]/40 flex items-center justify-center shadow-[0_0_8px_rgba(249,191,33,0.25)]">
+            <svg className="w-4 h-4 text-[#F9BF21]" viewBox="0 0 24 24" fill="currentColor">
               <path d="M4 16l3-6h10l3 6H4z" />
-              <path d="M6 18h12l-1 2H7l-1-2z" opacity="0.7" />
+              <path d="M6 18h12l-1 2H7l-1-2z" opacity="0.8" />
             </svg>
           </div>
         );
       case 'forex':
+        // Purple Accent (#8D26FF - Brand Accent)
         return (
-          <div className="w-6 h-6 rounded-full bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center font-bold text-[11px] text-cyan-300">
+          <div className="w-6 h-6 rounded-full bg-[#8D26FF]/20 border border-[#8D26FF]/50 flex items-center justify-center font-bold text-[11px] text-[#E879F9] shadow-[0_0_8px_rgba(141,38,255,0.3)]">
             €
           </div>
         );

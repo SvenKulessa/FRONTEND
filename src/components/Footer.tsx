@@ -7,12 +7,12 @@ export const Footer: React.FC = () => {
       {/* Thin elegant separator with golden center glow */}
       <div className="w-full h-px bg-gradient-to-r from-transparent via-amber-500/30 to-transparent mb-6" />
 
-      {/* Homogeneous Brand Logo lockup */}
+      {/* Pure Vector Brand Logo */}
       <div className="flex justify-center mb-4">
         <BrandLogo variant="inline" size="sm" />
       </div>
 
-      {/* Slogan from mockup */}
+      {/* Slogan from brand architecture */}
       <p className="text-[10px] sm:text-[11px] font-medium tracking-[0.24em] text-slate-400 uppercase select-none">
         GLOBALE INTELLIGENZ. EINE BESSERE ZUKUNFT.
       </p>
@@ -25,7 +25,7 @@ export const Footer: React.FC = () => {
         <span>•</span>
         <span className="hover:text-slate-300 transition-colors cursor-pointer">Datenschutz</span>
         <span>•</span>
-        <span className="hover:text-slate-300 transition-colors cursor-pointer">API</span>
+        <span className="hover:text-slate-300 transition-colors cursor-pointer">Manifest v6.0</span>
       </div>
 
       {/* Mobile iOS Home Indicator Bar */}
@@ -33,4 +33,3 @@ export const Footer: React.FC = () => {
     </footer>
   );
 };
-

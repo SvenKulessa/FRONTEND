@@ -5,25 +5,25 @@ export const KEY_PILLARS: KeyPillar[] = [
     id: 'realtime',
     title: 'Echtzeit-Marktdaten',
     iconType: 'coins',
-    color: '#F5A623',
+    color: '#F9BF21', // AIF Gold (Primary)
   },
   {
     id: 'transparent-ai',
     title: 'Transparente KI-Modelle',
     iconType: 'ai-brain',
-    color: '#C084FC',
+    color: '#8D26FF', // Purple (Accent)
   },
   {
     id: 'audience',
     title: 'Für Privatanleger und Professionals',
     iconType: 'users',
-    color: '#38BDF8',
+    color: '#44DE88', // Emerald (Success)
   },
   {
     id: 'global-markets',
     title: 'Weltweite Märkte auf einer Plattform',
     iconType: 'globe',
-    color: '#FBBF24',
+    color: '#F9BF21', // AIF Gold
   },
 ];
 
@@ -117,6 +117,8 @@ export const CORE_MODULES: CoreModule[] = [
     description: 'KI-gestützte Analyse mit transparenter Methodik.',
     iconType: 'brain',
     tagline: 'Multi-Faktor Scoring in Echtzeit',
+    brandColor: '#8D26FF', // Purple (Accent)
+    accentColor: '#E879F9',
     details: {
       useCase: 'Bewertet Fundamentaldaten, Sentiment, Cashflows und Risikofaktoren in einer einheitlichen Kennzahl von 0–100.',
       features: [
@@ -138,6 +140,8 @@ export const CORE_MODULES: CoreModule[] = [
     description: 'Bewertet Aktien nach Value-Prinzipien.',
     iconType: 'leaf',
     tagline: 'Diszipliniertes Investieren nach Warren Buffett',
+    brandColor: '#44DE88', // Emerald (Success)
+    accentColor: '#86EFAC',
     details: {
       useCase: 'Prüft Unternehmen auf nachhaltige Burggräben (Moats), Eigenkapitalrendite und Sicherheitsmarge (Margin of Safety).',
       features: [
@@ -154,11 +158,67 @@ export const CORE_MODULES: CoreModule[] = [
     },
   },
   {
+    id: 'ai-newsfeed',
+    title: 'AI Newsfeed',
+    description: 'Echtzeit-Sentiment & kuratierte Marktnachrichten.',
+    iconType: 'news',
+    tagline: 'KI-kuratierte Marktsignale in Millisekunden',
+    brandColor: '#F87171', // Rose (Breaking News / Market Pulse)
+    accentColor: '#FCA5A5',
+    details: {
+      useCase: 'Aggregiert weltweite Finanzmedien, Social Sentiment und Unternehmensmitteilungen in Echtzeit durch semantische KI-Filter.',
+      features: [
+        'Echtzeit-Sentiment-Scoring von globalen Schlagzeilen',
+        'Semantische Auswirkungsanalyse auf Indizes, Krypto & Rohstoffe',
+        'Faktenprüfung und Rausch-Filterung gegen Fehlinformationen',
+        'Personalisierte Alerts für relevante Portfolio-Events',
+      ],
+      sampleMetrics: [
+        { label: 'Analysierte Quellen / min', value: '4.200+', score: 'Echtzeit' },
+        { label: 'Markt-Sentiment-Index', value: 'Bullisch (+68)', score: 'Positiv' },
+        { label: 'KI-Klassifizierungsgenauigkeit', value: '96,4%', score: 'Top Tier' },
+        { label: 'Latenz Sentiment-Engine', value: '18 ms', score: 'Ultra-Fast' },
+      ],
+      newsItems: [
+        {
+          headline: 'EZB signalisiert vorsichtige Zinssenkungen im Euroraum',
+          source: 'Reuters Financial',
+          time: 'vor 4 Min.',
+          sentiment: 'bullish',
+          impact: 'EUR/USD • DAX 40',
+        },
+        {
+          headline: 'US-Tech-Sektor verzeichnet Rekord-Zuflüsse in KI-Infrastruktur',
+          source: 'Bloomberg Terminal',
+          time: 'vor 11 Min.',
+          sentiment: 'bullish',
+          impact: 'S&P 500 • NVDA • MSFT',
+        },
+        {
+          headline: 'Bitcoin hält Unterstützungszone nach institutionellen Käufen',
+          source: 'CoinDesk Pro',
+          time: 'vor 23 Min.',
+          sentiment: 'bullish',
+          impact: 'BTC/USD • ETH/USD',
+        },
+        {
+          headline: 'Rohöl-Volatilität steigt nach Nahost-Frachtrouten-Meldungen',
+          source: 'Financial Times',
+          time: 'vor 38 Min.',
+          sentiment: 'neutral',
+          impact: 'Brent Crude • Gold',
+        },
+      ],
+    },
+  },
+  {
     id: 'vocabulary',
     title: 'Vocabulary',
     description: 'Finanzbegriffe einfach erklärt.',
     iconType: 'book',
     tagline: 'Vom Einsteiger zum versierten Marktbeobachter',
+    brandColor: '#F9BF21', // AIF Gold (Primary)
+    accentColor: '#FDE047',
     details: {
       useCase: 'Interaktives Nachschlagewerk mit über 450 Finanz- und KI-Fachbegriffen, verständlichen Praxisbeispielen und Faustformeln.',
       features: [

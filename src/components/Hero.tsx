@@ -26,6 +26,12 @@ export const Hero: React.FC<HeroProps> = ({ onStartAnalysis, onExploreProduct })
             strokeWidth="1.2"
             opacity="0.75"
           />
+          <path
+            d="M-10,95 C120,40 220,110 340,30 C380,10 420,50 460,70"
+            stroke="url(#magentaWaveGrad)"
+            strokeWidth="1.2"
+            opacity="0.65"
+          />
           <defs>
             <linearGradient id="goldenWaveGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop offset="0%" stopColor="#F5B014" stopOpacity="0" />
@@ -37,6 +43,12 @@ export const Hero: React.FC<HeroProps> = ({ onStartAnalysis, onExploreProduct })
               <stop offset="0%" stopColor="#D97706" stopOpacity="0" />
               <stop offset="50%" stopColor="#FBBF24" stopOpacity="0.6" />
               <stop offset="100%" stopColor="#F59E0B" stopOpacity="0" />
+            </linearGradient>
+            <linearGradient id="magentaWaveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#8D26FF" stopOpacity="0" />
+              <stop offset="40%" stopColor="#D946EF" stopOpacity="0.7" />
+              <stop offset="70%" stopColor="#8D26FF" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#8D26FF" stopOpacity="0" />
             </linearGradient>
           </defs>
         </svg>
