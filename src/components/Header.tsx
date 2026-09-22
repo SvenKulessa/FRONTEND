@@ -26,6 +26,7 @@ import { trackLoginClick } from '../utils/analytics';
 interface HeaderProps {
   onOpenAnalysis?: () => void;
   onOpenModule?: (moduleId: string) => void;
+  onOpenVocabulary?: () => void;
   onSelectSubclass?: (subclass: AssetSubclass, category: MainCategory) => void;
   onViewAllMarkets?: () => void;
   onNavigateLogin?: () => void;
@@ -35,6 +36,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   onOpenAnalysis,
   onOpenModule,
+  onOpenVocabulary,
   onSelectSubclass,
   onViewAllMarkets,
   onNavigateLogin,
@@ -161,19 +163,8 @@ export const Header: React.FC<HeaderProps> = ({
                   </button>
                 </div>
 
-                {/* Status Indicator & Quick Login */}
-                <div className="mt-4 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-400/10 via-purple-500/10 to-transparent border border-amber-400/20 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-xs font-semibold text-amber-200">System v6.0 Online</span>
-                  </div>
-                  <span className="text-[10px] font-mono text-purple-300 bg-purple-500/20 px-1.5 py-0.5 rounded border border-purple-500/30">
-                    #8D26FF
-                  </span>
-                </div>
-
                 {/* Mobile Drawer Login CTA */}
-                <div className="mt-3">
+                <div className="mt-4">
                   <a
                     id="drawer-login-btn"
                     href="/login"
@@ -183,7 +174,7 @@ export const Header: React.FC<HeaderProps> = ({
                       trackLoginClick('drawer');
                       onNavigateLogin?.();
                     }}
-                    className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl bg-gradient-to-r from-amber-400/15 via-[#FF2E93]/15 to-[#8D26FF]/20 border border-amber-400/40 text-amber-200 hover:text-white font-bold text-xs transition-all shadow-[0_0_12px_rgba(249,191,33,0.15)] group"
+                    className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400/15 via-[#FF2E93]/15 to-[#8D26FF]/20 border border-amber-400/40 text-amber-200 hover:text-white font-bold text-xs transition-all shadow-[0_0_12px_rgba(249,191,33,0.15)] group"
                     data-analytics="drawer-login-click"
                     data-ga-category="authentication"
                     data-ga-action="click_login"
@@ -269,19 +260,30 @@ export const Header: React.FC<HeaderProps> = ({
                       </span>
                     </button>
 
+                    {/* MARKET VOCABULARY MODULE */}
                     <button
                       type="button"
                       onClick={() => {
                         setIsMenuOpen(false);
-                        onOpenModule?.('vocabulary');
+                        if (onOpenVocabulary) {
+                          onOpenVocabulary();
+                        } else {
+                          onOpenModule?.('vocabulary');
+                        }
                       }}
-                      className="w-full flex items-center justify-between py-2.5 px-3 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 text-left transition-all cursor-pointer"
+                      className="w-full flex items-center justify-between py-2.5 px-3 rounded-xl text-sm text-slate-200 hover:text-white bg-amber-400/5 hover:bg-amber-400/15 border border-amber-400/20 hover:border-amber-400/40 text-left transition-all cursor-pointer group shadow-[0_0_10px_rgba(249,191,33,0.06)]"
                     >
                       <span className="flex items-center gap-2.5">
-                        <BookOpen className="w-4 h-4 text-[#F9BF21]" />
-                        Finanz-Glossar
+                        <div className="w-6 h-6 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
+                          <BookOpen className="w-3.5 h-3.5 text-[#F9BF21]" />
+                        </div>
+                        <span className="font-semibold group-hover:text-amber-300 transition-colors">
+                          Market Vocabulary
+                        </span>
                       </span>
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+                      <span className="text-[10px] font-mono text-amber-400 bg-amber-400/20 px-2 py-0.5 rounded-full border border-amber-400/30">
+                        Glossar
+                      </span>
                     </button>
                   </div>
 

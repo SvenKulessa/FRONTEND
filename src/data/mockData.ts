@@ -1,4 +1,9 @@
 import { MarketAsset, CoreModule, KeyPillar, AssetClassInfo } from '../types';
+import { INDEX_ASSETS } from './assets/indexAssets';
+import { ALL_CRYPTO_ASSETS } from './assets/cryptoAssets';
+import { TOP_150_STOCKS } from './assets/stockAssets';
+import { FOREX_ASSETS } from './assets/forexAssets';
+import { COMMODITY_ASSETS } from './assets/commodityAssets';
 
 export const KEY_PILLARS: KeyPillar[] = [
   {

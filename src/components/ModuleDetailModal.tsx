@@ -7,12 +7,19 @@ interface ModuleDetailModalProps {
   module: CoreModule | null;
   onClose: () => void;
   onOpenAnalysis: () => void;
+  onOpenVocabulary?: () => void;
 }
 
-export const ModuleDetailModal: React.FC<ModuleDetailModalProps> = ({ module, onClose, onOpenAnalysis }) => {
+export const ModuleDetailModal: React.FC<ModuleDetailModalProps> = ({
+  module,
+  onClose,
+  onOpenAnalysis,
+  onOpenVocabulary,
+}) => {
   if (!module) return null;
 
   const brandColor = module.brandColor || '#F9BF21';
+  const isVocabulary = module.id === 'vocabulary';
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md">
@@ -166,18 +173,37 @@ export const ModuleDetailModal: React.FC<ModuleDetailModalProps> = ({ module, on
 
         {/* CTA */}
         <div className="mt-6 flex flex-col gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              onClose();
-              onOpenAnalysis();
-            }}
-            className="w-full py-3 text-black font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] active:scale-[0.99] shadow-lg cursor-pointer"
-            style={{ backgroundColor: brandColor }}
-          >
-            <span>Dieses Modul jetzt testen</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
+          {isVocabulary ? (
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                if (onOpenVocabulary) {
+                  onOpenVocabulary();
+                } else {
+                  onOpenAnalysis();
+                }
+              }}
+              className="w-full py-3 text-black font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] active:scale-[0.99] shadow-lg cursor-pointer"
+              style={{ backgroundColor: brandColor }}
+            >
+              <span>Vollständiges Glossar öffnen</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                onOpenAnalysis();
+              }}
+              className="w-full py-3 text-black font-bold rounded-xl text-sm flex items-center justify-center gap-2 transition-transform hover:scale-[1.01] active:scale-[0.99] shadow-lg cursor-pointer"
+              style={{ backgroundColor: brandColor }}
+            >
+              <span>Dieses Modul jetzt testen</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          )}
           <button
             type="button"
             onClick={onClose}

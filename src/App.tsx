@@ -16,7 +16,8 @@ import { AllMarketsModal } from './components/AllMarketsModal';
 import { SubclassDetailModal } from './components/SubclassDetailModal';
 import { LegalAndFaqPages, LegalRoute } from './components/LegalAndFaqPages';
 import { MarketAsset, CoreModule, MainCategory, AssetSubclass } from './types';
-import { CORE_MODULES } from './data/mockData';
+import { CORE_MODULES, MARKET_ASSETS } from './data/mockData';
+import { MarketVocabularyModal } from './components/MarketVocabularyModal';
 import { initGoogleAnalytics, trackPageView, updatePageSEO } from './utils/analytics';
 
 export const LEGAL_ROUTES: LegalRoute[] = ['/faq', '/datenschutz', '/agb', '/impressum'];
@@ -60,6 +61,15 @@ export function resolveAppRoute(rawPath: string): string {
   ) {
     return '/impressum';
   }
+  if (
+    clean === '/vocabulary' ||
+    clean === '/glossar' ||
+    clean === '/lexikon' ||
+    clean === '/market-vocabulary' ||
+    clean === '/dictionary'
+  ) {
+    return '/vocabulary';
+  }
   return '/';
 }
 
@@ -75,6 +85,12 @@ export default function App() {
   const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
   const [isProductTourOpen, setIsProductTourOpen] = useState(false);
   const [isAllMarketsOpen, setIsAllMarketsOpen] = useState(false);
+  const [isVocabularyOpen, setIsVocabularyOpen] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return resolveAppRoute(window.location.pathname) === '/vocabulary';
+    }
+    return false;
+  });
   const [marketCategoryFilter, setMarketCategoryFilter] = useState<'ALLE' | MainCategory>('ALLE');
   const [selectedAsset, setSelectedAsset] = useState<MarketAsset | null>(null);
   const [selectedModule, setSelectedModule] = useState<CoreModule | null>(null);
@@ -148,6 +164,17 @@ export default function App() {
         canonicalPath: '/impressum',
       });
       trackPageView('/impressum', title);
+    } else if (currentRoute === '/vocabulary') {
+      const title = 'Capital-AI | Market Vocabulary & Finanz-Glossar';
+      const description =
+        'Umfassendes Finanz- & Quant-Glossar von Capital-AI: Fachbegriffe verständlich erklärt mit Berechnungsformeln und Praxisbeispielen.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/vocabulary',
+      });
+      trackPageView('/vocabulary', title);
+      setIsVocabularyOpen(true);
     } else {
       const title = 'Capital-AI | AI-Driven Market Intelligence';
       const description =
@@ -172,6 +199,10 @@ export default function App() {
   };
 
   const handleOpenModuleById = (moduleId: string) => {
+    if (moduleId === 'vocabulary') {
+      setIsVocabularyOpen(true);
+      return;
+    }
     const found = CORE_MODULES.find((m) => m.id === moduleId);
     if (found) {
       setSelectedModule(found);
@@ -270,6 +301,7 @@ export default function App() {
             <Header
               onOpenAnalysis={() => setIsAnalysisOpen(true)}
               onOpenModule={handleOpenModuleById}
+              onOpenVocabulary={() => setIsVocabularyOpen(true)}
               onNavigateLogin={() => navigateTo('/login')}
               onNavigate={navigateTo}
               onSelectSubclass={(subclass, category) => {
@@ -301,7 +333,13 @@ export default function App() {
 
             {/* Core Modules ("Unsere Kernmodule") */}
             <CoreModules
-              onSelectModule={(module) => setSelectedModule(module)}
+              onSelectModule={(module) => {
+                if (module.id === 'vocabulary') {
+                  setIsVocabularyOpen(true);
+                } else {
+                  setSelectedModule(module);
+                }
+              }}
               onViewAllModules={() => handleOpenModuleById('enterprise-scorer')}
             />
 
@@ -337,6 +375,37 @@ export default function App() {
         onOpenAnalysis={() => {
           setSelectedModule(null);
           setIsAnalysisOpen(true);
+        }}
+        onOpenVocabulary={() => {
+          setSelectedModule(null);
+          setIsVocabularyOpen(true);
+        }}
+      />
+
+      {/* Dedicated Market Vocabulary & Finanz-Glossar Module */}
+      <MarketVocabularyModal
+        isOpen={isVocabularyOpen}
+        onClose={() => {
+          setIsVocabularyOpen(false);
+          if (currentRoute === '/vocabulary') {
+            navigateTo('/');
+          }
+        }}
+        onOpenAnalysis={() => {
+          setIsVocabularyOpen(false);
+          setIsAnalysisOpen(true);
+        }}
+        onSelectAssetSymbol={(symbol) => {
+          const cleanSymbol = symbol.split('/')[0].toUpperCase();
+          const found = MARKET_ASSETS.find(
+            (a) =>
+              a.symbol.toUpperCase() === symbol.toUpperCase() ||
+              a.symbol.toUpperCase() === cleanSymbol ||
+              a.name.toUpperCase().includes(cleanSymbol)
+          );
+          if (found) {
+            setSelectedAsset(found);
+          }
         }}
       />
 
