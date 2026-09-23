@@ -19,6 +19,10 @@ import { MarketAsset, CoreModule, MainCategory, AssetSubclass } from './types';
 import { CORE_MODULES, MARKET_ASSETS } from './data/mockData';
 import { MarketVocabularyModal } from './components/MarketVocabularyModal';
 import { initGoogleAnalytics, trackPageView, updatePageSEO } from './utils/analytics';
+import { PriceAlertsProvider, usePriceAlerts } from './context/PriceAlertsContext';
+import { PriceAlertToast } from './components/PriceAlertToast';
+import { PriceAlertsModal } from './components/PriceAlertsModal';
+import { MarketSentiment } from './components/MarketSentiment';
 
 export const LEGAL_ROUTES: LegalRoute[] = ['/faq', '/datenschutz', '/agb', '/impressum'];
 
@@ -73,13 +77,15 @@ export function resolveAppRoute(rawPath: string): string {
   return '/';
 }
 
-export default function App() {
+function AppContent() {
+  const { isAlertModalOpen, setIsAlertModalOpen } = usePriceAlerts();
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
     if (typeof window !== 'undefined') {
       return resolveAppRoute(window.location.pathname);
     }
     return '/';
   });
+
 
   const [viewMode, setViewMode] = useState<'mockup' | 'fullscreen'>('mockup');
   const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
@@ -92,6 +98,7 @@ export default function App() {
     return false;
   });
   const [marketCategoryFilter, setMarketCategoryFilter] = useState<'ALLE' | MainCategory>('ALLE');
+  const [marketSubclassFilter, setMarketSubclassFilter] = useState<string | undefined>(undefined);
   const [selectedAsset, setSelectedAsset] = useState<MarketAsset | null>(null);
   const [selectedModule, setSelectedModule] = useState<CoreModule | null>(null);
   const [selectedSubclass, setSelectedSubclass] = useState<{
@@ -302,6 +309,7 @@ export default function App() {
               onOpenAnalysis={() => setIsAnalysisOpen(true)}
               onOpenModule={handleOpenModuleById}
               onOpenVocabulary={() => setIsVocabularyOpen(true)}
+              onOpenPriceAlerts={() => setIsAlertModalOpen(true)}
               onNavigateLogin={() => navigateTo('/login')}
               onNavigate={navigateTo}
               onSelectSubclass={(subclass, category) => {
@@ -321,6 +329,15 @@ export default function App() {
 
             {/* 4 Feature Key Pillars */}
             <KeyPillars />
+
+            {/* Market Sentiment (Fear & Greed Index & Macro Trend Radar) */}
+            <MarketSentiment
+              onStartAnalysis={() => setIsAnalysisOpen(true)}
+              onExploreMarkets={() => {
+                setMarketCategoryFilter('ALLE');
+                setIsAllMarketsOpen(true);
+              }}
+            />
 
             {/* Global Markets Overview */}
             <MarketOverview
@@ -367,6 +384,7 @@ export default function App() {
       <AssetDetailModal
         asset={selectedAsset}
         onClose={() => setSelectedAsset(null)}
+        onOpenAllAlerts={() => setIsAlertModalOpen(true)}
       />
 
       <ModuleDetailModal
@@ -414,13 +432,15 @@ export default function App() {
         onClose={() => setSelectedSubclass(null)}
         subclass={selectedSubclass ? selectedSubclass.subclass : null}
         category={selectedSubclass ? selectedSubclass.category : null}
+        onSelectAsset={(asset) => setSelectedAsset(asset)}
         onOpenAnalysis={() => {
           setSelectedSubclass(null);
           setIsAnalysisOpen(true);
         }}
-        onExploreMarkets={() => {
+        onExploreMarkets={(subclassId) => {
           if (selectedSubclass) {
             setMarketCategoryFilter(selectedSubclass.category);
+            setMarketSubclassFilter(subclassId || selectedSubclass.subclass.id);
             setSelectedSubclass(null);
             setIsAllMarketsOpen(true);
           }
@@ -429,13 +449,47 @@ export default function App() {
 
       <AllMarketsModal
         isOpen={isAllMarketsOpen}
-        onClose={() => setIsAllMarketsOpen(false)}
+        onClose={() => {
+          setIsAllMarketsOpen(false);
+          setMarketSubclassFilter(undefined);
+        }}
         initialCategory={marketCategoryFilter}
+        initialSubclassId={marketSubclassFilter}
         onSelectAsset={(asset) => {
           setIsAllMarketsOpen(false);
+          setSelectedAsset(asset);
+        }}
+      />
+
+      {/* Global In-App Price Alert Toast Notification */}
+      <PriceAlertToast
+        onSelectAsset={(asset) => setSelectedAsset(asset)}
+        onOpenSentiment={() => {
+          const el = document.getElementById('market-sentiment-section');
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth' });
+          }
+        }}
+      />
+
+      {/* Full-featured PriceAlerts Manager & Preferences Modal */}
+      <PriceAlertsModal
+        isOpen={isAlertModalOpen}
+        onClose={() => setIsAlertModalOpen(false)}
+        onSelectAsset={(asset) => {
+          setIsAlertModalOpen(false);
           setSelectedAsset(asset);
         }}
       />
     </div>
   );
 }
+
+export default function App() {
+  return (
+    <PriceAlertsProvider>
+      <AppContent />
+    </PriceAlertsProvider>
+  );
+}
+

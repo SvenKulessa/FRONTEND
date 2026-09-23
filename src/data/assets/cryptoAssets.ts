@@ -127,7 +127,7 @@ export const CRYPTO_RAW_ASSETS: RawCryptoItem[] = [
   { id: 'c-dcr', name: 'Decred', symbol: 'DCR/USD', subclassId: 'krypto-privacy', subclassName: 'Privacy Coins', val: '$14,20', chg: '+1,15%', up: true, score: 80, rating: 'Hybrid PoW/PoS & CoinShuffle', desc: 'Mischtransaktionen und dezentrale Governance durch Stakeholder.' },
   { id: 'c-dash', name: 'Dash', symbol: 'DASH/USD', subclassId: 'krypto-privacy', subclassName: 'Privacy Coins', val: '$24,80', chg: '+0,90%', up: true, score: 79, rating: 'PrivateSend & InstantSend', desc: 'Masternode-Netzwerk für schnelle Zahlungen mit optionaler Privatsphäre.' },
   { id: 'c-zen', name: 'Horizen', symbol: 'ZEN/USD', subclassId: 'krypto-privacy', subclassName: 'Privacy Coins', val: '$7,40', chg: '+1,60%', up: true, score: 81, rating: 'Zero-Knowledge Sidechains', desc: 'Zendoo-Protokoll für hochgradig skalierbare, verifizierbare Sidechains.' },
-  { id: 'c-beam-priv', name: 'Beam Privacy', symbol: 'BEAM-P/USD', subclassId: 'krypto-privacy', subclassName: 'Privacy Coins', val: '$0,045', chg: '+2,80%', up: true, score: 82, rating: 'Mimblewimble & Lelantus', desc: 'Kompakte Blockchain ohne Transaktionshistorie für maximale Anonymität.' },
+  { id: 'c-beam-priv', name: 'Beam Privacy', symbol: 'BEAM/USD', subclassId: 'krypto-privacy', subclassName: 'Privacy Coins', val: '$0,045', chg: '+2,80%', up: true, score: 82, rating: 'Mimblewimble & Lelantus', desc: 'Kompakte Blockchain ohne Transaktionshistorie für maximale Anonymität.' },
   { id: 'c-xvg', name: 'Verge', symbol: 'XVG/USD', subclassId: 'krypto-privacy', subclassName: 'Privacy Coins', val: '$0,0058', chg: '+1,30%', up: true, score: 74, rating: 'TOR & I2P Routing', desc: 'Verbirgt IP-Adressen der Teilnehmer durch Routing über Anonymisierungsnetzwerke.' },
   { id: 'c-firo', name: 'Firo (Zcoin)', symbol: 'FIRO/USD', subclassId: 'krypto-privacy', subclassName: 'Privacy Coins', val: '$1,38', chg: '+2,10%', up: true, score: 81, rating: 'Lelantus Spark Protokoll', desc: 'Zerstört Coins kryptografisch und erzeugt frische Coins ohne Vorgeschichte.' },
   { id: 'c-pivx', name: 'PIVX', symbol: 'PIVX/USD', subclassId: 'krypto-privacy', subclassName: 'Privacy Coins', val: '$0,24', chg: '+1,05%', up: true, score: 76, rating: 'PoS mit zk-SNARKs', desc: 'Erster Proof-of-Stake Coin mit Zero-Knowledge-Datenschutz.' },
@@ -228,6 +228,8 @@ export const ALL_CRYPTO_ASSETS: MarketAsset[] = CRYPTO_RAW_ASSETS.map((item, idx
   change: item.chg,
   isPositive: item.up,
   mainCategory: 'KRYPTO',
+  subclassId: item.subclassId,
+  subclassName: item.subclassName,
   iconType: item.id === 'c-btc' ? 'bitcoin' : 'crypto',
   sparklinePath: item.up
     ? `M 0,${38 + (idx % 4)} Q 25,${42 - (idx % 5)} 45,${30 - (idx % 4)} T 80,${32 - (idx % 3)} T 115,${20 - (idx % 4)} T 150,${24 - (idx % 3)} T 175,${10 - (idx % 2)} T 200,${4 + (idx % 3)}`

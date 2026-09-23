@@ -16,17 +16,21 @@ import {
   DollarSign,
   Flame,
   LogIn,
+  Bell,
+  BellRing,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BrandLogo } from './BrandLogo';
 import { ASSET_CLASSES } from '../data/mockData';
 import { MainCategory, AssetSubclass } from '../types';
 import { trackLoginClick } from '../utils/analytics';
+import { usePriceAlerts } from '../context/PriceAlertsContext';
 
 interface HeaderProps {
   onOpenAnalysis?: () => void;
   onOpenModule?: (moduleId: string) => void;
   onOpenVocabulary?: () => void;
+  onOpenPriceAlerts?: () => void;
   onSelectSubclass?: (subclass: AssetSubclass, category: MainCategory) => void;
   onViewAllMarkets?: () => void;
   onNavigateLogin?: () => void;
@@ -37,6 +41,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenAnalysis,
   onOpenModule,
   onOpenVocabulary,
+  onOpenPriceAlerts,
   onSelectSubclass,
   onViewAllMarkets,
   onNavigateLogin,
@@ -44,6 +49,7 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedClass, setExpandedClass] = useState<MainCategory | null>('KRYPTO');
+  const { activeAlertsCount, triggeredAlertsCount } = usePriceAlerts();
 
   const renderClassIcon = (id: MainCategory) => {
     switch (id) {
@@ -87,6 +93,25 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* RIGHT SIDE: Live Status Chip & Login Button */}
       <div className="flex items-center space-x-2">
+        {/* PRICE ALERTS BELL BUTTON */}
+        <button
+          type="button"
+          onClick={onOpenPriceAlerts}
+          className="relative p-2 rounded-xl bg-white/5 hover:bg-white/10 active:bg-white/15 text-amber-300 border border-amber-500/20 hover:border-amber-500/40 transition-all cursor-pointer shadow-[0_0_12px_rgba(249,191,33,0.12)] shrink-0 group"
+          aria-label="Preisalarme öffnen"
+          title="PriceAlerts & Schwellenwerte"
+        >
+          <Bell className="w-4 h-4 text-amber-400 group-hover:scale-110 transition-transform" />
+          {activeAlertsCount > 0 && (
+            <span className="absolute -top-1 -right-1 min-w-[17px] h-[17px] px-1 rounded-full bg-amber-400 text-black text-[9.5px] font-mono font-black flex items-center justify-center shadow-[0_0_8px_rgba(249,191,33,0.8)] border border-[#02050e]">
+              {activeAlertsCount}
+            </span>
+          )}
+          {triggeredAlertsCount > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#FF2E93] animate-ping" />
+          )}
+        </button>
+
         <button
           type="button"
           onClick={onOpenAnalysis}
@@ -211,6 +236,32 @@ export const Header: React.FC<HeaderProps> = ({
                     </span>
                     <ChevronRight className="w-4 h-4 text-amber-400" />
                   </button>
+
+                  {/* PRICE ALERTS SYSTEM IN DRAWER */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      onOpenPriceAlerts?.();
+                    }}
+                    className="w-full flex items-center justify-between p-3 rounded-xl bg-[#091129] border border-amber-500/30 hover:border-amber-400 text-amber-200 font-semibold text-sm hover:bg-[#0e1a3e] transition-all text-left group shadow-[0_0_12px_rgba(249,191,33,0.08)] cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
+                        <Bell className="w-4 h-4 text-amber-400" />
+                      </div>
+                      <span>PriceAlerts &amp; Schwellenwerte</span>
+                    </span>
+                    <div className="flex items-center gap-1.5">
+                      {activeAlertsCount > 0 && (
+                        <span className="text-[10px] font-mono font-bold bg-amber-400 text-black px-1.5 py-0.2 rounded-full">
+                          {activeAlertsCount} aktiv
+                        </span>
+                      )}
+                      <ChevronRight className="w-4 h-4 text-amber-400" />
+                    </div>
+                  </button>
+
 
                   <div className="grid grid-cols-1 gap-1.5 pt-2">
                     <button

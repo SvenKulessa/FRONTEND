@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Sparkles, TrendingUp, Shield, BarChart3, Search, CheckCircle2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { BrandLogo } from './BrandLogo';
+import { AssetLogo } from './AssetLogo';
 
 interface AnalysisModalProps {
   isOpen: boolean;
@@ -86,6 +87,7 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, onClose })
                     : 'bg-slate-800/80 text-slate-300 hover:bg-slate-700'
                 }`}
               >
+                <AssetLogo symbol={item.symbol} name={item.name} size="xs" />
                 <span>{item.symbol}</span>
                 <span className={selectedStock.symbol === item.symbol ? 'text-black/70' : 'text-emerald-400 font-mono'}>
                   {item.trend}
@@ -104,13 +106,16 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, onClose })
             </div>
           ) : (
             <>
-              <div className="flex items-start justify-between">
-                <div>
-                  <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider">
-                    Analysebericht
-                  </span>
-                  <h4 className="text-xl font-bold text-white mt-0.5">{selectedStock.name}</h4>
-                  <span className="text-xs text-slate-400 font-mono">Ticker: {selectedStock.symbol}</span>
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-start gap-3">
+                  <AssetLogo symbol={selectedStock.symbol} name={selectedStock.name} size="lg" className="mt-0.5" />
+                  <div>
+                    <span className="text-[11px] font-bold text-amber-400 uppercase tracking-wider">
+                      Analysebericht
+                    </span>
+                    <h4 className="text-xl font-bold text-white mt-0.5">{selectedStock.name}</h4>
+                    <span className="text-xs text-slate-400 font-mono">Ticker: {selectedStock.symbol}</span>
+                  </div>
                 </div>
 
                 <div className="text-right">

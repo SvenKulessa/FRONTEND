@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { ArrowRight, TrendingUp, TrendingDown } from 'lucide-react';
+import { ArrowRight, TrendingUp, TrendingDown, Bell } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MARKET_ASSETS } from '../data/mockData';
 import { MarketAsset, MainCategory } from '../types';
+import { usePriceAlerts } from '../context/PriceAlertsContext';
+import { AssetLogo } from './AssetLogo';
 
 interface MarketOverviewProps {
   onSelectAsset: (asset: MarketAsset) => void;
@@ -22,10 +24,13 @@ const CATEGORIES: { id: CategoryFilter; label: string; color: string }[] = [
 
 export const MarketOverview: React.FC<MarketOverviewProps> = ({ onSelectAsset, onViewAllMarkets }) => {
   const [selectedCategory, setSelectedCategory] = useState<CategoryFilter>('ALLE');
+  const { getAlertsForAsset } = usePriceAlerts();
 
   const filteredAssets = selectedCategory === 'ALLE'
     ? MARKET_ASSETS
     : MARKET_ASSETS.filter((asset) => asset.mainCategory === selectedCategory);
+
+  const displayedAssets = filteredAssets.slice(0, 24);
 
   const getCategoryColor = (cat: MainCategory) => {
     switch (cat) {
@@ -177,8 +182,10 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ onSelectAsset, o
       {/* Market Cards Container (Horizontal scrolling with touch snap) */}
       <div className="flex gap-2.5 overflow-x-auto no-scrollbar pb-2 pt-1 -mx-5 px-5 snap-x snap-mandatory">
         <AnimatePresence mode="popLayout">
-          {filteredAssets.map((asset) => {
+          {displayedAssets.map((asset) => {
             const catColor = getCategoryColor(asset.mainCategory);
+            const assetAlerts = getAlertsForAsset(asset.symbol);
+            const hasActiveAlert = assetAlerts.some((a) => a.isEnabled && !a.isTriggered);
 
             return (
               <motion.div
@@ -207,15 +214,25 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ onSelectAsset, o
                   >
                     {asset.mainCategory}
                   </span>
-                  <span className="text-[9.5px] font-mono text-slate-400 bg-slate-800/60 px-1 py-0.5 rounded">
-                    KI <span className="text-white font-bold">{asset.aiScore}</span>
-                  </span>
+                  <div className="flex items-center gap-1">
+                    {hasActiveAlert && (
+                      <span
+                        className="w-4 h-4 rounded-full bg-amber-400/20 border border-amber-400/40 text-amber-300 flex items-center justify-center text-[9px] shadow-[0_0_6px_rgba(249,191,33,0.4)]"
+                        title="Aktiver PriceAlert aktiv"
+                      >
+                        <Bell className="w-2.5 h-2.5 fill-current" />
+                      </span>
+                    )}
+                    <span className="text-[9.5px] font-mono text-slate-400 bg-slate-800/60 px-1 py-0.5 rounded">
+                      KI <span className="text-white font-bold">{asset.aiScore}</span>
+                    </span>
+                  </div>
                 </div>
 
                 {/* Name & Icon */}
                 <div>
                   <div className="flex items-center gap-2 mb-1.5">
-                    {renderAssetIcon(asset.iconType, asset.waveColor)}
+                    <AssetLogo asset={asset} size="sm" />
                     <div className="min-w-0 flex-1">
                       <div className="text-[12.5px] font-bold text-white truncate group-hover:text-amber-300 transition-colors">
                         {asset.name}
@@ -291,6 +308,23 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({ onSelectAsset, o
             );
           })}
         </AnimatePresence>
+
+        {filteredAssets.length > 24 && (
+          <div
+            onClick={onViewAllMarkets}
+            className="snap-start shrink-0 w-[145px] sm:w-[155px] rounded-2xl bg-[#091129] border border-amber-500/30 hover:border-amber-400 p-4 flex flex-col items-center justify-center text-center cursor-pointer transition-all group shadow-[0_4px_16px_rgba(249,191,33,0.12)] hover:bg-[#0d183b]"
+          >
+            <div className="w-10 h-10 rounded-full bg-amber-500/15 border border-amber-500/40 flex items-center justify-center text-amber-400 group-hover:scale-110 group-hover:bg-amber-500/25 transition-all mb-2">
+              <ArrowRight className="w-5 h-5" />
+            </div>
+            <div className="text-xs font-bold text-white group-hover:text-amber-300">
+              +{filteredAssets.length - 24} weitere
+            </div>
+            <div className="text-[10px] text-slate-400 mt-0.5 font-medium">
+              Märkte erkunden
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
