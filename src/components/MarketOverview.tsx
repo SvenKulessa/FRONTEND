@@ -1,3 +1,22 @@
+/**
+ * ============================================================================
+ * [ARCHITEKTUR-MAPPING: GLOBAL MARKETS OVERVIEW & ASSET TICKER]
+ * ----------------------------------------------------------------------------
+ * 1. GRAFISCHE KOMPONENTE : 
+ *    - 2-Spalten Grid der Top-Märkte mit Vektor-Logos (`AssetLogo`)
+ *    - SVG Sparkline Mini-Charts mit dynamischen Farbverläufen
+ *    - Kategorie-Umschalter (Alle, Krypto, Aktien, Indizes, Forex, Rohstoffe)
+ * 2. SCORING-LOGIK        : 
+ *    - 24h Kursänderung (%) in Signalfarben (Grün/Rot)
+ *    - Indikation aktiver Schwellenwert-Alarme pro Asset
+ * 3. DATENANBINDUNG       : 
+ *    - `usePriceAlerts().getAlertsForAsset()`
+ *    - Callback `onSelectAsset()` für Detail-Modal
+ * 4. DATENQUELLEN / FEEDS : 
+ *    - `MARKET_ASSETS` (500+ Assets über alle Anlageklassen)
+ * ============================================================================
+ */
+
 import React, { useState } from 'react';
 import { ArrowRight, TrendingUp, TrendingDown, Bell } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';

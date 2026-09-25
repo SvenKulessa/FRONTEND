@@ -1,3 +1,27 @@
+/**
+ * ============================================================================
+ * [ARCHITEKTUR-MAPPING: GLOBAL ALERTS, TELEGRAM & WHALE RADAR CONTEXT]
+ * ----------------------------------------------------------------------------
+ * 1. GRAFISCHE KOMPONENTE : 
+ *    - PriceAlertToast (globaler Banner oben rechts)
+ *    - PriceAlertsModal (Full Management Hub)
+ *    - WhaleRadarSection (Homepage-Ticker) & WhaleRadarModal (Quant Hub)
+ * 2. SCORING-LOGIK        : 
+ *    - Threshold Breaches: Kursprüfungen gegen Zielwerte (`targetPrice`)
+ *    - Sentiment Coupling: Kopplung von Preisen an Makro-Sentiment (z.B. Extreme Greed)
+ *    - Whale Impact Scoring: Filterung nach Mindest-Volumen (`minWhaleVolumeMln`)
+ * 3. DATENANBINDUNG       : 
+ *    - React Context & Custom Hook (`usePriceAlerts()`)
+ *    - LocalStorage Persistence (`capital_ai_price_alerts_v2`, `capital_ai_whale_txs_v1`)
+ *    - Web Audio API Chime Synthesizer
+ *    - Telegram Push Webhook Dispatch (`dispatchTelegramPush()`)
+ * 4. DATENQUELLEN / FEEDS : 
+ *    - Live Ticker Market Quotes (MARKET_ASSETS)
+ *    - Mempool & ATS Dark Pool Simulatoren (INITIAL_WHALE_TRANSACTIONS)
+ *    - Sentiment Regime Transitions
+ * ============================================================================
+ */
+
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import {
   PriceAlert,
@@ -9,6 +33,8 @@ import {
   SentimentConditionType,
   PriceAlertSentimentCoupling,
   AlertToastData,
+  WhaleTransaction,
+  TelegramConfig,
 } from '../types';
 import {
   DEFAULT_ALERT_PREFERENCES,
@@ -19,6 +45,13 @@ import {
   playAlertChime,
   getSentimentLevelInfo,
 } from '../utils/priceAlerts';
+import {
+  dispatchTelegramPush,
+  formatWhaleTelegramMessage,
+  formatPriceAlertTelegramMessage,
+  DEFAULT_TELEGRAM_CONFIG,
+} from '../utils/telegramService';
+import { INITIAL_WHALE_TRANSACTIONS, generateRandomWhaleTx } from '../data/whaleRadarData';
 import { MARKET_ASSETS } from '../data/mockData';
 
 export interface AddAlertPayload {
@@ -77,10 +110,22 @@ interface PriceAlertsContextType {
   activeSentimentAlertsCount: number;
   triggeredSentimentAlertsCount: number;
 
-  // User preferences
+  // User preferences & Telegram
   preferences: UserAlertPreferences;
   updatePreferences: (updates: Partial<UserAlertPreferences>) => void;
+  updateTelegramConfig: (updates: Partial<TelegramConfig>) => void;
+  testTelegramPush: () => Promise<{ success: boolean; status: string; error?: string }>;
   resetToDefaults: () => void;
+
+  // Smart Money Flow & Whale Radar
+  whaleTransactions: WhaleTransaction[];
+  addWhaleTransaction: (tx: WhaleTransaction) => void;
+  pushWhaleToTelegram: (txId: string) => Promise<{ success: boolean; status: string; error?: string }>;
+  isWhaleRadarOpen: boolean;
+  setIsWhaleRadarOpen: (open: boolean) => void;
+  openWhaleRadar: (filterAsset?: string) => void;
+  preselectedWhaleAsset: string | null;
+  setPreselectedWhaleAsset: (symbol: string | null) => void;
 
   // Toast
   activeToast: AlertToastData | null;
@@ -152,8 +197,36 @@ export const PriceAlertsProvider: React.FC<{ children: ReactNode }> = ({ childre
 
   const [activeToast, setActiveToast] = useState<AlertToastData | null>(null);
   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false);
+  const [isWhaleRadarOpen, setIsWhaleRadarOpen] = useState(false);
+  const [preselectedWhaleAsset, setPreselectedWhaleAsset] = useState<string | null>(null);
   const [preselectedAssetForNewAlert, setPreselectedAssetForNewAlert] = useState<MarketAsset | null>(null);
   const [preselectedCategoryForSentiment, setPreselectedCategoryForSentiment] = useState<('ALLE' | MainCategory) | null>(null);
+
+  // Whale transactions state
+  const STORAGE_WHALE_KEY = 'capital_ai_whale_txs_v1';
+  const [whaleTransactions, setWhaleTransactions] = useState<WhaleTransaction[]>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_WHALE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {
+      // Fallback
+    }
+    return INITIAL_WHALE_TRANSACTIONS;
+  });
+
+  // Sync whale transactions
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_WHALE_KEY, JSON.stringify(whaleTransactions));
+    } catch {
+      // Ignore
+    }
+  }, [whaleTransactions]);
 
   // Sync alerts
   useEffect(() => {
@@ -192,6 +265,90 @@ export const PriceAlertsProvider: React.FC<{ children: ReactNode }> = ({ childre
     setPreferences((prev) => ({ ...prev, ...updates }));
   }, []);
 
+  // Telegram config update
+  const updateTelegramConfig = useCallback((updates: Partial<TelegramConfig>) => {
+    setPreferences((prev) => ({
+      ...prev,
+      telegram: {
+        ...(prev.telegram || DEFAULT_TELEGRAM_CONFIG),
+        ...updates,
+      },
+    }));
+  }, []);
+
+  // Send test telegram push
+  const testTelegramPush = useCallback(async () => {
+    const tgConfig = preferences.telegram || DEFAULT_TELEGRAM_CONFIG;
+    const title = '🤖 [TEST] Capital-AI Telegram Push aktiv';
+    const body =
+      'Verbindung erfolgreich! Ihr Telegram-Bot empfängt nun Live-Warnungen für On-Chain Whale Transaktionen, Smart Money Flow & Preis-Schwellenwerte.';
+    const html = `
+<b>🤖 CAPITAL-AI TELEGRAM PUSH</b>
+
+✅ <b>Verbindung erfolgreich hergestellt!</b>
+Ihr Telegram-Empfangskanal ist aktiv. Sie erhalten ab sofort:
+• 🐋 <b>On-Chain Whale Radar</b> (Großtransaktionen &gt; $5M)
+• 🌊 <b>Smart Money Flow</b> (Institutionelle Akkumulation)
+• 🔔 <b>Preis- &amp; Sentiment-Schwellenwerte</b>
+
+⚡ <i>Capital-AI Multi-Market Intelligence Terminal</i>
+`.trim();
+
+    const res = await dispatchTelegramPush(tgConfig, title, body, html);
+    if (res.success) {
+      updateTelegramConfig({ connected: true, lastTestedAt: new Date().toLocaleTimeString('de-DE') });
+    }
+    return res;
+  }, [preferences.telegram, updateTelegramConfig]);
+
+  // Push specific whale transaction to Telegram
+  const pushWhaleToTelegram = useCallback(
+    async (txId: string) => {
+      const tx = whaleTransactions.find((t) => t.id === txId);
+      if (!tx) return { success: false, status: 'FAILED', error: 'Transaktion nicht gefunden' };
+
+      const tgConfig = preferences.telegram || DEFAULT_TELEGRAM_CONFIG;
+      const { title, body, html } = formatWhaleTelegramMessage(tx);
+      const res = await dispatchTelegramPush(tgConfig, title, body, html);
+
+      if (res.success) {
+        setWhaleTransactions((prev) =>
+          prev.map((t) => (t.id === txId ? { ...t, telegramPushed: true } : t))
+        );
+      }
+      return res;
+    },
+    [whaleTransactions, preferences.telegram]
+  );
+
+  // Add Whale Transaction
+  const addWhaleTransaction = useCallback(
+    (tx: WhaleTransaction) => {
+      setWhaleTransactions((prev) => [tx, ...prev.slice(0, 49)]);
+
+      if (tx.impactScore >= 90 && preferences.soundEnabled) {
+        playAlertChime();
+      }
+
+      const tgConfig = preferences.telegram;
+      if (
+        tgConfig?.enabled &&
+        tgConfig.notifyWhaleRadar &&
+        tx.amountUsd >= (tgConfig.minWhaleVolumeMln || 5) * 1_000_000
+      ) {
+        const { title, body, html } = formatWhaleTelegramMessage(tx);
+        dispatchTelegramPush(tgConfig, title, body, html);
+      }
+    },
+    [preferences.soundEnabled, preferences.telegram]
+  );
+
+  // Open Whale Radar with optional asset filter
+  const openWhaleRadar = useCallback((filterAsset?: string) => {
+    setPreselectedWhaleAsset(filterAsset || null);
+    setIsWhaleRadarOpen(true);
+  }, []);
+
   // Trigger asset alert notification
   const triggerNotification = useCallback(
     (alert: PriceAlert) => {
@@ -204,8 +361,14 @@ export const PriceAlertsProvider: React.FC<{ children: ReactNode }> = ({ childre
           alert,
         });
       }
+
+      // Auto-dispatch to Telegram if enabled
+      if (preferences.telegram?.enabled && preferences.telegram?.notifyPriceAlerts) {
+        const { title, body, html } = formatPriceAlertTelegramMessage(alert, alert.formattedTarget);
+        dispatchTelegramPush(preferences.telegram, title, body, html);
+      }
     },
-    [preferences.soundEnabled, preferences.inAppNotifications]
+    [preferences.soundEnabled, preferences.inAppNotifications, preferences.telegram]
   );
 
   // Trigger sentiment alert notification
@@ -220,8 +383,20 @@ export const PriceAlertsProvider: React.FC<{ children: ReactNode }> = ({ childre
           sentimentAlert,
         });
       }
+
+      // Auto-dispatch to Telegram if enabled
+      if (preferences.telegram?.enabled && preferences.telegram?.notifySentimentFlips) {
+        const title = `🌊 [SENTIMENT REGIME] ${sentimentAlert.categoryLabel}`;
+        const body = `${sentimentAlert.title}\n${sentimentAlert.description}\nDetail: ${
+          sentimentAlert.triggerDetail || 'Regime-Wechsel erkannt'
+        }`;
+        const html = `<b>🌊 CAPITAL-AI SENTIMENT ALERT</b>\n\n📌 <b>${sentimentAlert.title}</b>\n${
+          sentimentAlert.description
+        }\n\n<i>${sentimentAlert.triggerDetail || 'Multi-Faktor Wechsel detektiert'}</i>`;
+        dispatchTelegramPush(preferences.telegram, title, body, html);
+      }
     },
-    [preferences.soundEnabled, preferences.inAppNotifications]
+    [preferences.soundEnabled, preferences.inAppNotifications, preferences.telegram]
   );
 
   // Add new asset price alert
@@ -622,6 +797,19 @@ export const PriceAlertsProvider: React.FC<{ children: ReactNode }> = ({ childre
     return () => clearInterval(timer);
   }, [preferences.autoCheckIntervalSec, triggerNotification]);
 
+  // Background simulation for on-chain whale radar movements (sub-minute realistic transactions)
+  useEffect(() => {
+    const whaleTimer = setInterval(() => {
+      // 40% chance of generating a new whale movement
+      if (Math.random() < 0.4) {
+        const newTx = generateRandomWhaleTx();
+        addWhaleTransaction(newTx);
+      }
+    }, 38000);
+
+    return () => clearInterval(whaleTimer);
+  }, [addWhaleTransaction]);
+
   return (
     <PriceAlertsContext.Provider
       value={{
@@ -648,7 +836,18 @@ export const PriceAlertsProvider: React.FC<{ children: ReactNode }> = ({ childre
 
         preferences,
         updatePreferences,
+        updateTelegramConfig,
+        testTelegramPush,
         resetToDefaults,
+
+        whaleTransactions,
+        addWhaleTransaction,
+        pushWhaleToTelegram,
+        isWhaleRadarOpen,
+        setIsWhaleRadarOpen,
+        openWhaleRadar,
+        preselectedWhaleAsset,
+        setPreselectedWhaleAsset,
 
         activeToast,
         dismissToast,

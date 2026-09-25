@@ -1,3 +1,23 @@
+/**
+ * ============================================================================
+ * [ARCHITEKTUR-MAPPING: HAUPTANWENDUNG & ORCHESTRIERUNGS-CONTAINER]
+ * ----------------------------------------------------------------------------
+ * 1. GRAFISCHE KOMPONENTE : 
+ *    - Main Viewport Layout (iPhone Mockup Frame vs. Vollbreite)
+ *    - Orchestriert alle Hauptsektionen (Hero, Sentiment, Sektoren, Whale Radar, Märkte, Module)
+ *    - Globaler Modal-Container (Analysis, ProductTour, AssetDetail, Vocabulary, WhaleRadar, Pricing)
+ * 2. SCORING-LOGIK        : 
+ *    - Koordiniert globales State-Management & Filterung für Multi-Faktor-Scores
+ *    - Dynamic Routing SEO-Scoring & Google Analytics Pageview Tracking
+ * 3. DATENANBINDUNG       : 
+ *    - PriceAlertsProvider (Zentraler Event-Bus & Context)
+ *    - Browser History API & PopState Event Listener für SPA-Routing
+ * 4. DATENQUELLEN / FEEDS : 
+ *    - Integrierte Mock-Stores (MARKET_ASSETS, CORE_MODULES)
+ *    - Sub-Klassen-Kataloge und Live-Alert-Subscriptions
+ * ============================================================================
+ */
+
 import React, { useState, useEffect } from 'react';
 import { Smartphone, Monitor } from 'lucide-react';
 import { Header } from './components/Header';
@@ -23,6 +43,11 @@ import { PriceAlertsProvider, usePriceAlerts } from './context/PriceAlertsContex
 import { PriceAlertToast } from './components/PriceAlertToast';
 import { PriceAlertsModal } from './components/PriceAlertsModal';
 import { MarketSentiment } from './components/MarketSentiment';
+import { SectorAnalysis } from './components/SectorAnalysis';
+import { WhaleRadarSection } from './components/WhaleRadarSection';
+import { WhaleRadarModal } from './components/WhaleRadarModal';
+import { MonetizationModal } from './components/MonetizationModal';
+import { ArchitecturePage } from './components/ArchitecturePage';
 
 export const LEGAL_ROUTES: LegalRoute[] = ['/faq', '/datenschutz', '/agb', '/impressum'];
 
@@ -74,11 +99,46 @@ export function resolveAppRoute(rawPath: string): string {
   ) {
     return '/vocabulary';
   }
+  if (
+    clean === '/pricing' ||
+    clean === '/preise' ||
+    clean === '/tarife' ||
+    clean === '/monetarisierung' ||
+    clean === '/membership'
+  ) {
+    return '/pricing';
+  }
+  if (
+    clean === '/whale-radar' ||
+    clean === '/whales' ||
+    clean === '/smart-money' ||
+    clean === '/on-chain' ||
+    clean === '/telegram'
+  ) {
+    return '/whale-radar';
+  }
+  if (
+    clean === '/architecture' ||
+    clean === '/architektur' ||
+    clean === '/pipeline' ||
+    clean === '/system-architecture' ||
+    clean === '/kursdaten' ||
+    clean === '/data-feed'
+  ) {
+    return '/architecture';
+  }
   return '/';
 }
 
+
 function AppContent() {
-  const { isAlertModalOpen, setIsAlertModalOpen } = usePriceAlerts();
+  const {
+    isAlertModalOpen,
+    setIsAlertModalOpen,
+    isWhaleRadarOpen,
+    setIsWhaleRadarOpen,
+    openWhaleRadar,
+  } = usePriceAlerts();
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
     if (typeof window !== 'undefined') {
       return resolveAppRoute(window.location.pathname);
@@ -91,6 +151,12 @@ function AppContent() {
   const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
   const [isProductTourOpen, setIsProductTourOpen] = useState(false);
   const [isAllMarketsOpen, setIsAllMarketsOpen] = useState(false);
+  const [isMonetizationOpen, setIsMonetizationOpen] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return resolveAppRoute(window.location.pathname) === '/pricing';
+    }
+    return false;
+  });
   const [isVocabularyOpen, setIsVocabularyOpen] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       return resolveAppRoute(window.location.pathname) === '/vocabulary';
@@ -182,6 +248,38 @@ function AppContent() {
       });
       trackPageView('/vocabulary', title);
       setIsVocabularyOpen(true);
+    } else if (currentRoute === '/pricing') {
+      const title = 'Capital-AI | Preise, Tarife & Monetarisierungskonzept';
+      const description =
+        'Capital-AI Business Model: Transparente B2C SaaS Tarife (Free, Pro, Alpha Elite), B2B Data APIs, Broker-Affiliates und interaktiver Ertrags-Simulator.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/pricing',
+      });
+      trackPageView('/pricing', title);
+      setIsMonetizationOpen(true);
+    } else if (currentRoute === '/whale-radar') {
+      const title = 'Capital-AI | Smart Money Flow & On-Chain Whale Radar';
+      const description =
+        'Echtzeit-Tracking institutioneller On-Chain Großtransaktionen, Smart Money Flow Index (SMFI), Dark Pool ATS Blocks und Telegram Push-Benachrichtigungen.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/whale-radar',
+      });
+      trackPageView('/whale-radar', title);
+      setIsWhaleRadarOpen(true);
+    } else if (currentRoute === '/architecture') {
+      const title = 'Capital-AI | Kursdaten-Architektur, Provider & Low-Budget Pipeline';
+      const description =
+        'Technische Spezifikation der Capital-AI Marktdaten-Pipeline: Sub-45ms Latenz, Multi-Provider Failover, Zero-Trust Proxy, In-Memory Caching & Low-Budget Blueprint (<35€/Mo).';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/architecture',
+      });
+      trackPageView('/architecture', title);
     } else {
       const title = 'Capital-AI | AI-Driven Market Intelligence';
       const description =
@@ -216,7 +314,25 @@ function AppContent() {
     }
   };
 
+  const handleOpenSectorAnalysis = () => {
+    if (currentRoute !== '/') {
+      navigateTo('/');
+      setTimeout(() => {
+        const el = document.getElementById('sector-analysis-section');
+        el?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+      return;
+    }
+    const el = document.getElementById('sector-analysis-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      setIsAnalysisOpen(true);
+    }
+  };
+
   return (
+
     <div className="min-h-screen bg-[#02050e] text-slate-100 flex flex-col items-center justify-start relative overflow-x-hidden">
       {/* Background ambient gold light rays & cosmic particles (matching mockup outer environment) */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -275,7 +391,7 @@ function AppContent() {
       <main
         className={`w-full relative z-10 transition-all duration-300 ${
           currentRoute !== '/'
-            ? 'max-w-4xl bg-[#02050e]'
+            ? 'max-w-5xl bg-[#02050e]'
             : viewMode === 'mockup'
             ? 'sm:my-6 sm:max-w-[412px] sm:rounded-[52px] sm:border-[8px] sm:border-[#2a2f3e] sm:ring-1 sm:ring-amber-500/20 sm:shadow-[0_25px_70px_rgba(0,0,0,0.8),0_0_50px_rgba(245,176,20,0.15)] bg-[#02050e] overflow-hidden'
             : 'max-w-md bg-[#02050e]'
@@ -295,6 +411,13 @@ function AppContent() {
             onNavigateFaq={() => navigateTo('/faq')}
             onNavigateLegal={navigateTo}
           />
+        ) : currentRoute === '/architecture' ? (
+          /* Dedicated Architecture & Market Data Pipeline View */
+          <ArchitecturePage
+            onBackToHome={() => navigateTo('/')}
+            onNavigateLogin={() => navigateTo('/login')}
+            onNavigateLegal={navigateTo}
+          />
         ) : LEGAL_ROUTES.includes(currentRoute as LegalRoute) ? (
           /* Dedicated Legal & FAQ View (/faq, /datenschutz, /agb, /impressum) */
           <LegalAndFaqPages
@@ -307,9 +430,12 @@ function AppContent() {
             {/* Header */}
             <Header
               onOpenAnalysis={() => setIsAnalysisOpen(true)}
+              onOpenSectorAnalysis={handleOpenSectorAnalysis}
               onOpenModule={handleOpenModuleById}
               onOpenVocabulary={() => setIsVocabularyOpen(true)}
               onOpenPriceAlerts={() => setIsAlertModalOpen(true)}
+              onOpenMonetization={() => setIsMonetizationOpen(true)}
+              onOpenWhaleRadar={() => setIsWhaleRadarOpen(true)}
               onNavigateLogin={() => navigateTo('/login')}
               onNavigate={navigateTo}
               onSelectSubclass={(subclass, category) => {
@@ -338,6 +464,33 @@ function AppContent() {
                 setIsAllMarketsOpen(true);
               }}
             />
+
+            {/* Sector Analysis (Sector Rotation Radar & Institutional Capital Flows) */}
+            <SectorAnalysis
+              onSelectAsset={(asset) => setSelectedAsset(asset)}
+              onOpenPriceAlerts={() => setIsAlertModalOpen(true)}
+              onExploreMarkets={(category) => {
+                setMarketCategoryFilter(category || 'ALLE');
+                setIsAllMarketsOpen(true);
+              }}
+            />
+
+            {/* Smart Money Flow & On-Chain Whale Radar */}
+            <WhaleRadarSection
+              onOpenTerminal={() => setIsWhaleRadarOpen(true)}
+              onOpenTelegram={() => setIsWhaleRadarOpen(true)}
+              onSelectAsset={(sym) => {
+                const found = MARKET_ASSETS.find(
+                  (a) => a.symbol.toUpperCase() === sym.toUpperCase()
+                );
+                if (found) {
+                  setSelectedAsset(found);
+                } else {
+                  openWhaleRadar(sym);
+                }
+              }}
+            />
+
 
             {/* Global Markets Overview */}
             <MarketOverview
@@ -370,7 +523,9 @@ function AppContent() {
       <AnalysisModal
         isOpen={isAnalysisOpen}
         onClose={() => setIsAnalysisOpen(false)}
+        onSelectAsset={(asset) => setSelectedAsset(asset)}
       />
+
 
       <ProductTourModal
         isOpen={isProductTourOpen}
@@ -479,6 +634,44 @@ function AppContent() {
         onSelectAsset={(asset) => {
           setIsAlertModalOpen(false);
           setSelectedAsset(asset);
+        }}
+      />
+
+      {/* Monetization & Business Model Concept Modal */}
+      <MonetizationModal
+        isOpen={isMonetizationOpen}
+        onClose={() => {
+          setIsMonetizationOpen(false);
+          if (currentRoute === '/pricing') {
+            navigateTo('/');
+          }
+        }}
+        onNavigateLogin={() => {
+          setIsMonetizationOpen(false);
+          navigateTo('/login');
+        }}
+        onOpenWhaleRadar={() => {
+          setIsMonetizationOpen(false);
+          setIsWhaleRadarOpen(true);
+        }}
+      />
+
+      {/* Smart Money Flow & On-Chain Whale Radar Terminal Modal */}
+      <WhaleRadarModal
+        isOpen={isWhaleRadarOpen}
+        onClose={() => {
+          setIsWhaleRadarOpen(false);
+          if (currentRoute === '/whale-radar') {
+            navigateTo('/');
+          }
+        }}
+        onSelectAsset={(sym) => {
+          const found = MARKET_ASSETS.find(
+            (a) => a.symbol.toUpperCase() === sym.toUpperCase()
+          );
+          if (found) {
+            setSelectedAsset(found);
+          }
         }}
       />
     </div>

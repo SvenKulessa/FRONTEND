@@ -1,3 +1,20 @@
+/**
+ * ============================================================================
+ * [ARCHITEKTUR-MAPPING: HERO LANDING & BRAND CONSTELLATION]
+ * ----------------------------------------------------------------------------
+ * 1. GRAFISCHE KOMPONENTE : 
+ *    - Luminous Glowing Earth Node Canvas mit goldenen neuronalen Lichtpfaden
+ *    - Primärer Call-to-Action: "Analyse starten" (Goldener Button mit 3-Bar Chart Icon)
+ *    - Sekundärer Call-to-Action: "Produkt entdecken" (Glassmorphic Play Button)
+ * 2. SCORING-LOGIK        : 
+ *    - Einstiegspunkt in die quantitative Analyse-Engine
+ * 3. DATENANBINDUNG       : 
+ *    - Callbacks `onStartAnalysis()` (öffnet AnalysisModal) und `onExploreProduct()` (ProductTourModal)
+ * 4. DATENQUELLEN / FEEDS : 
+ *    - Hochauflösende Vektor- und Bild-Assets (`heroEarthImage`)
+ * ============================================================================
+ */
+
 import React from 'react';
 import { ArrowRight, Play, BarChart2 } from 'lucide-react';
 import { motion } from 'motion/react';

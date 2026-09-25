@@ -4,7 +4,9 @@ import {
   MainCategory,
   SentimentLevel,
   SentimentAlert,
+  TelegramConfig,
 } from '../types';
+import { DEFAULT_TELEGRAM_CONFIG } from './telegramService';
 
 /**
  * Maps a numeric sentiment score (0-100) to a SentimentLevel.
@@ -175,6 +177,7 @@ export const DEFAULT_ALERT_PREFERENCES: UserAlertPreferences = {
   emailDigest: true,
   pushSimulation: true,
   autoCheckIntervalSec: 10,
+  telegram: DEFAULT_TELEGRAM_CONFIG,
 };
 
 export const INITIAL_PRICE_ALERTS: PriceAlert[] = [

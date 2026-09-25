@@ -1,3 +1,24 @@
+/**
+ * ============================================================================
+ * [ARCHITEKTUR-MAPPING: GLOBAL NAVIGATION & TERMINAL HEADER]
+ * ----------------------------------------------------------------------------
+ * 1. GRAFISCHE KOMPONENTE : 
+ *    - Vector Brand Logo mit goldenem Glowing-Effekt
+ *    - Live Latency Status Chip (`Sub-45ms Latenz`)
+ *    - Schnellzugriff-Buttons (Analyse, Sektoren, Whale Radar, Tarife, Login)
+ *    - Vollintegriertes Hamburger-Drawer-Menü mit Assetklassen-Hierarchie
+ * 2. SCORING-LOGIK        : 
+ *    - Indiziert Alert-Zähler (`activeAlertsCount`, `triggeredAlertsCount`)
+ *    - Visuelle Notification-Badges bei Schwellenwert-Auslösung
+ * 3. DATENANBINDUNG       : 
+ *    - `usePriceAlerts()` Context Hook für Alert-Zähler
+ *    - Google Analytics Event Tracking (`trackLoginClick`, `header-analysis-btn`)
+ * 4. DATENQUELLEN / FEEDS : 
+ *    - Asset-Klassen-Katalog (ASSET_CLASSES)
+ *    - Live-Feed-Latenz-Indikator
+ * ============================================================================
+ */
+
 import React, { useState } from 'react';
 import {
   Menu,
@@ -18,6 +39,10 @@ import {
   LogIn,
   Bell,
   BellRing,
+  Layers,
+  CreditCard,
+  Radio,
+  Cpu,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BrandLogo } from './BrandLogo';
@@ -28,9 +53,12 @@ import { usePriceAlerts } from '../context/PriceAlertsContext';
 
 interface HeaderProps {
   onOpenAnalysis?: () => void;
+  onOpenSectorAnalysis?: () => void;
   onOpenModule?: (moduleId: string) => void;
   onOpenVocabulary?: () => void;
   onOpenPriceAlerts?: () => void;
+  onOpenMonetization?: () => void;
+  onOpenWhaleRadar?: () => void;
   onSelectSubclass?: (subclass: AssetSubclass, category: MainCategory) => void;
   onViewAllMarkets?: () => void;
   onNavigateLogin?: () => void;
@@ -39,14 +67,18 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenAnalysis,
+  onOpenSectorAnalysis,
   onOpenModule,
   onOpenVocabulary,
   onOpenPriceAlerts,
+  onOpenMonetization,
+  onOpenWhaleRadar,
   onSelectSubclass,
   onViewAllMarkets,
   onNavigateLogin,
   onNavigate,
 }) => {
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedClass, setExpandedClass] = useState<MainCategory | null>('KRYPTO');
   const { activeAlertsCount, triggeredAlertsCount } = usePriceAlerts();
@@ -124,10 +156,51 @@ export const Header: React.FC<HeaderProps> = ({
           <span>Analyse</span>
         </button>
 
-        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] font-mono text-emerald-400">
+        {onOpenSectorAnalysis && (
+          <button
+            type="button"
+            onClick={onOpenSectorAnalysis}
+            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-400/10 hover:bg-cyan-400/20 border border-cyan-400/30 text-cyan-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_10px_rgba(6,182,212,0.15)]"
+            title="Zur KI-Sektor-Analyse springen"
+          >
+            <Layers className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Sektoren</span>
+          </button>
+        )}
+
+        {onOpenWhaleRadar && (
+          <button
+            type="button"
+            onClick={onOpenWhaleRadar}
+            className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/40 text-cyan-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_12px_rgba(6,182,212,0.2)]"
+            title="Smart Money Flow & On-Chain Whale Radar"
+          >
+            <Radio className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+            <span>Whale Radar</span>
+          </button>
+        )}
+
+        {onOpenMonetization && (
+          <button
+            type="button"
+            onClick={onOpenMonetization}
+            className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 text-amber-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_10px_rgba(249,191,33,0.15)]"
+            title="Preise, B2C SaaS Tarife & Business Model"
+          >
+            <CreditCard className="w-3.5 h-3.5 text-amber-400" />
+            <span>Tarife</span>
+          </button>
+        )}
+
+        <button
+          type="button"
+          onClick={() => onNavigate?.('/architecture')}
+          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 hover:border-emerald-500/40 text-[11px] font-mono text-emerald-400 transition-all cursor-pointer group"
+          title="Kursdaten-Architektur, Provider & Low-Budget Pipeline (/architecture)"
+        >
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span>LIVE</span>
-        </div>
+          <span className="group-hover:underline underline-offset-2">LIVE • Sub-45ms</span>
+        </button>
 
         {/* PROMINENT TOP-RIGHT LOGIN BUTTON LEADING TO /login */}
         <a
@@ -237,6 +310,29 @@ export const Header: React.FC<HeaderProps> = ({
                     <ChevronRight className="w-4 h-4 text-amber-400" />
                   </button>
 
+                  {/* KI-Sektor-Analyse CTA */}
+                  {onOpenSectorAnalysis && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        onOpenSectorAnalysis();
+                      }}
+                      className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-cyan-500/20 via-blue-500/15 to-transparent border border-cyan-400/40 text-cyan-200 font-semibold text-sm hover:from-cyan-500/30 hover:to-blue-500/25 transition-all text-left group shadow-[0_0_15px_rgba(6,182,212,0.12)] cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-lg bg-cyan-400/20 flex items-center justify-center text-cyan-300 group-hover:scale-110 transition-transform">
+                          <Layers className="w-4 h-4" />
+                        </div>
+                        KI-Sektor-Analyse
+                      </span>
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-400 text-black">
+                        Rotation
+                      </span>
+                    </button>
+                  )}
+
+
                   {/* PRICE ALERTS SYSTEM IN DRAWER */}
                   <button
                     type="button"
@@ -260,6 +356,79 @@ export const Header: React.FC<HeaderProps> = ({
                       )}
                       <ChevronRight className="w-4 h-4 text-amber-400" />
                     </div>
+                  </button>
+
+                  {/* SMART MONEY FLOW & WHALE RADAR IN DRAWER */}
+                  {onOpenWhaleRadar && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        onOpenWhaleRadar();
+                      }}
+                      className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-cyan-500/20 via-blue-500/15 to-transparent border border-cyan-400/40 text-cyan-200 font-semibold text-sm hover:from-cyan-500/30 hover:to-blue-500/25 transition-all text-left group shadow-[0_0_15px_rgba(6,182,212,0.15)] cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-lg bg-cyan-400/20 flex items-center justify-center text-cyan-300 group-hover:scale-110 transition-transform">
+                          <Radio className="w-4 h-4 text-cyan-400 animate-pulse" />
+                        </div>
+                        <div>
+                          <div className="text-white font-bold leading-none">Whale Radar &amp; Telegram</div>
+                          <div className="text-[10px] text-cyan-300/80 mt-1 font-normal">Smart Money Flow &amp; On-Chain</div>
+                        </div>
+                      </span>
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-400 text-black shadow-sm">
+                        Live
+                      </span>
+                    </button>
+                  )}
+
+                  {/* MONETARISIERUNGSKONZEPT & TARIFE */}
+                  {onOpenMonetization && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        onOpenMonetization();
+                      }}
+                      className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-transparent border border-amber-400/40 text-amber-200 font-semibold text-sm hover:from-amber-500/25 hover:to-orange-500/20 transition-all text-left group shadow-[0_0_15px_rgba(249,191,33,0.12)] cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2.5">
+                        <div className="w-7 h-7 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
+                          <CreditCard className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="text-white font-bold leading-none">Preise &amp; Tarife</div>
+                          <div className="text-[10px] text-amber-300/80 mt-1 font-normal">SaaS, B2B &amp; Simulator</div>
+                        </div>
+                      </span>
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-400 text-black shadow-sm">
+                        Modell
+                      </span>
+                    </button>
+                  )}
+
+                  {/* ARCHITEKTUR & KURS-DATEN PIPELINE */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      onNavigate?.('/architecture');
+                    }}
+                    className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-500/15 via-indigo-500/10 to-transparent border border-blue-400/40 text-blue-200 font-semibold text-sm hover:from-blue-500/25 hover:to-indigo-500/20 transition-all text-left group shadow-[0_0_15px_rgba(59,130,246,0.12)] cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-blue-400/20 flex items-center justify-center text-blue-300 group-hover:scale-110 transition-transform">
+                        <Cpu className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-white font-bold leading-none">Architektur &amp; Kursdaten</div>
+                        <div className="text-[10px] text-blue-300/80 mt-1 font-normal">Low-Budget &amp; Sub-45ms Pipeline</div>
+                      </div>
+                    </span>
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-400 text-black shadow-sm">
+                      /arch
+                    </span>
                   </button>
 
 
@@ -487,9 +656,20 @@ export const Header: React.FC<HeaderProps> = ({
                     type="button"
                     onClick={() => {
                       setIsMenuOpen(false);
-                      onNavigate?.('/faq');
+                      onNavigate?.('/architecture');
                     }}
                     className="hover:text-amber-300 transition-colors font-bold text-amber-400 cursor-pointer"
+                  >
+                    Architektur
+                  </button>
+                  <span>•</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      onNavigate?.('/faq');
+                    }}
+                    className="hover:text-amber-300 transition-colors cursor-pointer"
                   >
                     FAQ
                   </button>

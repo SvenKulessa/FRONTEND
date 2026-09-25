@@ -1,3 +1,24 @@
+/**
+ * ============================================================================
+ * [ARCHITEKTUR-MAPPING: ASSET DETAIL & QUANTITATIVE ANALYSE MODAL]
+ * ----------------------------------------------------------------------------
+ * 1. GRAFISCHE KOMPONENTE : 
+ *    - Interaktiver Kurschart mit Zeitfenster-Auswahl (1T bis MAX)
+ *    - Capital-AI Scoring Insight & Rating Badge
+ *    - Smart Money Flow & Whale Index Card mit Direktlink zum Whale Radar
+ *    - Inline-Formular zur Konfiguration von Schwellenwert-Kursalarmen
+ * 2. SCORING-LOGIK        : 
+ *    - `asset.aiScore` (0-100) & Konfidenzbewertung
+ *    - `SMART_MONEY_METRICS`: SMFI-Score & institutioneller 24h-Nettofluss
+ *    - Prozentuale Abweichungsberechnung (+2%, -2%, +5%, -5%) für Alerts
+ * 3. DATENANBINDUNG       : 
+ *    - `usePriceAlerts()`: `addAlert()`, `deleteAlert()`, `toggleAlert()`, `openWhaleRadar()`
+ * 4. DATENQUELLEN / FEEDS : 
+ *    - Ausgewähltes Asset-Objekt (`MarketAsset`) aus `MARKET_ASSETS`
+ *    - On-Chain Smart Money Metriken (`SMART_MONEY_METRICS`)
+ * ============================================================================
+ */
+
 import React, { useState } from 'react';
 import {
   X,
@@ -17,11 +38,13 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Trash2,
+  Radio,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MarketAsset, AlertCondition } from '../types';
 import { usePriceAlerts } from '../context/PriceAlertsContext';
 import { parsePriceToNumber, formatCurrencyPrice } from '../utils/priceAlerts';
+import { SMART_MONEY_METRICS } from '../data/whaleRadarData';
 import { AssetLogo } from './AssetLogo';
 
 interface AssetDetailModalProps {
@@ -48,6 +71,7 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({
     preferences,
     updatePreferences,
     testTriggerAlert,
+    openWhaleRadar,
   } = usePriceAlerts();
 
   // Form state
@@ -544,6 +568,56 @@ export const AssetDetailModal: React.FC<AssetDetailModalProps> = ({
             <div className="text-[10px] text-slate-300">Hohe Konfidenz</div>
           </div>
         </div>
+
+        {/* Smart Money Flow & Whale Index Card */}
+        {(() => {
+          const smartMetric = SMART_MONEY_METRICS.find(
+            (m) => m.assetSymbol.toUpperCase() === asset.symbol.toUpperCase()
+          );
+          const score = smartMetric ? smartMetric.score : Math.round(asset.aiScore * 0.95);
+          const bias = smartMetric ? smartMetric.smartMoneyBias : asset.aiScore >= 75 ? 'BULLISH' : 'NEUTRAL';
+
+          return (
+            <div className="mt-2.5 p-3 rounded-xl bg-cyan-950/30 border border-cyan-500/30 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 flex items-center justify-center shrink-0">
+                  <Radio className="w-4 h-4 animate-pulse" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                    <span>Smart Money &amp; Whale Flow</span>
+                    <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold">
+                      {bias}
+                    </span>
+                  </div>
+                  <div className="text-[10px] text-slate-400 mt-0.5">
+                    {smartMetric
+                      ? `24h Netto: +${(smartMetric.netInflow24hUsd / 1_000_000).toFixed(0)}M $ institutionell`
+                      : 'Institutionelle ATS & Mempool Überwachung aktiv'}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <div className="text-right">
+                  <div className="text-base font-black font-mono text-cyan-300">{score}/100</div>
+                  <span className="text-[9px] text-slate-400 font-mono">SMFI Index</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    openWhaleRadar(asset.symbol);
+                  }}
+                  className="px-2.5 py-1.5 rounded-lg bg-cyan-400/15 hover:bg-cyan-400/25 border border-cyan-400/40 text-cyan-300 text-[10px] font-bold transition-all cursor-pointer"
+                  title="Whale Radar für dieses Asset öffnen"
+                >
+                  Radar →
+                </button>
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Key Stats Grid */}
         <div className="grid grid-cols-3 gap-2 mt-3">

@@ -1,3 +1,19 @@
+/**
+ * ============================================================================
+ * [ARCHITEKTUR-MAPPING: MARKET DATA & CORE MODULE REPOSITORY]
+ * ----------------------------------------------------------------------------
+ * 1. GRAFISCHE KOMPONENTE : Bereitstellung von Asset-Daten für MarketOverview, AssetDetailModal, AllMarketsModal
+ * 2. SCORING-LOGIK        : Enthält die Basis-Scores (`aiScore` 0-100, `aiRating`, Risikokennzahlen)
+ * 3. DATENANBINDUNG       : Exportiert als statische In-Memory Stores mit sub-sekündlicher Filterbarkeit
+ * 4. DATENQUELLEN / FEEDS : Aggregation aus 5 Sub-Feeds:
+ *                           - Indizes (INDEX_ASSETS)
+ *                           - Krypto-Börsen (ALL_CRYPTO_ASSETS)
+ *                           - Aktien Top 150 (TOP_150_STOCKS)
+ *                           - Devisenmärkte (FOREX_ASSETS)
+ *                           - Rohstoff-Futures (COMMODITY_ASSETS)
+ * ============================================================================
+ */
+
 import { MarketAsset, CoreModule, KeyPillar, AssetClassInfo } from '../types';
 import { INDEX_ASSETS } from './assets/indexAssets';
 import { ALL_CRYPTO_ASSETS } from './assets/cryptoAssets';
@@ -5,6 +21,7 @@ import { TOP_150_STOCKS } from './assets/stockAssets';
 import { FOREX_ASSETS } from './assets/forexAssets';
 import { COMMODITY_ASSETS } from './assets/commodityAssets';
 
+/* === [PLATZHALTER: ARCHITEKTUR - 4 KEY PILLARS METADATEN] === */
 export const KEY_PILLARS: KeyPillar[] = [
   {
     id: 'realtime',

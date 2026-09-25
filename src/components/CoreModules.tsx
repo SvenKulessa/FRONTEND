@@ -1,3 +1,21 @@
+/**
+ * ============================================================================
+ * [ARCHITEKTUR-MAPPING: CAPITAL-AI KERNMODULE REPOSITORY]
+ * ----------------------------------------------------------------------------
+ * 1. GRAFISCHE KOMPONENTE : 
+ *    - 4 Modulkarten (Enterprise Scorer, Buffett Value Check, AI Newsfeed, Market Vocabulary)
+ *    - Marken-Farbkodierung: Purple (#8D26FF), Emerald (#44DE88), Red (#F87171), Gold (#F9BF21)
+ * 2. SCORING-LOGIK        : 
+ *    - Enterprise Scorer: Multi-Faktor Bewertung (Fundamentaldaten, Cashflows, Altman Z-Score)
+ *    - Buffett Value Check: Moat-Rating, Free Cashflow Yield, Net-Cash Ratio
+ *    - AI Newsfeed: NLP-Sentiment Impact (+ / - / neutral)
+ * 3. DATENANBINDUNG       : 
+ *    - `onSelectModule()` öffnet `ModuleDetailModal` oder `MarketVocabularyModal`
+ * 4. DATENQUELLEN / FEEDS : 
+ *    - `CORE_MODULES` Repository mit Use-Cases und Beispieldaten
+ * ============================================================================
+ */
+
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';

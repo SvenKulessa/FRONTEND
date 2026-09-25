@@ -1,3 +1,23 @@
+/**
+ * ============================================================================
+ * [ARCHITEKTUR-MAPPING: MARKET SENTIMENT & FEAR & GREED RADAR]
+ * ----------------------------------------------------------------------------
+ * 1. GRAFISCHE KOMPONENTE : 
+ *    - Halbkreis-Tachometer Gauge (Arc-Visualizer) für Fear & Greed (0-100)
+ *    - Recharts 30-Tage Sparkline Time-Series Verlauf
+ *    - Makro-Trend-Radar mit 4 Multi-Faktor Indikatoren
+ * 2. SCORING-LOGIK        : 
+ *    - Fear & Greed Index Score (0-100): Extreme Fear (<25), Fear, Neutral, Greed, Extreme Greed (>75)
+ *    - Multi-Faktor Gewichtung: Volatilität (VIX/IV), Momentum (RSI), On-Chain/Orderbuch-Ratio, Safe-Haven-Demand
+ * 3. DATENANBINDUNG       : 
+ *    - `usePriceAlerts()`: Ermöglicht das Setzen von Sentiment-Kopplungs-Alarmen direkt aus dem Chart
+ *    - Lokale reaktive State-Filter nach Hauptkategorie (Alle, Krypto, Aktien, etc.)
+ * 4. DATENQUELLEN / FEEDS : 
+ *    - Aggregierte Sentiment-Feeds aus News-NLP & Social-Media-Semantik
+ *    - CBOE VIX Volatilitäts-Indizes & Put/Call-Verhältnisse
+ * ============================================================================
+ */
+
 import React, { useState, useMemo } from 'react';
 import {
   Activity,

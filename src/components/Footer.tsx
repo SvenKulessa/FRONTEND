@@ -72,12 +72,33 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           id="footer-nav-faq"
           href="/faq"
           onClick={(e) => handleNavClick(e, '/faq', 'faq')}
-          className="hover:text-amber-400 transition-colors cursor-pointer text-amber-300 font-bold hover:underline underline-offset-4 flex items-center gap-1"
+          className="hover:text-amber-400 transition-colors cursor-pointer text-slate-400 font-medium hover:underline underline-offset-4 flex items-center gap-1"
           data-analytics="footer-faq"
         >
           FAQ
         </a>
+        <span className="text-slate-600">•</span>
+        <a
+          id="footer-nav-pricing"
+          href="/pricing"
+          onClick={(e) => handleNavClick(e, '/pricing', 'pricing')}
+          className="hover:text-amber-300 transition-colors cursor-pointer text-amber-300 font-bold hover:underline underline-offset-4 flex items-center gap-1"
+          data-analytics="footer-pricing"
+        >
+          Preise &amp; Tarife
+        </a>
+        <span className="text-slate-600">•</span>
+        <a
+          id="footer-nav-architecture"
+          href="/architecture"
+          onClick={(e) => handleNavClick(e, '/architecture', 'architecture')}
+          className="hover:text-cyan-300 transition-colors cursor-pointer text-cyan-400 font-bold hover:underline underline-offset-4 flex items-center gap-1"
+          data-analytics="footer-architecture"
+        >
+          Architektur &amp; Kursdaten
+        </a>
       </div>
+
 
       {/* Mobile iOS Home Indicator Bar */}
       <div className="w-28 h-1 bg-white/40 rounded-full mx-auto mt-6" />

@@ -1,3 +1,20 @@
+/**
+ * ============================================================================
+ * [ARCHITEKTUR-MAPPING: MARKET VOCABULARY & FINANZ-GLOSSAR MODAL]
+ * ----------------------------------------------------------------------------
+ * 1. GRAFISCHE KOMPONENTE : 
+ *    - Durchsuchbares Glossar mit mathematischen Berechnungsformeln
+ *    - Kategorie-Filterung (Quant & KI, Makro & Geldpolitik, Krypto & On-Chain, Value Investing)
+ *    - Interaktive Formelkarten mit Praxisbeispielen
+ * 2. SCORING-LOGIK        : 
+ *    - Mathematische Definitionen aller im Terminal verwendeten Scores (SMFI, Sharpe Ratio, Altman Z)
+ * 3. DATENANBINDUNG       : 
+ *    - Callback `onSelectAssetSymbol()` öffnet Detail-Modal für referenzierte Beispiel-Assets
+ * 4. DATENQUELLEN / FEEDS : 
+ *    - `VOCABULARY_TERMS` & `VOCABULARY_CATEGORIES` aus `src/data/vocabularyData.ts`
+ * ============================================================================
+ */
+
 import React, { useState, useMemo } from 'react';
 import {
   X,

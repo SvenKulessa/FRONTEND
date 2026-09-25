@@ -1,3 +1,25 @@
+/**
+ * ============================================================================
+ * [ARCHITEKTUR-MAPPING: MULTI-ASSET & SENTIMENT PRICE ALERTS MANAGER]
+ * ----------------------------------------------------------------------------
+ * 1. GRAFISCHE KOMPONENTE : 
+ *    - Tab 1: Asset-Alarme (Status-Filter, Suchfeld, Triggered Badges, Direction Icons)
+ *    - Tab 2: Markt-Sentiment Alarme (Regime-Change, Transition Triggers)
+ *    - Tab 3: Neuer Alarm Wizard (Asset-Auswahl, Zielpreis-Prozenttasten)
+ *    - Tab 4: Einstellungen & Telegram Integration (Bot-Push, Audio-Chime, Prüfintervall)
+ * 2. SCORING-LOGIK        : 
+ *    - Automatische Schwellenwert-Validierung gegen Live-Tickerkurse
+ *    - Sentiment-Score Schwellenwerte (Score Above / Below / Transition)
+ *    - Telegram-Dispatch-Kriterien
+ * 3. DATENANBINDUNG       : 
+ *    - `usePriceAlerts()`: Globale Alert-Listen, CRUD-Aktionen, Telegram-Push-Methoden
+ *    - Web Audio API Chime Synthesizer
+ * 4. DATENQUELLEN / FEEDS : 
+ *    - Multi-Asset Quotations (`MARKET_ASSETS`)
+ *    - Macro Fear & Greed Sentiment Status
+ * ============================================================================
+ */
+
 import React, { useState, useEffect } from 'react';
 import {
   X,
@@ -23,6 +45,8 @@ import {
   ArrowRight,
   Layers,
   Sparkles,
+  Send,
+  Radio,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { usePriceAlerts } from '../context/PriceAlertsContext';
@@ -82,6 +106,9 @@ export const PriceAlertsModal: React.FC<PriceAlertsModalProps> = ({
     setPreselectedAssetForNewAlert,
     preselectedCategoryForSentiment,
     setPreselectedCategoryForSentiment,
+    updateTelegramConfig,
+    testTelegramPush,
+    openWhaleRadar,
   } = usePriceAlerts();
 
   const [activeTab, setActiveTab] = useState<ModalTab>('alerts');
@@ -1553,6 +1580,65 @@ export const PriceAlertsModal: React.FC<PriceAlertsModalProps> = ({
                   <option value="30">Alle 30 Sekunden</option>
                   <option value="60">Jede Minute</option>
                 </select>
+              </div>
+            </div>
+
+            {/* Telegram Bot Integration Card */}
+            <div className="p-4 rounded-2xl bg-gradient-to-b from-[#0a1538] to-[#040818] border border-blue-500/40 space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-xl bg-blue-500/20 text-blue-300 border border-blue-400/40 flex items-center justify-center">
+                    <Send className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h5 className="font-bold text-white text-xs">Telegram Push Bot (@CapitalAI_WhaleBot)</h5>
+                    <span className="text-[10px] text-slate-400">Direkte Push-Nachrichten für Preisalarme, Wal-Transaktionen &amp; Sentiment</span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => updateTelegramConfig({ enabled: !preferences.telegram?.enabled })}
+                  className={`w-9 h-5 rounded-full p-0.5 transition-colors cursor-pointer ${
+                    preferences.telegram?.enabled ? 'bg-blue-500' : 'bg-slate-800'
+                  }`}
+                >
+                  <div
+                    className={`w-4 h-4 rounded-full bg-black transition-transform ${
+                      preferences.telegram?.enabled ? 'translate-x-4' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between pt-2 border-t border-slate-800/80">
+                <div className="flex items-center gap-1.5 text-[11px] font-mono text-slate-300">
+                  <span className={`w-2 h-2 rounded-full ${preferences.telegram?.connected ? 'bg-emerald-400' : 'bg-amber-400'}`} />
+                  <span>{preferences.telegram?.connected ? 'Mit Telegram verbunden' : 'Bereit zur Kopplung'}</span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={async () => {
+                      await testTelegramPush();
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-400/30 text-[10px] font-bold cursor-pointer transition-colors"
+                  >
+                    Test-Push senden
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      openWhaleRadar();
+                    }}
+                    className="px-2.5 py-1 rounded-lg bg-cyan-400 text-black text-[10px] font-black cursor-pointer shadow-sm flex items-center gap-1"
+                  >
+                    <Radio className="w-3 h-3" />
+                    <span>Whale Radar Hub →</span>
+                  </button>
+                </div>
               </div>
             </div>
 
