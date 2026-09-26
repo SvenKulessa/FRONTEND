@@ -59,15 +59,18 @@ import {
   BarChart3,
   Globe,
   Flame,
-  Search
+  Search,
+  SlidersHorizontal,
 } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
 import { trackEvent } from '../utils/analytics';
+import { PipelineBuilder } from './PipelineBuilder';
 
 interface ArchitecturePageProps {
   onBackToHome: () => void;
   onNavigateLogin?: () => void;
   onNavigateLegal?: (path: string) => void;
+  onNavigateTokenomics?: () => void;
 }
 
 // ---------------------------------------------------------------------------
@@ -252,9 +255,10 @@ export const ArchitecturePage: React.FC<ArchitecturePageProps> = ({
   onBackToHome,
   onNavigateLogin,
   onNavigateLegal,
+  onNavigateTokenomics,
 }) => {
   const [activeTab, setActiveTab] = useState<
-    'pipeline' | 'providers' | 'simulator' | 'cost' | 'security' | 'code'
+    'pipeline' | 'builder' | 'providers' | 'simulator' | 'cost' | 'security' | 'code'
   >('pipeline');
 
   // Filter state for providers matrix
@@ -474,6 +478,22 @@ export const ArchitecturePage: React.FC<ArchitecturePageProps> = ({
 
         <button
           type="button"
+          onClick={() => setActiveTab('builder')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 cursor-pointer ${
+            activeTab === 'builder'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-black shadow-lg shadow-amber-500/20'
+              : 'text-slate-400 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          <SlidersHorizontal className="w-4 h-4 text-amber-400" />
+          <span>2. Pipeline Builder</span>
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-amber-400 text-black font-extrabold">
+            NEU
+          </span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => setActiveTab('providers')}
           className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 cursor-pointer ${
             activeTab === 'providers'
@@ -482,7 +502,7 @@ export const ArchitecturePage: React.FC<ArchitecturePageProps> = ({
           }`}
         >
           <Database className="w-4 h-4" />
-          <span>2. Provider- &amp; Konfigurationsmatrix</span>
+          <span>3. Provider- &amp; Konfigurationsmatrix</span>
         </button>
 
         <button
@@ -771,6 +791,19 @@ export const ArchitecturePage: React.FC<ArchitecturePageProps> = ({
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* =================================================================== */}
+      {/* TAB: PIPELINE BUILDER (DATA CONCEPTS, EVIDENCE, TIER 4 & TOOLS) */}
+      {/* =================================================================== */}
+      {activeTab === 'builder' && (
+        <div className="animate-fadeIn">
+          <PipelineBuilder
+            onBackToHome={onBackToHome}
+            onNavigateLogin={onNavigateLogin}
+            onNavigateTokenomics={onNavigateTokenomics}
+          />
         </div>
       )}
 

@@ -48,6 +48,8 @@ import { WhaleRadarSection } from './components/WhaleRadarSection';
 import { WhaleRadarModal } from './components/WhaleRadarModal';
 import { MonetizationModal } from './components/MonetizationModal';
 import { ArchitecturePage } from './components/ArchitecturePage';
+import { TokenomicsPage } from './components/TokenomicsPage';
+import { PipelineBuilder } from './components/PipelineBuilder';
 
 export const LEGAL_ROUTES: LegalRoute[] = ['/faq', '/datenschutz', '/agb', '/impressum'];
 
@@ -118,14 +120,31 @@ export function resolveAppRoute(rawPath: string): string {
     return '/whale-radar';
   }
   if (
+    clean === '/pipeline-builder' ||
+    clean === '/builder' ||
+    clean === '/pipeline-konfigurator' ||
+    clean === '/data-pipeline' ||
+    clean === '/pipeline'
+  ) {
+    return '/pipeline-builder';
+  }
+  if (
     clean === '/architecture' ||
     clean === '/architektur' ||
-    clean === '/pipeline' ||
     clean === '/system-architecture' ||
     clean === '/kursdaten' ||
     clean === '/data-feed'
   ) {
     return '/architecture';
+  }
+  if (
+    clean === '/tokenomics' ||
+    clean === '/token' ||
+    clean === '/cpt' ||
+    clean === '/tokenomics-konzept' ||
+    clean === '/token-economy'
+  ) {
+    return '/tokenomics';
   }
   return '/';
 }
@@ -172,13 +191,45 @@ function AppContent() {
     category: MainCategory;
   } | null>(null);
 
-  // Initialize Analytics & handle popstate browser routing
+  // Analysis Modal initial state for shared query parameters
+  const [analysisInitialTab, setAnalysisInitialTab] = useState<'asset' | 'sector'>('asset');
+  const [analysisInitialTicker, setAnalysisInitialTicker] = useState<string | undefined>(undefined);
+  const [analysisInitialSectorId, setAnalysisInitialSectorId] = useState<string | undefined>(undefined);
+
+  // Initialize Analytics & handle popstate browser routing + query params
   useEffect(() => {
     initGoogleAnalytics();
 
-    const handlePopState = () => {
+    const parseUrlState = () => {
       const resolved = resolveAppRoute(window.location.pathname);
       setCurrentRoute(resolved);
+
+      // Check URL query parameters for shared analysis links
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const analysisParam = params.get('analysis');
+        const tickerParam = params.get('ticker');
+        const sectorParam = params.get('sector');
+
+        if (analysisParam || tickerParam || sectorParam) {
+          if (analysisParam === 'sector' || sectorParam) {
+            setAnalysisInitialTab('sector');
+            if (sectorParam) setAnalysisInitialSectorId(sectorParam);
+          } else {
+            setAnalysisInitialTab('asset');
+            if (tickerParam) setAnalysisInitialTicker(tickerParam);
+          }
+          setIsAnalysisOpen(true);
+        }
+      } catch {
+        // Silent fallback
+      }
+    };
+
+    parseUrlState();
+
+    const handlePopState = () => {
+      parseUrlState();
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -270,6 +321,16 @@ function AppContent() {
       });
       trackPageView('/whale-radar', title);
       setIsWhaleRadarOpen(true);
+    } else if (currentRoute === '/pipeline-builder') {
+      const title = 'Capital-AI | Data Pipeline Builder & Concept Synthesizer';
+      const description =
+        'Automatischer Pipeline Builder für Data Authority, Evidence, Tier 4, Hybrid & Individual Datenkonzepte für TradingView, Bloomberg, Python/Pandas & MetaTrader.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/pipeline-builder',
+      });
+      trackPageView('/pipeline-builder', title);
     } else if (currentRoute === '/architecture') {
       const title = 'Capital-AI | Kursdaten-Architektur, Provider & Low-Budget Pipeline';
       const description =
@@ -280,6 +341,16 @@ function AppContent() {
         canonicalPath: '/architecture',
       });
       trackPageView('/architecture', title);
+    } else if (currentRoute === '/tokenomics') {
+      const title = 'Capital-AI | $CPT Tokenomics, Staking & Deflations-Konzept';
+      const description =
+        'Wirtschafts- und Token-Konzept von Capital-AI ($CPT): 100M Hard Cap, Staking-Tiers für Sub-45ms Latenz, 25% Revenue Buyback & Burn sowie dezentrale Kuration.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/tokenomics',
+      });
+      trackPageView('/tokenomics', title);
     } else {
       const title = 'Capital-AI | AI-Driven Market Intelligence';
       const description =
@@ -332,8 +403,15 @@ function AppContent() {
   };
 
   return (
-
     <div className="min-h-screen bg-[#02050e] text-slate-100 flex flex-col items-center justify-start relative overflow-x-hidden">
+      {/* Accessibility Skip-To-Content Link for screen reader and keyboard navigation */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-amber-400 focus:text-black focus:font-bold focus:rounded-xl focus:shadow-2xl focus:outline-none focus:ring-4 focus:ring-amber-500"
+      >
+        Zum Hauptinhalt springen
+      </a>
+
       {/* Background ambient gold light rays & cosmic particles (matching mockup outer environment) */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
         {/* Diagonal Golden Ray 1 */}
@@ -389,7 +467,9 @@ function AppContent() {
 
       {/* Main Container */}
       <main
-        className={`w-full relative z-10 transition-all duration-300 ${
+        id="main-content"
+        tabIndex={-1}
+        className={`w-full relative z-10 transition-all duration-300 outline-none ${
           currentRoute !== '/'
             ? 'max-w-5xl bg-[#02050e]'
             : viewMode === 'mockup'
@@ -411,9 +491,24 @@ function AppContent() {
             onNavigateFaq={() => navigateTo('/faq')}
             onNavigateLegal={navigateTo}
           />
+        ) : currentRoute === '/pipeline-builder' ? (
+          /* Dedicated Pipeline Builder & Synthesizer View */
+          <PipelineBuilder
+            onBackToHome={() => navigateTo('/')}
+            onNavigateLogin={() => navigateTo('/login')}
+            onNavigateTokenomics={() => navigateTo('/tokenomics')}
+          />
         ) : currentRoute === '/architecture' ? (
           /* Dedicated Architecture & Market Data Pipeline View */
           <ArchitecturePage
+            onBackToHome={() => navigateTo('/')}
+            onNavigateLogin={() => navigateTo('/login')}
+            onNavigateLegal={navigateTo}
+            onNavigateTokenomics={() => navigateTo('/tokenomics')}
+          />
+        ) : currentRoute === '/tokenomics' ? (
+          /* Dedicated Tokenomics, Staking & Deflation Concept View */
+          <TokenomicsPage
             onBackToHome={() => navigateTo('/')}
             onNavigateLogin={() => navigateTo('/login')}
             onNavigateLegal={navigateTo}
@@ -522,7 +617,17 @@ function AppContent() {
       {/* Interactive Modals */}
       <AnalysisModal
         isOpen={isAnalysisOpen}
-        onClose={() => setIsAnalysisOpen(false)}
+        onClose={() => {
+          setIsAnalysisOpen(false);
+          // If URL had analysis query params, clean them up cleanly in the URL bar
+          if (typeof window !== 'undefined' && window.location.search.includes('analysis=')) {
+            const cleanUrl = window.location.pathname;
+            window.history.replaceState({}, '', cleanUrl);
+          }
+        }}
+        initialTab={analysisInitialTab}
+        initialTicker={analysisInitialTicker}
+        initialSectorId={analysisInitialSectorId}
         onSelectAsset={(asset) => setSelectedAsset(asset)}
       />
 
@@ -653,6 +758,10 @@ function AppContent() {
         onOpenWhaleRadar={() => {
           setIsMonetizationOpen(false);
           setIsWhaleRadarOpen(true);
+        }}
+        onNavigateTokenomics={() => {
+          setIsMonetizationOpen(false);
+          navigateTo('/tokenomics');
         }}
       />
 

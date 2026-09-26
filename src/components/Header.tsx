@@ -43,6 +43,7 @@ import {
   CreditCard,
   Radio,
   Cpu,
+  SlidersHorizontal,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BrandLogo } from './BrandLogo';
@@ -191,6 +192,26 @@ export const Header: React.FC<HeaderProps> = ({
             <span>Tarife</span>
           </button>
         )}
+
+        <button
+          type="button"
+          onClick={() => onNavigate?.('/pipeline-builder')}
+          className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-400/30 text-cyan-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_10px_rgba(6,182,212,0.12)] group"
+          title="Pipeline Builder: Data Authority, Evidence, Tier 4 & Hybrid (/pipeline-builder)"
+        >
+          <SlidersHorizontal className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
+          <span>Pipeline Builder</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => onNavigate?.('/tokenomics')}
+          className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_10px_rgba(249,191,33,0.12)] group"
+          title="$CPT Tokenomics, Staking-Tiers & Deflationäres Konzept (/tokenomics)"
+        >
+          <Coins className="w-3.5 h-3.5 text-amber-400 group-hover:rotate-12 transition-transform" />
+          <span>Tokenomics</span>
+        </button>
 
         <button
           type="button"
@@ -428,6 +449,52 @@ export const Header: React.FC<HeaderProps> = ({
                     </span>
                     <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-400 text-black shadow-sm">
                       /arch
+                    </span>
+                  </button>
+
+                  {/* $CPT TOKENOMICS & STAKING */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      onNavigate?.('/tokenomics');
+                    }}
+                    className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-500/15 via-yellow-500/10 to-transparent border border-amber-400/40 text-amber-200 font-semibold text-sm hover:from-amber-500/25 hover:to-yellow-500/20 transition-all text-left group shadow-[0_0_15px_rgba(249,191,33,0.12)] cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
+                        <Coins className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-white font-bold leading-none">$CPT Tokenomics &amp; Staking</div>
+                        <div className="text-[10px] text-amber-300/80 mt-1 font-normal">Konzept, Tiers &amp; Deflation</div>
+                      </div>
+                    </span>
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-400 text-black shadow-sm">
+                      $CPT
+                    </span>
+                  </button>
+
+                  {/* DATA PIPELINE BUILDER */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                      onNavigate?.('/pipeline-builder');
+                    }}
+                    className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-cyan-500/15 via-blue-500/10 to-transparent border border-cyan-400/40 text-cyan-200 font-semibold text-sm hover:from-cyan-500/25 hover:to-blue-500/20 transition-all text-left group shadow-[0_0_15px_rgba(6,182,212,0.12)] cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <div className="w-7 h-7 rounded-lg bg-cyan-400/20 flex items-center justify-center text-cyan-300 group-hover:scale-110 transition-transform">
+                        <SlidersHorizontal className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="text-white font-bold leading-none">Data Pipeline Builder</div>
+                        <div className="text-[10px] text-cyan-300/80 mt-1 font-normal">Data Authority, Evidence &amp; Tier 4</div>
+                      </div>
+                    </span>
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-400 text-black shadow-sm">
+                      Builder
                     </span>
                   </button>
 
