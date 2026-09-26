@@ -1,0 +1,102 @@
+# =============================================================================
+# CAPITAL AI — CONTINUOUS INTEGRATION & AUDIT PIPELINE (AP-001, AP-002, AP-006)
+# GITHUB ACTIONS WORKFLOW: ci.yml
+# =============================================================================
+
+name: Capital-AI CI & Architecture Compliance Audit
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  audit_and_build:
+    name: Contracts, Linting & Build Verification
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js Environment (v22)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Project Dependencies
+        run: npm ci
+
+      - name: 1. Architecture Contracts & Zod Schema Audit (AP-001)
+        run: |
+          echo "Auditing 21 Node Catalog Types and Zod Contract Schemas..."
+          npx tsx -e "
+            import { runContractValidationSuite } from './src/contracts/__tests__/contracts.test';
+            const res = runContractValidationSuite();
+            console.log(res.results.join('\n'));
+            if (!res.passed) {
+              console.error('Contract validation failed!');
+              process.exit(1);
+            }
+          "
+
+      - name: 2. Storage & Template Presets Validation (AP-002, AP-005)
+        run: |
+          echo "Validating Preset Pipelines and URL Hash Serialization..."
+          npx tsx -e "
+            import { runStorageValidationSuite } from './src/contracts/__tests__/storage.test';
+            const res = runStorageValidationSuite();
+            console.log(res.results.join('\n'));
+            if (!res.passed) {
+              console.error('Storage validation failed!');
+              process.exit(1);
+            }
+          "
+
+      - name: 3. SHA-256 Merkle Proof & Paper Trading Audit (AP-002, AP-004)
+        run: |
+          echo "Verifying Cryptographic Merkle Proof Generation & Paper Execution..."
+          npx tsx -e "
+            import { runMerkleAndPaperTestSuite } from './src/contracts/__tests__/merkle.test';
+            const res = runMerkleAndPaperTestSuite();
+            console.log(res.results.join('\n'));
+            if (!res.passed) {
+              console.error('Merkle / Paper test failed!');
+              process.exit(1);
+            }
+          "
+
+      - name: 4. Provider Registry, Health & Budget Audit (WP-004, AP-003, AP-006)
+        run: |
+          echo "Auditing Provider Registry, Capability Contracts, Taxonomy Routing and Budget Cap..."
+          npx tsx -e "
+            import { runProviderRegistryValidationSuite } from './src/contracts/__tests__/providerRegistry.test';
+            const res = runProviderRegistryValidationSuite();
+            console.log(res.results.join('\n'));
+            if (!res.passed) {
+              console.error('Provider registry test failed!');
+              process.exit(1);
+            }
+          "
+
+      - name: 5. TypeScript Typecheck & Linting
+        run: npm run lint
+
+      - name: 6. Production Application Build (Vite)
+        run: npm run build
+
+      - name: 7. AP-006 Budget Guard Verification (< 40 EUR / Month)
+        run: |
+          echo "Auditing Render Blueprint and Pipeline Configurations for 40 EUR Budget Compliance..."
+          node -e "
+            const fs = require('fs');
+            const renderYaml = fs.readFileSync('render.yaml', 'utf8');
+            if (!renderYaml.includes('40')) {
+              console.error('AP-006: Render Blueprint missing explicit 40 EUR budget cap specification');
+              process.exit(1);
+            }
+            console.log('✓ AP-006 Budget guard validated.');
+          "

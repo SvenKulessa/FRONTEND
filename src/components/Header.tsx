@@ -44,6 +44,8 @@ import {
   Radio,
   Cpu,
   SlidersHorizontal,
+  Building2,
+  Leaf,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BrandLogo } from './BrandLogo';
@@ -60,6 +62,7 @@ interface HeaderProps {
   onOpenPriceAlerts?: () => void;
   onOpenMonetization?: () => void;
   onOpenWhaleRadar?: () => void;
+  onOpenMarketscreener?: () => void;
   onSelectSubclass?: (subclass: AssetSubclass, category: MainCategory) => void;
   onViewAllMarkets?: () => void;
   onNavigateLogin?: () => void;
@@ -74,6 +77,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenPriceAlerts,
   onOpenMonetization,
   onOpenWhaleRadar,
+  onOpenMarketscreener,
   onSelectSubclass,
   onViewAllMarkets,
   onNavigateLogin,
@@ -145,79 +149,35 @@ export const Header: React.FC<HeaderProps> = ({
           )}
         </button>
 
+        {/* UNIFIED MARKETSCREENER BUTTON (Shared analysis tools) */}
         <button
           type="button"
-          onClick={onOpenAnalysis}
-          className="hidden xs:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 text-amber-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_10px_rgba(249,191,33,0.15)]"
-          data-analytics="header-analysis-btn"
-          data-ga-category="navigation"
-          data-ga-action="open_analysis"
+          onClick={onOpenMarketscreener || onOpenAnalysis}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 text-amber-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_10px_rgba(249,191,33,0.15)] shrink-0"
+          data-analytics="header-marketscreener-btn"
+          title="Marketscreener: Buffett Value Check, Enterprise Scorer, Sektoren & Märkte"
         >
-          <Activity className="w-3.5 h-3.5 text-amber-400" />
-          <span>Analyse</span>
+          <BarChart3 className="w-3.5 h-3.5 text-amber-400" />
+          <span>Marketscreener</span>
         </button>
 
-        {onOpenSectorAnalysis && (
-          <button
-            type="button"
-            onClick={onOpenSectorAnalysis}
-            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-400/10 hover:bg-cyan-400/20 border border-cyan-400/30 text-cyan-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_10px_rgba(6,182,212,0.15)]"
-            title="Zur KI-Sektor-Analyse springen"
-          >
-            <Layers className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Sektoren</span>
-          </button>
-        )}
-
-        {onOpenWhaleRadar && (
-          <button
-            type="button"
-            onClick={onOpenWhaleRadar}
-            className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/40 text-cyan-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_12px_rgba(6,182,212,0.2)]"
-            title="Smart Money Flow & On-Chain Whale Radar"
-          >
-            <Radio className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-            <span>Whale Radar</span>
-          </button>
-        )}
-
-        {onOpenMonetization && (
-          <button
-            type="button"
-            onClick={onOpenMonetization}
-            className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 text-amber-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_10px_rgba(249,191,33,0.15)]"
-            title="Preise, B2C SaaS Tarife & Business Model"
-          >
-            <CreditCard className="w-3.5 h-3.5 text-amber-400" />
-            <span>Tarife</span>
-          </button>
-        )}
-
+        {/* FOUNDER SUITE BUTTON */}
         <button
           type="button"
-          onClick={() => onNavigate?.('/pipeline-builder')}
-          className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-400/30 text-cyan-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_10px_rgba(6,182,212,0.12)] group"
-          title="Pipeline Builder: Data Authority, Evidence, Tier 4 & Hybrid (/pipeline-builder)"
+          onClick={() => onNavigate?.('/founder')}
+          className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/40 text-cyan-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_10px_rgba(6,182,212,0.15)] shrink-0"
+          title="Founder Suite: $CPT Token-Strategie & Pipeline Builder (/founder)"
         >
-          <SlidersHorizontal className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
-          <span>Pipeline Builder</span>
+          <Building2 className="w-3.5 h-3.5 text-cyan-400" />
+          <span>Founder</span>
         </button>
 
+        {/* LIVE LATENCY STATUS CHIP */}
         <button
           type="button"
-          onClick={() => onNavigate?.('/tokenomics')}
-          className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/30 text-amber-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_10px_rgba(249,191,33,0.12)] group"
-          title="$CPT Tokenomics, Staking-Tiers & Deflationäres Konzept (/tokenomics)"
-        >
-          <Coins className="w-3.5 h-3.5 text-amber-400 group-hover:rotate-12 transition-transform" />
-          <span>Tokenomics</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => onNavigate?.('/architecture')}
-          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 hover:border-emerald-500/40 text-[11px] font-mono text-emerald-400 transition-all cursor-pointer group"
-          title="Kursdaten-Architektur, Provider & Low-Budget Pipeline (/architecture)"
+          onClick={() => onNavigate?.('/provider-status')}
+          className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 hover:border-emerald-500/40 text-[11px] font-mono text-emerald-400 transition-all cursor-pointer group shrink-0"
+          title="Data Provider Status Dashboard, Latenzen & Health Monitor (/provider-status)"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
           <span className="group-hover:underline underline-offset-2">LIVE • Sub-45ms</span>
@@ -308,270 +268,270 @@ export const Header: React.FC<HeaderProps> = ({
                 </div>
 
                 {/* Navigation Sections */}
-                <div className="mt-5 space-y-3">
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400/80 px-1">
-                    Kernfunktionen & Module
+                <div className="mt-5 space-y-4">
+                  {/* SECTION 1: MARKETSCREENER & ANALYSE */}
+                  <div>
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400/90 px-1 mb-2">
+                      Marketscreener &amp; Analyse
+                    </div>
+
+                    <div className="space-y-1.5">
+                      {/* Unified Marketscreener CTA */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          if (onOpenMarketscreener) onOpenMarketscreener();
+                          else onOpenAnalysis?.();
+                        }}
+                        className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/15 to-transparent border border-amber-400/40 text-amber-200 font-semibold text-sm hover:from-amber-500/30 hover:to-orange-500/25 transition-all text-left group shadow-[0_0_15px_rgba(249,191,33,0.12)] cursor-pointer"
+                      >
+                        <span className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
+                            <BarChart3 className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <div className="text-white font-bold leading-none">Marketscreener Hub</div>
+                            <div className="text-[10px] text-amber-300/80 mt-1 font-normal">Buffett Check, Scorer &amp; Märkte</div>
+                          </div>
+                        </span>
+                        <ChevronRight className="w-4 h-4 text-amber-400" />
+                      </button>
+
+                      {/* Buffett Value Check Direct */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onOpenModule?.('buffett-value');
+                        }}
+                        className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Leaf className="w-3.5 h-3.5 text-emerald-400" />
+                          <span>Buffett Value Check</span>
+                        </span>
+                        <span className="text-[9px] font-mono text-emerald-400 font-semibold">Margin of Safety</span>
+                      </button>
+
+                      {/* Enterprise Scorer Direct */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onOpenModule?.('enterprise-scorer');
+                        }}
+                        className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Zap className="w-3.5 h-3.5 text-purple-400" />
+                          <span>Enterprise Scorer (0-100)</span>
+                        </span>
+                        <span className="text-[9px] font-mono text-purple-400 font-semibold">Multi-Faktor</span>
+                      </button>
+
+                      {/* KI-Sektor-Analyse */}
+                      {onOpenSectorAnalysis && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            onOpenSectorAnalysis();
+                          }}
+                          className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+                        >
+                          <span className="flex items-center gap-2">
+                            <Layers className="w-3.5 h-3.5 text-cyan-400" />
+                            <span>KI-Sektor-Rotation</span>
+                          </span>
+                          <span className="text-[9px] font-mono text-cyan-400 font-semibold">Kapitalfluss</span>
+                        </button>
+                      )}
+
+                      {/* Whale Radar */}
+                      {onOpenWhaleRadar && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            onOpenWhaleRadar();
+                          }}
+                          className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+                        >
+                          <span className="flex items-center gap-2">
+                            <Radio className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+                            <span>Whale Radar &amp; Smart Money</span>
+                          </span>
+                          <span className="text-[9px] font-mono text-cyan-400 font-semibold">On-Chain</span>
+                        </button>
+                      )}
+
+                      {/* PriceAlerts */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onOpenPriceAlerts?.();
+                        }}
+                        className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Bell className="w-3.5 h-3.5 text-amber-400" />
+                          <span>PriceAlerts &amp; Schwellenwerte</span>
+                        </span>
+                        {activeAlertsCount > 0 && (
+                          <span className="text-[9px] font-mono text-amber-400 font-bold bg-amber-400/20 px-1.5 py-0.2 rounded-full">
+                            {activeAlertsCount} aktiv
+                          </span>
+                        )}
+                      </button>
+                    </div>
                   </div>
 
-                  {/* Primary CTA */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      onOpenAnalysis?.();
-                    }}
-                    className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-500/20 via-purple-500/15 to-transparent border border-amber-400/40 text-amber-200 font-semibold text-sm hover:from-amber-500/30 hover:to-purple-500/25 transition-all text-left group shadow-[0_0_15px_rgba(249,191,33,0.12)] cursor-pointer"
-                  >
-                    <span className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
-                        <TrendingUp className="w-4 h-4" />
-                      </div>
-                      KI-Marktanalyse
-                    </span>
-                    <ChevronRight className="w-4 h-4 text-amber-400" />
-                  </button>
-
-                  {/* KI-Sektor-Analyse CTA */}
-                  {onOpenSectorAnalysis && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        onOpenSectorAnalysis();
-                      }}
-                      className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-cyan-500/20 via-blue-500/15 to-transparent border border-cyan-400/40 text-cyan-200 font-semibold text-sm hover:from-cyan-500/30 hover:to-blue-500/25 transition-all text-left group shadow-[0_0_15px_rgba(6,182,212,0.12)] cursor-pointer"
-                    >
-                      <span className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-lg bg-cyan-400/20 flex items-center justify-center text-cyan-300 group-hover:scale-110 transition-transform">
-                          <Layers className="w-4 h-4" />
-                        </div>
-                        KI-Sektor-Analyse
-                      </span>
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-400 text-black">
-                        Rotation
-                      </span>
-                    </button>
-                  )}
-
-
-                  {/* PRICE ALERTS SYSTEM IN DRAWER */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      onOpenPriceAlerts?.();
-                    }}
-                    className="w-full flex items-center justify-between p-3 rounded-xl bg-[#091129] border border-amber-500/30 hover:border-amber-400 text-amber-200 font-semibold text-sm hover:bg-[#0e1a3e] transition-all text-left group shadow-[0_0_12px_rgba(249,191,33,0.08)] cursor-pointer"
-                  >
-                    <span className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
-                        <Bell className="w-4 h-4 text-amber-400" />
-                      </div>
-                      <span>PriceAlerts &amp; Schwellenwerte</span>
-                    </span>
-                    <div className="flex items-center gap-1.5">
-                      {activeAlertsCount > 0 && (
-                        <span className="text-[10px] font-mono font-bold bg-amber-400 text-black px-1.5 py-0.2 rounded-full">
-                          {activeAlertsCount} aktiv
-                        </span>
-                      )}
-                      <ChevronRight className="w-4 h-4 text-amber-400" />
+                  {/* SECTION 2: FOUNDER SUITE & STRATEGIE (Untergeordnet: Pipeline Builder & Fleet Monitor) */}
+                  <div className="pt-2 border-t border-slate-800/80">
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-cyan-400/90 px-1 mb-2">
+                      Founder Suite
                     </div>
-                  </button>
 
-                  {/* SMART MONEY FLOW & WHALE RADAR IN DRAWER */}
-                  {onOpenWhaleRadar && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        onOpenWhaleRadar();
-                      }}
-                      className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-cyan-500/20 via-blue-500/15 to-transparent border border-cyan-400/40 text-cyan-200 font-semibold text-sm hover:from-cyan-500/30 hover:to-blue-500/25 transition-all text-left group shadow-[0_0_15px_rgba(6,182,212,0.15)] cursor-pointer"
-                    >
-                      <span className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-lg bg-cyan-400/20 flex items-center justify-center text-cyan-300 group-hover:scale-110 transition-transform">
-                          <Radio className="w-4 h-4 text-cyan-400 animate-pulse" />
-                        </div>
-                        <div>
-                          <div className="text-white font-bold leading-none">Whale Radar &amp; Telegram</div>
-                          <div className="text-[10px] text-cyan-300/80 mt-1 font-normal">Smart Money Flow &amp; On-Chain</div>
-                        </div>
-                      </span>
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-400 text-black shadow-sm">
-                        Live
-                      </span>
-                    </button>
-                  )}
-
-                  {/* MONETARISIERUNGSKONZEPT & TARIFE */}
-                  {onOpenMonetization && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        onOpenMonetization();
-                      }}
-                      className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-500/15 via-orange-500/10 to-transparent border border-amber-400/40 text-amber-200 font-semibold text-sm hover:from-amber-500/25 hover:to-orange-500/20 transition-all text-left group shadow-[0_0_15px_rgba(249,191,33,0.12)] cursor-pointer"
-                    >
-                      <span className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
-                          <CreditCard className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <div className="text-white font-bold leading-none">Preise &amp; Tarife</div>
-                          <div className="text-[10px] text-amber-300/80 mt-1 font-normal">SaaS, B2B &amp; Simulator</div>
-                        </div>
-                      </span>
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-400 text-black shadow-sm">
-                        Modell
-                      </span>
-                    </button>
-                  )}
-
-                  {/* ARCHITEKTUR & KURS-DATEN PIPELINE */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      onNavigate?.('/architecture');
-                    }}
-                    className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-blue-500/15 via-indigo-500/10 to-transparent border border-blue-400/40 text-blue-200 font-semibold text-sm hover:from-blue-500/25 hover:to-indigo-500/20 transition-all text-left group shadow-[0_0_15px_rgba(59,130,246,0.12)] cursor-pointer"
-                  >
-                    <span className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-lg bg-blue-400/20 flex items-center justify-center text-blue-300 group-hover:scale-110 transition-transform">
-                        <Cpu className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <div className="text-white font-bold leading-none">Architektur &amp; Kursdaten</div>
-                        <div className="text-[10px] text-blue-300/80 mt-1 font-normal">Low-Budget &amp; Sub-45ms Pipeline</div>
-                      </div>
-                    </span>
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-blue-400 text-black shadow-sm">
-                      /arch
-                    </span>
-                  </button>
-
-                  {/* $CPT TOKENOMICS & STAKING */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      onNavigate?.('/tokenomics');
-                    }}
-                    className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-500/15 via-yellow-500/10 to-transparent border border-amber-400/40 text-amber-200 font-semibold text-sm hover:from-amber-500/25 hover:to-yellow-500/20 transition-all text-left group shadow-[0_0_15px_rgba(249,191,33,0.12)] cursor-pointer"
-                  >
-                    <span className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
-                        <Coins className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <div className="text-white font-bold leading-none">$CPT Tokenomics &amp; Staking</div>
-                        <div className="text-[10px] text-amber-300/80 mt-1 font-normal">Konzept, Tiers &amp; Deflation</div>
-                      </div>
-                    </span>
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-400 text-black shadow-sm">
-                      $CPT
-                    </span>
-                  </button>
-
-                  {/* DATA PIPELINE BUILDER */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      onNavigate?.('/pipeline-builder');
-                    }}
-                    className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-cyan-500/15 via-blue-500/10 to-transparent border border-cyan-400/40 text-cyan-200 font-semibold text-sm hover:from-cyan-500/25 hover:to-blue-500/20 transition-all text-left group shadow-[0_0_15px_rgba(6,182,212,0.12)] cursor-pointer"
-                  >
-                    <span className="flex items-center gap-2.5">
-                      <div className="w-7 h-7 rounded-lg bg-cyan-400/20 flex items-center justify-center text-cyan-300 group-hover:scale-110 transition-transform">
-                        <SlidersHorizontal className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <div className="text-white font-bold leading-none">Data Pipeline Builder</div>
-                        <div className="text-[10px] text-cyan-300/80 mt-1 font-normal">Data Authority, Evidence &amp; Tier 4</div>
-                      </div>
-                    </span>
-                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-400 text-black shadow-sm">
-                      Builder
-                    </span>
-                  </button>
-
-
-                  <div className="grid grid-cols-1 gap-1.5 pt-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        onOpenModule?.('enterprise-scorer');
-                      }}
-                      className="w-full flex items-center justify-between py-2.5 px-3 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 text-left transition-all cursor-pointer"
-                    >
-                      <span className="flex items-center gap-2.5">
-                        <Zap className="w-4 h-4 text-[#8D26FF]" />
-                        Enterprise Scorer
-                      </span>
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        onOpenModule?.('buffett-value');
-                      }}
-                      className="w-full flex items-center justify-between py-2.5 px-3 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 text-left transition-all cursor-pointer"
-                    >
-                      <span className="flex items-center gap-2.5">
-                        <ShieldCheck className="w-4 h-4 text-[#44DE88]" />
-                        Buffett Value Check
-                      </span>
-                      <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        onOpenModule?.('ai-newsfeed');
-                      }}
-                      className="w-full flex items-center justify-between py-2.5 px-3 rounded-xl text-sm text-slate-300 hover:text-white hover:bg-white/5 text-left transition-all cursor-pointer"
-                    >
-                      <span className="flex items-center gap-2.5">
-                        <Newspaper className="w-4 h-4 text-[#F87171]" />
-                        AI Newsfeed
-                      </span>
-                      <span className="text-[10px] font-mono text-[#F87171] bg-[#F87171]/15 px-1.5 py-0.5 rounded border border-[#F87171]/30">
-                        NEU
-                      </span>
-                    </button>
-
-                    {/* MARKET VOCABULARY MODULE */}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsMenuOpen(false);
-                        if (onOpenVocabulary) {
-                          onOpenVocabulary();
-                        } else {
-                          onOpenModule?.('vocabulary');
-                        }
-                      }}
-                      className="w-full flex items-center justify-between py-2.5 px-3 rounded-xl text-sm text-slate-200 hover:text-white bg-amber-400/5 hover:bg-amber-400/15 border border-amber-400/20 hover:border-amber-400/40 text-left transition-all cursor-pointer group shadow-[0_0_10px_rgba(249,191,33,0.06)]"
-                    >
-                      <span className="flex items-center gap-2.5">
-                        <div className="w-6 h-6 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
-                          <BookOpen className="w-3.5 h-3.5 text-[#F9BF21]" />
-                        </div>
-                        <span className="font-semibold group-hover:text-amber-300 transition-colors">
-                          Market Vocabulary
+                    <div className="space-y-1.5">
+                      {/* Main Founder Hub CTA */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/founder');
+                        }}
+                        className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-cyan-500/20 via-indigo-500/15 to-transparent border border-cyan-400/40 text-cyan-200 font-semibold text-sm hover:from-cyan-500/30 hover:to-indigo-500/25 transition-all text-left group shadow-[0_0_15px_rgba(6,182,212,0.15)] cursor-pointer"
+                      >
+                        <span className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-cyan-400/20 flex items-center justify-center text-cyan-300 group-hover:scale-110 transition-transform">
+                            <Building2 className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <div className="text-white font-bold leading-none">Founder Hub &amp; Token-Strategie</div>
+                            <div className="text-[10px] text-cyan-300/80 mt-1 font-normal">$CPT Ökonomie, Tiers &amp; Burn</div>
+                          </div>
                         </span>
-                      </span>
-                      <span className="text-[10px] font-mono text-amber-400 bg-amber-400/20 px-2 py-0.5 rounded-full border border-amber-400/30">
-                        Glossar
-                      </span>
-                    </button>
+                        <ChevronRight className="w-4 h-4 text-cyan-400" />
+                      </button>
+
+                      {/* SUBORDINATE 1: Pipeline Builder (Alternate PC-Konfigurator) */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/pipeline-builder');
+                        }}
+                        className="w-full flex items-center justify-between py-2 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <SlidersHorizontal className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+                          <span>Pipeline Builder (PC-Konfigurator)</span>
+                        </span>
+                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300">
+                          Alternate-Stil
+                        </span>
+                      </button>
+
+                      {/* SUBORDINATE 2: Provider Fleet Status Dashboard (WP-004) */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/provider-status');
+                        }}
+                        className="w-full flex items-center justify-between py-2 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <Activity className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+                          <span>Provider Fleet &amp; Health Monitor</span>
+                        </span>
+                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300">
+                          WP-004
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* SECTION 3: SYSTEM & PLATTFORM */}
+                  <div className="pt-2 border-t border-slate-800/80">
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500 px-1 mb-2">
+                      System &amp; Mehr
+                    </div>
+
+                    <div className="space-y-1">
+                      {/* ARCHITEKTUR & KURS-DATEN PIPELINE */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/architecture');
+                        }}
+                        className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Cpu className="w-3.5 h-3.5 text-blue-400" />
+                          <span>Architektur &amp; Kursdaten (4-Tier)</span>
+                        </span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
+                      </button>
+
+                      {/* MONETARISIERUNGSKONZEPT & TARIFE */}
+                      {onOpenMonetization && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            onOpenMonetization();
+                          }}
+                          className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+                        >
+                          <span className="flex items-center gap-2">
+                            <CreditCard className="w-3.5 h-3.5 text-amber-400" />
+                            <span>Preise &amp; SaaS Tarife</span>
+                          </span>
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
+                        </button>
+                      )}
+
+                      {/* MARKT-VOKABULAR */}
+                      {onOpenVocabulary && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            onOpenVocabulary();
+                          }}
+                          className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+                        >
+                          <span className="flex items-center gap-2">
+                            <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>Markt-Glossar &amp; Vokabular</span>
+                          </span>
+                          <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
+                        </button>
+                      )}
+                      {/* AI NEWSFEED */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onOpenModule?.('ai-newsfeed');
+                        }}
+                        className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Newspaper className="w-3.5 h-3.5 text-[#F87171]" />
+                          <span>AI Newsfeed</span>
+                        </span>
+                        <span className="text-[9px] font-mono text-[#F87171] bg-[#F87171]/15 px-1.5 py-0.2 rounded border border-[#F87171]/30">
+                          NEU
+                        </span>
+                      </button>
+                    </div>
                   </div>
 
                   {/* ASSETKLASSEN & UNTERKLASSEN (KRYPTO, AKTIEN, INDIZIES, FOREX, ROHSTOFFE) */}

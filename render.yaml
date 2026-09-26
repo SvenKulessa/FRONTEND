@@ -1,0 +1,121 @@
+# =============================================================================
+# CAPITAL AI — INFRASTRUCTURE AS CODE (AP-006: BUDGET <= 40 EUR / MONTH)
+# RENDER BLUEPRINT SPECIFICATION: render.yaml
+# =============================================================================
+
+version: '1'
+
+services:
+  # ---------------------------------------------------------------------------
+  # 1. CAPITAL AI WEB APPLICATION (VITE + REACT 19 SPA)
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: capital-ai-web
+    env: static
+    plan: free # 0.00 EUR / Month
+    region: frankfurt # Low-latency EU location (Equinix FR2 vicinity)
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Strict-Transport-Security
+        value: max-age=31536000; includeSubDomains
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_APP_ENV
+        value: production
+      - key: VITE_SUPABASE_URL
+        fromDatabase:
+          name: capital-ai-db
+          property: connectionString
+      - key: VITE_GA_MEASUREMENT_ID
+        sync: false
+
+  # ---------------------------------------------------------------------------
+  # 2. CAPITAL AI BACKEND FOR FRONTEND (BFF & BUSINESS API - NESTJS)
+  # ---------------------------------------------------------------------------
+  - type: web
+    name: capital-ai-bff
+    env: node
+    plan: starter # 7.00 USD (~6.50 EUR) / Month
+    region: frankfurt
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: node dist/server.js
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: MONTHLY_BUDGET_CAP_EUR
+        value: '40.00'
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: capital-ai-cache
+          property: connectionString
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+
+  # ---------------------------------------------------------------------------
+  # 3. HIGH-THROUGHPUT WEBSOCKET INGESTION WORKER (GO / GORILLA DAEMON)
+  # ---------------------------------------------------------------------------
+  - type: worker
+    name: capital-ai-ingest-worker
+    env: docker
+    plan: starter # 7.00 USD (~6.50 EUR) / Month
+    region: frankfurt
+    dockerfilePath: ./docker/Dockerfile.worker
+    dockerContext: .
+    autoDeploy: true
+    envVars:
+      - key: WORKER_ENV
+        value: production
+      - key: TARGET_EXCHANGES
+        value: 'BINANCE,KRAKEN,COINBASE'
+      - key: MAX_LATENCY_CEILING_MS
+        value: '45'
+      - key: MERKLE_TREE_DEPTH
+        value: '16'
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: capital-ai-cache
+          property: connectionString
+
+# -----------------------------------------------------------------------------
+# 4. IN-MEMORY HOT CACHE & RINGBUFFER (REDIS)
+# -----------------------------------------------------------------------------
+databases:
+  - name: capital-ai-cache
+    plan: starter # 7.00 USD (~6.50 EUR) / Month (Max 256MB LRU Buffer)
+    region: frankfurt
+    ipAllowList: [] # Private network only
+
+# =============================================================================
+# BUDGET SUMMARY (AP-006):
+# • Web Frontend: Free (0.00 €)
+# • BFF Web Service: Starter (~6.50 €)
+# • Ingestion Worker: Starter (~6.50 €)
+# • Redis Hot Cache: Starter (~6.50 €)
+# • Supabase System of Record: Free / Community tier (0.00 €)
+# • Total Estimated Infrastructure Cost: ~19.50 € / Month (Well below 40.00 € Cap)
+# =============================================================================

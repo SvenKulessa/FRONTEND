@@ -65,6 +65,7 @@ import {
 import { BrandLogo } from './BrandLogo';
 import { trackEvent } from '../utils/analytics';
 import { PipelineBuilder } from './PipelineBuilder';
+import { ProviderStatusDashboard } from './ProviderStatusDashboard';
 
 interface ArchitecturePageProps {
   onBackToHome: () => void;
@@ -258,7 +259,7 @@ export const ArchitecturePage: React.FC<ArchitecturePageProps> = ({
   onNavigateTokenomics,
 }) => {
   const [activeTab, setActiveTab] = useState<
-    'pipeline' | 'builder' | 'providers' | 'simulator' | 'cost' | 'security' | 'code'
+    'pipeline' | 'builder' | 'providers' | 'dashboard' | 'simulator' | 'cost' | 'security' | 'code'
   >('pipeline');
 
   // Filter state for providers matrix
@@ -502,7 +503,23 @@ export const ArchitecturePage: React.FC<ArchitecturePageProps> = ({
           }`}
         >
           <Database className="w-4 h-4" />
-          <span>3. Provider- &amp; Konfigurationsmatrix</span>
+          <span>3. Provider-Matrix</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('dashboard')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shrink-0 cursor-pointer ${
+            activeTab === 'dashboard'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-black shadow-lg shadow-amber-500/20'
+              : 'text-slate-400 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          <Activity className="w-4 h-4 text-emerald-400" />
+          <span>4. Provider Fleet Dashboard</span>
+          <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-emerald-400 text-black font-extrabold">
+            WP-004
+          </span>
         </button>
 
         <button
@@ -515,7 +532,7 @@ export const ArchitecturePage: React.FC<ArchitecturePageProps> = ({
           }`}
         >
           <Gauge className="w-4 h-4" />
-          <span>3. Live Latency &amp; Failover Tester</span>
+          <span>5. Live Latency &amp; Failover Tester</span>
         </button>
 
         <button
@@ -1048,7 +1065,21 @@ export const ArchitecturePage: React.FC<ArchitecturePageProps> = ({
       )}
 
       {/* =================================================================== */}
-      {/* TAB 3: LIVE LATENCY & FAILOVER SIMULATOR */}
+      {/* TAB 4: LIVE PROVIDER STATUS DASHBOARD (WP-004)                      */}
+      {/* =================================================================== */}
+      {activeTab === 'dashboard' && (
+        <div className="space-y-6 animate-fadeIn">
+          <ProviderStatusDashboard
+            onBackToHome={onBackToHome}
+            onNavigateArchitecture={() => setActiveTab('pipeline')}
+            onNavigateLogin={onNavigateLogin}
+            isStandaloneView={false}
+          />
+        </div>
+      )}
+
+      {/* =================================================================== */}
+      {/* TAB 5: LIVE LATENCY & FAILOVER SIMULATOR                            */}
       {/* =================================================================== */}
       {activeTab === 'simulator' && (
         <div className="space-y-6 animate-fadeIn">

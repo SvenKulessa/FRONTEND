@@ -1,0 +1,76 @@
+# =============================================================================
+# CAPITAL AI — PRODUCTION COMPOSE ORCHESTRATION (AP-006: BUDGET <= 40 EUR / MO)
+# docker-compose.prod.yml
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # 1. Web Application Container (React 19 + Nginx)
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+    container_name: capitalai_web
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - redis
+    networks:
+      - capitalai_network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+
+  # 2. High-Throughput Ingestion Worker
+  ingest-worker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.worker
+    container_name: capitalai_worker
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://redis:6379
+      - MERKLE_TREE_DEPTH=16
+      - TARGET_EXCHANGES=BINANCE,KRAKEN
+    depends_on:
+      - redis
+    networks:
+      - capitalai_network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+
+  # 3. Redis In-Memory Hot Cache & RingBuffer
+  redis:
+    image: redis:7-alpine
+    container_name: capitalai_redis
+    restart: always
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru --save ""
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - capitalai_network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
+
+volumes:
+  redis_data:
+    driver: local
+
+networks:
+  capitalai_network:
+    driver: bridge

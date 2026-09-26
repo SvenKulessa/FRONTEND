@@ -50,6 +50,9 @@ import { MonetizationModal } from './components/MonetizationModal';
 import { ArchitecturePage } from './components/ArchitecturePage';
 import { TokenomicsPage } from './components/TokenomicsPage';
 import { PipelineBuilder } from './components/PipelineBuilder';
+import { ProviderStatusDashboard } from './components/ProviderStatusDashboard';
+import { FounderPage } from './components/FounderPage';
+import { MarketscreenerModal } from './components/MarketscreenerModal';
 
 export const LEGAL_ROUTES: LegalRoute[] = ['/faq', '/datenschutz', '/agb', '/impressum'];
 
@@ -146,6 +149,32 @@ export function resolveAppRoute(rawPath: string): string {
   ) {
     return '/tokenomics';
   }
+  if (
+    clean === '/founder' ||
+    clean === '/founder-hub' ||
+    clean === '/founder-suite' ||
+    clean === '/founders' ||
+    clean === '/founder-strategie'
+  ) {
+    return '/founder';
+  }
+  if (
+    clean === '/marketscreener' ||
+    clean === '/screener' ||
+    clean === '/analyse-tools' ||
+    clean === '/market-screener'
+  ) {
+    return '/marketscreener';
+  }
+  if (
+    clean === '/provider-status' ||
+    clean === '/providers' ||
+    clean === '/admin/providers' ||
+    clean === '/provider-fleet' ||
+    clean === '/fleet'
+  ) {
+    return '/provider-status';
+  }
   return '/';
 }
 
@@ -168,6 +197,7 @@ function AppContent() {
 
   const [viewMode, setViewMode] = useState<'mockup' | 'fullscreen'>('mockup');
   const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
+  const [isMarketscreenerOpen, setIsMarketscreenerOpen] = useState(false);
   const [isProductTourOpen, setIsProductTourOpen] = useState(false);
   const [isAllMarketsOpen, setIsAllMarketsOpen] = useState(false);
   const [isMonetizationOpen, setIsMonetizationOpen] = useState<boolean>(() => {
@@ -351,6 +381,26 @@ function AppContent() {
         canonicalPath: '/tokenomics',
       });
       trackPageView('/tokenomics', title);
+    } else if (currentRoute === '/founder') {
+      const title = 'Capital-AI | Founder Suite, $CPT Token-Strategie & Pipeline Builder';
+      const description =
+        'Founder Hub von Capital-AI: $CPT Tokenomics & Strategie, modularer Pipeline Builder im Alternate-Stil und Provider Fleet Health Monitor.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/founder',
+      });
+      trackPageView('/founder', title);
+    } else if (currentRoute === '/provider-status') {
+      const title = 'Capital-AI | Data Provider Status Dashboard & Health Monitor';
+      const description =
+        'Echtzeit-Überwachung aller autorisierten Data-Provider: Latenz, Jitter, Circuit-Breaker, AP-006 Budget (<40€) und Zod-Vertrags-Audits.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/provider-status',
+      });
+      trackPageView('/provider-status', title);
     } else {
       const title = 'Capital-AI | AI-Driven Market Intelligence';
       const description =
@@ -498,6 +548,13 @@ function AppContent() {
             onNavigateLogin={() => navigateTo('/login')}
             onNavigateTokenomics={() => navigateTo('/tokenomics')}
           />
+        ) : currentRoute === '/founder' ? (
+          /* Dedicated Founder Suite Hub: Tokenomics & Subordinate Pipeline Builder & Provider Fleet */
+          <FounderPage
+            onBackToHome={() => navigateTo('/')}
+            onNavigateLogin={() => navigateTo('/login')}
+            onNavigateLegal={navigateTo}
+          />
         ) : currentRoute === '/architecture' ? (
           /* Dedicated Architecture & Market Data Pipeline View */
           <ArchitecturePage
@@ -513,6 +570,14 @@ function AppContent() {
             onNavigateLogin={() => navigateTo('/login')}
             onNavigateLegal={navigateTo}
           />
+        ) : currentRoute === '/provider-status' ? (
+          /* Dedicated Provider Status Dashboard (WP-004) */
+          <ProviderStatusDashboard
+            onBackToHome={() => navigateTo('/')}
+            onNavigateArchitecture={() => navigateTo('/architecture')}
+            onNavigateLogin={() => navigateTo('/login')}
+            isStandaloneView={true}
+          />
         ) : LEGAL_ROUTES.includes(currentRoute as LegalRoute) ? (
           /* Dedicated Legal & FAQ View (/faq, /datenschutz, /agb, /impressum) */
           <LegalAndFaqPages
@@ -524,6 +589,7 @@ function AppContent() {
           <>
             {/* Header */}
             <Header
+              onOpenMarketscreener={() => setIsMarketscreenerOpen(true)}
               onOpenAnalysis={() => setIsAnalysisOpen(true)}
               onOpenSectorAnalysis={handleOpenSectorAnalysis}
               onOpenModule={handleOpenModuleById}
@@ -781,6 +847,39 @@ function AppContent() {
           if (found) {
             setSelectedAsset(found);
           }
+        }}
+      />
+
+      {/* Unified Marketscreener & Analysis Modal */}
+      <MarketscreenerModal
+        isOpen={isMarketscreenerOpen || currentRoute === '/marketscreener'}
+        onClose={() => {
+          setIsMarketscreenerOpen(false);
+          if (currentRoute === '/marketscreener') {
+            navigateTo('/');
+          }
+        }}
+        onOpenAnalysis={(tab) => {
+          setIsMarketscreenerOpen(false);
+          if (tab) setAnalysisInitialTab(tab);
+          setIsAnalysisOpen(true);
+        }}
+        onOpenSectorAnalysis={() => {
+          setIsMarketscreenerOpen(false);
+          handleOpenSectorAnalysis();
+        }}
+        onOpenWhaleRadar={() => {
+          setIsMarketscreenerOpen(false);
+          setIsWhaleRadarOpen(true);
+        }}
+        onOpenModule={(modId) => {
+          setIsMarketscreenerOpen(false);
+          handleOpenModuleById(modId);
+        }}
+        onViewAllMarkets={() => {
+          setIsMarketscreenerOpen(false);
+          setMarketCategoryFilter('ALLE');
+          setIsAllMarketsOpen(true);
         }}
       />
     </div>
