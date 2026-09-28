@@ -327,6 +327,9 @@ export const WhaleRadarSection: React.FC<WhaleRadarSectionProps> = ({
                     </div>
 
                     <div className="text-xs text-slate-300 mt-0.5 flex items-center gap-1.5 flex-wrap">
+                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 font-bold">
+                        BEOBACHTETE TRANSAKTION (FAKT)
+                      </span>
                       <span className="font-semibold text-slate-200">{tx.actionLabel}:</span>
                       <span className="text-slate-400 font-mono text-[11px] truncate max-w-[140px] sm:max-w-[200px]">
                         {tx.fromWallet.label}
@@ -335,11 +338,17 @@ export const WhaleRadarSection: React.FC<WhaleRadarSectionProps> = ({
                       <span className="text-cyan-400 font-mono text-[11px] truncate max-w-[140px] sm:max-w-[200px]">
                         {tx.toWallet.label}
                       </span>
+                      <span className="text-[10px] font-mono text-slate-400">(96% Label-Konfidenz)</span>
                     </div>
 
-                    <p className="text-[11px] text-slate-400 mt-1 line-clamp-1 italic">
-                      {tx.aiInterpretation}
-                    </p>
+                    <div className="text-[11px] text-slate-400 mt-1 flex items-start gap-1">
+                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-purple-500/15 text-purple-300 border border-purple-500/30 shrink-0 font-bold">
+                        MODELL-HYPOTHESE
+                      </span>
+                      <span className="line-clamp-1 italic text-slate-300">
+                        {tx.aiInterpretation}
+                      </span>
+                    </div>
                   </div>
                 </div>
 

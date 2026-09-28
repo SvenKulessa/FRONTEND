@@ -1,7 +1,7 @@
 /**
  * CAPITAL AI — ADVISOR CHATBOT (AI PURCHASE ADVISOR / KAUFBERATER)
  *
- * An institutional AI purchase advisor for the Pipeline Builder (Alternate PC-Konfigurator Style).
+ * An institutional AI purchase advisor for the Pipeline Builder.
  * - Powered by existing Gemini integration (gemini-3.8-flash) with Scientist Reasoning.
  * - Guides users step-by-step through the Fintech / Scientist stack configuration.
  * - Live Inventory & Cataloging system for user-selected tools referenced for Revenue Assurance.
@@ -49,6 +49,8 @@ import {
   InventoryBOMSummary,
   CatalogToolEntry,
 } from '../utils/pipelineToolCatalog';
+
+export type { PipelineConfigState };
 
 export interface AdvisorChatbotProps {
   currentConfig: PipelineConfigState;

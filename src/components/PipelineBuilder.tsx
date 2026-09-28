@@ -1,8 +1,8 @@
 /**
- * CAPITAL AI — BAFIN-KONFORMER PIPELINE BUILDER (ALTERNATE PC-KONFIGURATOR STIL)
+ * CAPITAL AI — BAFIN-KONFORMER PIPELINE BUILDER
  * Work Package: WP-004 / AP-001 / AP-003 / AP-006
  *
- * Konfiguriert Datenpipelines und Screener-Lösungen modular wie beim PC-Kauf auf Alternate.
+ * Konfiguriert Datenpipelines und Screener-Lösungen modular nach institutionellen Architektur-Standards.
  * Ausgangspunkt: Analyse-Tool (z.B. Buffett Value Check) -> Latenz/Taktung -> Provider -> Caching -> BaFin Audit -> Blueprint.
  * Enthält den Reasoning-Kaufberater mit Scientist Stack & Revenue Assurance.
  */
@@ -50,6 +50,15 @@ import {
   BrainCircuit,
   Lock,
   Boxes,
+  Filter,
+  Globe,
+  Newspaper,
+  Workflow,
+  Target,
+  CheckSquare,
+  Square,
+  Search,
+  TrendingDown,
 } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import { trackEvent } from '../utils/analytics';
@@ -57,6 +66,16 @@ import {
   AdvisorChatbot,
   PipelineConfigState,
 } from './AdvisorChatbot';
+import {
+  MASTER_INDICATORS_CATALOG,
+  MASTER_PATTERNS_CATALOG,
+  MASTER_NEWS_APIS_CATALOG,
+  IndicatorToolItem,
+  PatternToolItem,
+  NewsApiToolItem,
+  SignalType,
+  PriorityLevel,
+} from '../utils/pipelineToolCatalog';
 
 export interface PipelineBuilderProps {
   onBackToHome?: () => void;
@@ -66,7 +85,7 @@ export interface PipelineBuilderProps {
 }
 
 // =============================================================================
-// KONFIGURATOR-DATEN: DIE 6 EBENEN (ALTERNATE PC-STIL)
+// BUILDER-DATEN: DIE 6 EBENEN DER DATENPIPELINE
 // =============================================================================
 
 // EBENE 1: ANALYSE-FOKUS & SCREENER-ZIEL (DER AUSGANGSPUNKT)
@@ -155,6 +174,78 @@ export const ANALYSIS_FOCUS_CATALOG: AnalysisFocusItem[] = [
     keyMetrics: ['Cross-Exchange Spread', 'L2 Book Depth', 'VWAP Slippage', 'Monotone Ticks'],
     recommendedInterval: 'hft-tick',
     badge: 'Ultra Low-Latency',
+  },
+  {
+    id: 'graham-value',
+    title: 'Benjamin Graham Deep Value (NCAV)',
+    subtitle: 'Net-Current-Asset-Value & Sicherheitsmarge',
+    description: 'Klassisches Value-Investing: Identifiziert Aktien, deren Marktkapitalisierung unter dem bereinigten Umlaufvermögen abzüglich aller Verbindlichkeiten liegt.',
+    category: 'Fundamental Value',
+    idealLatency: 'End-of-Day (EOD) / Daily',
+    bafinStandard: 'WpHG § 83 Revisionssicher',
+    keyMetrics: ['Kurs < 67% Net-Current-Asset-Value', 'Liquidationswert', 'KGV * KBV < 22.5', 'Dividendenhistorie > 20J'],
+    recommendedInterval: 'eod-daily',
+    badge: 'Klassiker',
+  },
+  {
+    id: 'piotroski-fscore',
+    title: 'Piotroski 9-Faktor Bilanz-Scorer',
+    subtitle: 'Rentabilität, Verschuldung & Effizienz',
+    description: 'Systematisches 9-Kriterien Scoring zur Trennung finanziell gesunder von notleidenden Unternehmen vor der Veröffentlichung von Quartalsberichten.',
+    category: 'Fundamental Value',
+    idealLatency: 'End-of-Day (EOD) / Daily',
+    bafinStandard: 'WpHG § 83 Revisionssicher',
+    keyMetrics: ['ROA positiv', 'Operating Cashflow > Net Income', 'Margin Expansion', 'Asset Turnover'],
+    recommendedInterval: 'eod-daily',
+    badge: 'F-Score 9/9',
+  },
+  {
+    id: 'altman-zscore',
+    title: 'Altman Z-Score Insolvenz-Frühwarnung',
+    subtitle: 'Kreditrisiko- & Ausfallwahrscheinlichkeits-Modell',
+    description: 'Quantitatives Frühwarnsystem für Kreditinstitute und Risikomanager zur Identifikation von Insolvenzrisiken über multivariate Diskriminanzanalyse.',
+    category: 'Compliance & Risk',
+    idealLatency: '15-Minuten Delayed Snapshot',
+    bafinStandard: 'BaFin MaRisk & WpHG § 83',
+    keyMetrics: ['Z-Score > 2.99 Safe Zone', 'Working Capital / Assets', 'EBIT / Assets', 'Market Equity / Debt'],
+    recommendedInterval: 'delayed-15m',
+    badge: 'Risk Early Warning',
+  },
+  {
+    id: 'volatility-squeeze',
+    title: 'TTM Squeeze & Volatilitäts-Ausbruch',
+    subtitle: 'Bollinger Band & Keltner Channel Kompression',
+    description: 'Erkennt explosive Ausbruchsbewegungen durch Messung der Bandbreiten-Kompression, wenn Bollinger Bänder innerhalb der Keltner Kanäle wandern.',
+    category: 'Technischer Screener',
+    idealLatency: '1-Minuten Intraday Candles',
+    bafinStandard: 'MiFID II Best Execution',
+    keyMetrics: ['BB inside Keltner', 'Momentum Histogramm Flip', 'Volume Surge > 200%', 'Directional Breakout'],
+    recommendedInterval: 'intraday-1m',
+    badge: 'High Dynamic',
+  },
+  {
+    id: 'smart-money-orderblock',
+    title: 'SMC Orderblock & Fair Value Gap (FVG)',
+    subtitle: 'Institutionelle Liquiditätszonen & Imbalance',
+    description: 'Algorithmus zur automatisierten Lokalisierung institutioneller Orderblöcke, Ungleichgewichte (FVGs) und Liquiditäts-Sweeps auf Multi-Asset Charts.',
+    category: 'On-Chain & Smart Money',
+    idealLatency: 'Sub-45ms Realtime Events',
+    bafinStandard: 'MiCA On-Chain Audit',
+    keyMetrics: ['Bullish/Bearish FVG', 'Breaker Block', 'Liquidity Sweep', 'Change of Character (CHoCH)'],
+    recommendedInterval: 'hft-tick',
+    badge: 'Smart Money Alpha',
+  },
+  {
+    id: 'stat-arbitrage',
+    title: 'Statistische Kointegration & Pairs Engine',
+    subtitle: 'Mean-Reversion Z-Score & Spread Deviation',
+    description: 'Hochfrequenter statistischer Arbitrage-Scanner für kointegrierte Wertpapierpaare mit dynamischer Z-Score Schwellenüberwachung.',
+    category: 'High-Frequency',
+    idealLatency: 'Sub-20ms Tick-by-Tick',
+    bafinStandard: 'MiFID II Art. 48 Algorithmus-Compliance',
+    keyMetrics: ['Engle-Granger Kointegration', 'Spread Z-Score > 2.5', 'Half-Life Mean Reversion', 'Beta Hedge Ratio'],
+    recommendedInterval: 'hft-tick',
+    badge: 'Quant Algorithmic',
   },
 ];
 
@@ -376,7 +467,7 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
   onNavigateTokenomics,
   onNavigateFounder,
 }) => {
-  // Alternate PC-Konfigurator Step Selection State
+  // Modular Pipeline Builder Step Selection State
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   // Configuration State across all 6 Levels
@@ -386,7 +477,18 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
     providerIds: ['twelvedata', 'fred'],
     cachingId: 'redis-ring',
     evidenceId: 'worm-storage',
+    selectedIndicators: ['rsi-14', 'macd-12-26-9'],
+    selectedPatterns: ['double-bottom'],
+    selectedNewsApis: ['news-bafin-press', 'news-fed-wire'],
+    selectedAssetClasses: ['us-equities', 'dax-equities', 'crypto'],
+    logicalOperator: 'AND',
   });
+
+  // Filter & Search State for Analysis Tools Dropdown
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isLogicalBuilderOpen, setIsLogicalBuilderOpen] = useState<boolean>(true);
+  const [selectedNewsCategoryFilter, setSelectedNewsCategoryFilter] = useState<string>('all');
 
   // Chatbot Drawer / Modal State
   const [isChatbotOpen, setIsChatbotOpen] = useState<boolean>(false);
@@ -420,10 +522,15 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
 
   // Real-time Calculations (Budget, Latency, BaFin Score)
   const calculationSummary = useMemo(() => {
-    // 1. Costs
+    // 1. Costs (Data providers + Latency impact + News APIs)
     const providersCost = selectedProviders.reduce((sum, p) => sum + p.monthlyCostEur, 0);
     const latencyCost = selectedLatency.costImpactEur;
-    const totalMonthlyCostEur = Math.round((providersCost + latencyCost) * 100) / 100;
+    const newsCost = (config.selectedNewsApis || []).reduce((sum, nId) => {
+      const item = MASTER_NEWS_APIS_CATALOG.find((n) => n.id === nId);
+      return sum + (item?.monthlyCostEur || 0);
+    }, 0);
+
+    const totalMonthlyCostEur = Math.round((providersCost + latencyCost + newsCost) * 100) / 100;
     const budgetCapEur = 40.0;
     const remainingBudgetEur = Math.max(0, budgetCapEur - totalMonthlyCostEur);
     const isWithinBudget = totalMonthlyCostEur <= budgetCapEur;
@@ -437,9 +544,10 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
 
     // 3. BaFin Compliance Score
     let bafinScore = 90;
-    if (config.evidenceId === 'worm-storage') bafinScore += 8;
-    if (config.evidenceId === 'merkle-tree') bafinScore += 7;
+    if (config.evidenceId === 'worm-storage') bafinScore += 6;
+    if (config.evidenceId === 'merkle-tree') bafinScore += 5;
     if (selectedProviders.some((p) => p.id === 'twelvedata' || p.id === 'kraken')) bafinScore += 2;
+    if ((config.selectedNewsApis || []).includes('news-bafin-press')) bafinScore += 2;
     bafinScore = Math.min(100, bafinScore);
 
     return {
@@ -451,6 +559,26 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
       bafinScore,
     };
   }, [selectedProviders, selectedLatency, config]);
+
+  // Unique categories for analysis dropdown
+  const toolCategories = useMemo(() => {
+    const cats = Array.from(new Set(ANALYSIS_FOCUS_CATALOG.map((t) => t.category)));
+    return ['all', ...cats];
+  }, []);
+
+  // Filtered analysis tools
+  const filteredAnalysisTools = useMemo(() => {
+    return ANALYSIS_FOCUS_CATALOG.filter((item) => {
+      const matchesCat = selectedCategoryFilter === 'all' || item.category === selectedCategoryFilter;
+      const matchesSearch =
+        searchQuery.trim() === '' ||
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.subtitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.keyMetrics.some((km) => km.toLowerCase().includes(searchQuery.toLowerCase()));
+      return matchesCat && matchesSearch;
+    });
+  }, [selectedCategoryFilter, searchQuery]);
 
   // Handle preset application from Kaufberater chatbot
   const handleApplyPresetConfig = (newConfig: PipelineConfigState) => {
@@ -465,14 +593,14 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
 
   // Toggle provider selection
   const toggleProvider = (providerId: string) => {
-    setConfig((prev) => {
+    setConfig((prev: PipelineConfigState) => {
       const exists = prev.providerIds.includes(providerId);
       if (exists) {
         // Keep at least one
         if (prev.providerIds.length <= 1) return prev;
         return {
           ...prev,
-          providerIds: prev.providerIds.filter((id) => id !== providerId),
+          providerIds: prev.providerIds.filter((id: string) => id !== providerId),
         };
       } else {
         return {
@@ -480,6 +608,51 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
           providerIds: [...prev.providerIds, providerId],
         };
       }
+    });
+  };
+
+  // Toggle indicator selection
+  const toggleIndicator = (indId: string) => {
+    setConfig((prev: PipelineConfigState) => {
+      const current = prev.selectedIndicators || [];
+      const next = current.includes(indId)
+        ? current.filter((id: string) => id !== indId)
+        : [...current, indId];
+      return { ...prev, selectedIndicators: next };
+    });
+  };
+
+  // Toggle chart pattern selection
+  const togglePattern = (patId: string) => {
+    setConfig((prev: PipelineConfigState) => {
+      const current = prev.selectedPatterns || [];
+      const next = current.includes(patId)
+        ? current.filter((id: string) => id !== patId)
+        : [...current, patId];
+      return { ...prev, selectedPatterns: next };
+    });
+  };
+
+  // Toggle news API selection
+  const toggleNewsApi = (newsId: string) => {
+    setConfig((prev: PipelineConfigState) => {
+      const current = prev.selectedNewsApis || [];
+      const next = current.includes(newsId)
+        ? current.filter((id: string) => id !== newsId)
+        : [...current, newsId];
+      return { ...prev, selectedNewsApis: next };
+    });
+  };
+
+  // Toggle asset class selection
+  const toggleAssetClass = (assetId: string) => {
+    setConfig((prev: PipelineConfigState) => {
+      const current = prev.selectedAssetClasses || [];
+      if (current.includes(assetId) && current.length <= 1) return prev;
+      const next = current.includes(assetId)
+        ? current.filter((id: string) => id !== assetId)
+        : [...current, assetId];
+      return { ...prev, selectedAssetClasses: next };
     });
   };
 
@@ -551,22 +724,22 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
                 onClick={onNavigateFounder}
                 className="hover:text-amber-400 transition-colors cursor-pointer"
               >
-                Founder Suite
+                Studio Hub
               </button>
             ) : (
-              <span>Founder Suite</span>
+              <span>Studio Hub</span>
             )}
             <span aria-hidden="true" className="text-slate-600">/</span>
-            <span className="text-amber-400 font-semibold">Data Pipeline Konfigurator (Alternate-PC-Stil)</span>
+            <span className="text-amber-400 font-semibold">Pipeline Builder</span>
           </div>
 
           <div className="flex items-center gap-3">
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
               <SlidersHorizontal className="w-6 h-6 text-amber-400 shrink-0" />
-              <span>Pipeline &amp; Screener Konfigurator</span>
+              <span>Pipeline Builder</span>
             </h1>
             <span className="text-xs font-mono font-bold px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-              PC-BUILDER
+              PIPELINE BUILDER
             </span>
           </div>
         </div>
@@ -591,7 +764,7 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-400/10 hover:bg-amber-400/20 text-amber-300 border border-amber-400/30 text-xs font-bold transition-colors cursor-pointer"
             >
               <Coins className="w-3.5 h-3.5 text-amber-400" />
-              <span>Founder &amp; Tokenomics</span>
+              <span>Studio Hub &amp; Architektur</span>
             </button>
           )}
 
@@ -610,7 +783,7 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. STICKY / COMPACT STATUS BAR (Alternate PC-Konfigurator Summary)        */}
+      {/* 2. STICKY / COMPACT STATUS BAR (Pipeline Builder Summary)                 */}
       {/* ========================================================================= */}
       <div className="p-3 sm:p-4 rounded-xl bg-[#090e21] border border-slate-800/90 mb-6 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
         <div>
@@ -647,7 +820,7 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* 3. STEP PROGRESS BAR (Alternate PC-Konfigurator Style)                     */}
+      {/* 3. STEP PROGRESS BAR (Pipeline Builder Step Navigation)                   */}
       {/* ========================================================================= */}
       <div className="flex items-center gap-1.5 p-1 rounded-xl bg-[#090e21] border border-slate-800/90 mb-6 overflow-x-auto scrollbar-none">
         {[
@@ -684,28 +857,78 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
       {/* EBENE 1: ANALYSE-FOKUS & SCREENER-ZIEL (DER AUSGANGSPUNKT)                */}
       {/* ------------------------------------------------------------------------- */}
       {currentStep === 1 && (
-        <div className="space-y-4">
-          <div className="p-4 rounded-xl bg-[#090e21] border border-slate-800">
-            <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-              <span className="w-6 h-6 rounded-lg bg-amber-400 text-black text-xs font-black flex items-center justify-center font-mono">
-                1
-              </span>
-              <span>Wählen Sie das Analyse-Tool, das Sie BaFin-konform scoreable machen wollen</span>
-            </h2>
-            <p className="text-xs text-slate-400 mt-1">
-              Der Ausgangspunkt Ihres Systems. Ob disziplinierter <strong>Buffett Value Check</strong>, MaRisk-Risikoscoring oder HFT-Arbitrage: 
-              Alle nachfolgenden Hardware-, Latenz- und Caching-Ebenen passen sich automatisch optimal daran an.
-            </p>
+        <div className="space-y-6">
+          {/* Header & Category Dropdown Filter */}
+          <div className="p-4 rounded-xl bg-[#090e21] border border-slate-800 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h2 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                  <span className="w-6 h-6 rounded-lg bg-amber-400 text-black text-xs font-black flex items-center justify-center font-mono">
+                    1
+                  </span>
+                  <span>Analysetools, Arten &amp; Multi-Asset Screener-Ausgangspunkt</span>
+                </h2>
+                <p className="text-xs text-slate-400 mt-1">
+                  Wählen Sie Ihr Kern-Tool (z.B. <strong>Buffett Value Check</strong> oder <strong>BaFin Multi-Faktor Scorer</strong>) 
+                  und konfigurieren Sie unten im <strong>Logical Screening Builder</strong> Indikatoren, Chart-Muster und Asset-Klassen.
+                </p>
+              </div>
+
+              {/* Dropdown Menu for Tool Categories */}
+              <div className="flex items-center gap-2 shrink-0">
+                <div className="relative">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/60 border border-slate-700 text-xs">
+                    <Filter className="w-3.5 h-3.5 text-amber-400" />
+                    <select
+                      value={selectedCategoryFilter}
+                      onChange={(e) => setSelectedCategoryFilter(e.target.value)}
+                      className="bg-transparent text-white font-medium text-xs focus:outline-none cursor-pointer pr-4"
+                    >
+                      <option value="all" className="bg-[#090e21] text-white">
+                        Alle Tool-Arten ({ANALYSIS_FOCUS_CATALOG.length})
+                      </option>
+                      {toolCategories
+                        .filter((c) => c !== 'all')
+                        .map((cat) => (
+                          <option key={cat} value={cat} className="bg-[#090e21] text-white">
+                            {cat} ({ANALYSIS_FOCUS_CATALOG.filter((t) => t.category === cat).length})
+                          </option>
+                        ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Tool suchen..."
+                    className="w-32 sm:w-44 bg-black/60 border border-slate-700 rounded-xl px-2.5 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+                  />
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-2 top-2 text-slate-400 hover:text-white"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
 
+          {/* Analysis Tools Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {ANALYSIS_FOCUS_CATALOG.map((item) => {
+            {filteredAnalysisTools.map((item) => {
               const isSelected = config.analysisFocusId === item.id;
               return (
                 <div
                   key={item.id}
                   onClick={() => {
-                    setConfig((prev) => ({
+                    setConfig((prev: PipelineConfigState) => ({
                       ...prev,
                       analysisFocusId: item.id,
                       latencyIntervalId: item.recommendedInterval,
@@ -754,7 +977,262 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
             })}
           </div>
 
-          <div className="flex justify-end pt-4">
+          {/* ===================================================================== */}
+          {/* MULTI-ASSET & LOGICAL SCREENING BUILDER (PATTERNS & INDICATORS)       */}
+          {/* ===================================================================== */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-b from-[#090e21] to-[#040714] border border-cyan-500/30 shadow-2xl space-y-5">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+              <div>
+                <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                  <Workflow className="w-4 h-4 text-cyan-400" />
+                  <span>Individueller Multi-Asset &amp; Logical Screening Builder</span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">
+                    FINTECH STACK KIT
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Kombinieren Sie logische Regeln, Chart-Muster und mathematische Indikatoren mit Signal- und Prioritäts-Badges.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-400 font-mono">Logik:</span>
+                <div className="flex rounded-lg bg-black/60 p-0.5 border border-slate-800">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setConfig((prev: PipelineConfigState) => ({ ...prev, logicalOperator: 'AND' }))
+                    }
+                    className={`px-3 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
+                      config.logicalOperator === 'AND'
+                        ? 'bg-amber-400 text-black shadow'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    UND (Alle)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setConfig((prev: PipelineConfigState) => ({ ...prev, logicalOperator: 'OR' }))
+                    }
+                    className={`px-3 py-1 rounded-md text-xs font-bold transition-all cursor-pointer ${
+                      config.logicalOperator === 'OR'
+                        ? 'bg-cyan-400 text-black shadow'
+                        : 'text-slate-400 hover:text-white'
+                    }`}
+                  >
+                    ODER (Trigger)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Live Screener Trigger Sentence Visualizer */}
+            <div className="p-3 rounded-xl bg-black/70 border border-slate-800 text-xs font-mono space-y-1">
+              <div className="text-[10px] uppercase text-slate-500 flex items-center gap-1 font-bold">
+                <Target className="w-3 h-3 text-amber-400" />
+                <span>Aktive Screener-Trigger Logik (Kompilierter Regelsatz):</span>
+              </div>
+              <div className="text-cyan-200 leading-relaxed">
+                <strong className="text-amber-400">WENN</strong> [Basis: {selectedFocus.title}]
+                <strong className="text-white"> {config.logicalOperator || 'AND'} </strong>
+                <span>[Assets: {(config.selectedAssetClasses || []).join(', ') || 'Alle'}]</span>
+                <strong className="text-white"> {config.logicalOperator || 'AND'} </strong>
+                <span>[Indikatoren ({(config.selectedIndicators || []).length}): {(config.selectedIndicators || []).join(', ')}]</span>
+                <strong className="text-white"> {config.logicalOperator || 'AND'} </strong>
+                <span>[Muster ({(config.selectedPatterns || []).length}): {(config.selectedPatterns || []).join(', ')}]</span>
+                <strong className="text-emerald-400"> → DANN </strong>
+                <span className="text-emerald-300 font-bold">[BaFin WORM Audit Snapshot auslösen]</span>
+              </div>
+            </div>
+
+            {/* 1. Multi-Asset Classes Selector */}
+            <div className="space-y-2">
+              <div className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                <Globe className="w-3.5 h-3.5 text-cyan-400" />
+                <span>1. Multi-Asset Abdeckung auswählen:</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { id: 'us-equities', label: 'US Equities (S&P / Nasdaq)', badge: 'Top 150' },
+                  { id: 'dax-equities', label: 'DAX & EU Blue Chips', badge: 'EUR Benchmark' },
+                  { id: 'crypto', label: 'Krypto (BTC, ETH, Top 100)', badge: 'Realtime L2' },
+                  { id: 'forex', label: 'Forex G10 Currencies', badge: '24/5 FX' },
+                  { id: 'commodities', label: 'Rohstoffe (Gold, Silber, Brent)', badge: 'Futures' },
+                  { id: 'bonds', label: 'Staatsanleihen (US 10Y-2Y)', badge: 'Zinskurve' },
+                ].map((asset) => {
+                  const isSelected = (config.selectedAssetClasses || []).includes(asset.id);
+                  return (
+                    <button
+                      key={asset.id}
+                      type="button"
+                      onClick={() => toggleAssetClass(asset.id)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-2 transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-cyan-500/20 text-cyan-200 border-cyan-400 shadow-sm'
+                          : 'bg-black/40 text-slate-400 border-slate-800 hover:border-slate-700'
+                      }`}
+                    >
+                      {isSelected ? <CheckSquare className="w-3.5 h-3.5 text-cyan-400" /> : <Square className="w-3.5 h-3.5" />}
+                      <span>{asset.label}</span>
+                      <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-black/60 text-slate-400">
+                        {asset.badge}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* 2. Indicators with Signal & Priority Badges */}
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <div className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span>2. Mathematische Indikatoren &amp; Formeln:</span>
+                </div>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  {(config.selectedIndicators || []).length} aktiv
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {MASTER_INDICATORS_CATALOG.map((ind) => {
+                  const isSelected = (config.selectedIndicators || []).includes(ind.id);
+
+                  // Signal badge colors
+                  let signalBadgeClass = 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
+                  if (ind.signal === 'bearish') signalBadgeClass = 'bg-rose-500/15 text-rose-300 border-rose-500/30';
+                  else if (ind.signal === 'neutral') signalBadgeClass = 'bg-amber-400/15 text-amber-300 border-amber-400/30';
+                  else if (ind.signal === 'volatility') signalBadgeClass = 'bg-purple-500/15 text-purple-300 border-purple-500/30';
+
+                  // Priority badge colors
+                  let priorityBadgeClass = 'bg-rose-500/20 text-rose-200 border-rose-500/40';
+                  if (ind.priority === 'P2') priorityBadgeClass = 'bg-amber-400/20 text-amber-200 border-amber-400/40';
+                  else if (ind.priority === 'P3') priorityBadgeClass = 'bg-cyan-500/20 text-cyan-200 border-cyan-500/40';
+
+                  return (
+                    <div
+                      key={ind.id}
+                      onClick={() => toggleIndicator(ind.id)}
+                      className={`p-3 rounded-xl bg-black/50 border transition-all cursor-pointer flex flex-col justify-between ${
+                        isSelected
+                          ? 'border-amber-400 bg-amber-400/5 ring-1 ring-amber-400/30'
+                          : 'border-slate-800 hover:border-slate-700'
+                      }`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between gap-2 mb-1.5">
+                          <div className="flex items-center gap-1.5">
+                            {isSelected ? (
+                              <CheckSquare className="w-4 h-4 text-amber-400 shrink-0" />
+                            ) : (
+                              <Square className="w-4 h-4 text-slate-500 shrink-0" />
+                            )}
+                            <span className="text-xs font-bold text-white">{ind.name}</span>
+                          </div>
+
+                          <div className="flex items-center gap-1 shrink-0">
+                            {/* Signal Badge */}
+                            <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border uppercase font-bold ${signalBadgeClass}`}>
+                              {ind.signal}
+                            </span>
+                            {/* Priority Badge */}
+                            <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border font-bold ${priorityBadgeClass}`}>
+                              {ind.priority}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="p-1.5 rounded-lg bg-black/80 border border-slate-800 text-[10px] font-mono text-cyan-200 mb-1.5 truncate">
+                          {ind.formula}
+                        </div>
+
+                        <p className="text-[11px] text-slate-400 mb-1.5">{ind.description}</p>
+                      </div>
+
+                      <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+                        <span>Trigger: <strong className="text-slate-200">{ind.defaultThreshold}</strong></span>
+                        <span className="text-slate-300">Intervall: {ind.timeframe.toUpperCase()}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* 3. Chart Patterns with Signal & Priority Badges */}
+            <div className="space-y-2.5">
+              <div className="flex items-center justify-between">
+                <div className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                  <BarChart2 className="w-3.5 h-3.5 text-purple-400" />
+                  <span>3. Chart-Muster mit Historischer Win-Rate:</span>
+                </div>
+                <span className="text-[11px] text-slate-400 font-mono">
+                  {(config.selectedPatterns || []).length} aktiv
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {MASTER_PATTERNS_CATALOG.map((pat) => {
+                  const isSelected = (config.selectedPatterns || []).includes(pat.id);
+
+                  let signalBadgeClass = 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30';
+                  if (pat.signal === 'bearish') signalBadgeClass = 'bg-rose-500/15 text-rose-300 border-rose-500/30';
+
+                  let priorityBadgeClass = 'bg-rose-500/20 text-rose-200 border-rose-500/40';
+                  if (pat.priority === 'P2') priorityBadgeClass = 'bg-amber-400/20 text-amber-200 border-amber-400/40';
+
+                  return (
+                    <div
+                      key={pat.id}
+                      onClick={() => togglePattern(pat.id)}
+                      className={`p-3 rounded-xl bg-black/50 border transition-all cursor-pointer flex flex-col justify-between ${
+                        isSelected
+                          ? 'border-purple-400 bg-purple-400/5 ring-1 ring-purple-400/30'
+                          : 'border-slate-800 hover:border-slate-700'
+                      }`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between gap-2 mb-1.5">
+                          <div className="flex items-center gap-1.5">
+                            {isSelected ? (
+                              <CheckSquare className="w-4 h-4 text-purple-400 shrink-0" />
+                            ) : (
+                              <Square className="w-4 h-4 text-slate-500 shrink-0" />
+                            )}
+                            <span className="text-xs font-bold text-white">{pat.name}</span>
+                          </div>
+
+                          <div className="flex items-center gap-1 shrink-0">
+                            <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border uppercase font-bold ${signalBadgeClass}`}>
+                              {pat.signal}
+                            </span>
+                            <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border font-bold ${priorityBadgeClass}`}>
+                              {pat.priority}
+                            </span>
+                            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/10 text-emerald-300 font-bold">
+                              {pat.winRateHistorical}
+                            </span>
+                          </div>
+                        </div>
+
+                        <p className="text-[11px] text-slate-300 mb-2">{pat.description}</p>
+                      </div>
+
+                      <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+                        <span>Typ: <strong className="text-slate-200">{pat.category}</strong></span>
+                        <span className="text-slate-300">Intervall: {pat.timeframe.toUpperCase()}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-2">
             <button
               type="button"
               onClick={() => setCurrentStep(2)}
@@ -793,7 +1271,7 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
               return (
                 <div
                   key={item.id}
-                  onClick={() => setConfig((prev) => ({ ...prev, latencyIntervalId: item.id }))}
+                  onClick={() => setConfig((prev: PipelineConfigState) => ({ ...prev, latencyIntervalId: item.id }))}
                   className={`p-4 rounded-xl bg-[#090e21] border transition-all cursor-pointer flex flex-col justify-between ${
                     isSelected
                       ? 'border-amber-400 bg-amber-400/5 ring-1 ring-amber-400/30 shadow-lg'
@@ -899,6 +1377,98 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
             })}
           </div>
 
+          {/* ===================================================================== */}
+          {/* AUSWAHL AN NEWS API SCHNITTSTELLEN MIT KATEGORISIERUNG                */}
+          {/* ===================================================================== */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-b from-[#090e21] to-[#040714] border border-cyan-500/30 shadow-2xl space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+              <div>
+                <h3 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                  <Newspaper className="w-4 h-4 text-cyan-400" />
+                  <span>Auswahl an News API Schnittstellen (Kategorisiert)</span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">
+                    REALTIME NEWS WIRE
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Integrieren Sie behördliche BaFin-Warnungen, SEC Edgar Filings, Makro-Zentralbankdaten und Krypto-Newsfeeds direkt in Ihr Fintech Stack Kit.
+                </p>
+              </div>
+
+              {/* News Category Filter Tabs */}
+              <div className="flex items-center gap-1 overflow-x-auto scrollbar-none py-1">
+                {[
+                  { id: 'all', label: 'Alle News' },
+                  { id: 'Makro & Zentralbanken', label: 'Makro & Zinsen' },
+                  { id: 'Regulatorisch & BaFin', label: 'BaFin & SEC' },
+                  { id: 'Ad-Hoc & Earnings', label: 'Ad-Hoc (DGAP)' },
+                  { id: 'Krypto & On-Chain', label: 'Krypto & Whales' },
+                ].map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setSelectedNewsCategoryFilter(cat.id)}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
+                      selectedNewsCategoryFilter === cat.id
+                        ? 'bg-amber-400 text-black font-bold shadow-sm'
+                        : 'bg-black/50 text-slate-400 hover:text-white border border-slate-800'
+                    }`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* News API Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {MASTER_NEWS_APIS_CATALOG.filter(
+                (news) => selectedNewsCategoryFilter === 'all' || news.category === selectedNewsCategoryFilter
+              ).map((news) => {
+                const isSelected = (config.selectedNewsApis || []).includes(news.id);
+
+                return (
+                  <div
+                    key={news.id}
+                    onClick={() => toggleNewsApi(news.id)}
+                    className={`p-3.5 rounded-xl bg-black/50 border transition-all cursor-pointer flex flex-col justify-between ${
+                      isSelected
+                        ? 'border-cyan-400 bg-cyan-400/5 ring-1 ring-cyan-400/30 shadow-md'
+                        : 'border-slate-800 hover:border-slate-700'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-2 mb-1.5">
+                        <div className="flex items-center gap-1.5">
+                          {isSelected ? (
+                            <CheckSquare className="w-4 h-4 text-cyan-400 shrink-0" />
+                          ) : (
+                            <Square className="w-4 h-4 text-slate-500 shrink-0" />
+                          )}
+                          <h4 className="text-xs font-bold text-white leading-tight">{news.name}</h4>
+                        </div>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-emerald-300 font-bold shrink-0">
+                          {news.monthlyCostEur === 0 ? '0,00 € (Sovereign)' : `${news.monthlyCostEur.toFixed(2)} €/Mo`}
+                        </span>
+                      </div>
+
+                      <div className="text-[10px] text-cyan-300 font-mono mb-1">{news.provider}</div>
+                      <p className="text-[11px] text-slate-300 mb-2 leading-relaxed">{news.description}</p>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+                      <span>Latenz: <strong className="text-slate-200">{news.latencySpec}</strong></span>
+                      <span className="text-emerald-400 font-medium">{news.bafinRelevance}</span>
+                      <span className={`font-bold ${isSelected ? 'text-cyan-300' : 'text-slate-400'}`}>
+                        {isSelected ? '✓ Aktiviert' : '+ Hinzufügen'}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
           <div className="flex justify-between pt-4">
             <button
               type="button"
@@ -943,7 +1513,7 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
               return (
                 <div
                   key={item.id}
-                  onClick={() => setConfig((prev) => ({ ...prev, cachingId: item.id }))}
+                  onClick={() => setConfig((prev: PipelineConfigState) => ({ ...prev, cachingId: item.id }))}
                   className={`p-4 rounded-xl bg-[#090e21] border transition-all cursor-pointer flex flex-col justify-between ${
                     isSelected
                       ? 'border-amber-400 bg-amber-400/5 ring-1 ring-amber-400/30 shadow-lg'
@@ -1015,7 +1585,7 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
               return (
                 <div
                   key={item.id}
-                  onClick={() => setConfig((prev) => ({ ...prev, evidenceId: item.id }))}
+                  onClick={() => setConfig((prev: PipelineConfigState) => ({ ...prev, evidenceId: item.id }))}
                   className={`p-4 rounded-xl bg-[#090e21] border transition-all cursor-pointer flex flex-col justify-between ${
                     isSelected
                       ? 'border-amber-400 bg-amber-400/5 ring-1 ring-amber-400/30 shadow-lg'
@@ -1077,7 +1647,7 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
                   Ihr individuelles {selectedFocus.title} Datensystem
                 </h2>
                 <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                  Konfiguriert nach dem Alternate PC-Konzept. Erfüllt alle Kriterien für BaFin MaRisk, WpHG § 83 und die 
+                  Konfiguriert nach der modularen Enterprise Pipeline-Architektur. Erfüllt alle Kriterien für BaFin MaRisk, WpHG § 83 und die 
                   vertragliche <strong className="text-amber-400 font-mono">40,00 € Monatsbudget-Obergrenze (AP-006)</strong>.
                 </p>
               </div>
@@ -1095,7 +1665,7 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
             </div>
           </div>
 
-          {/* Full Specification List (Alternate Style Bill of Materials) */}
+          {/* Full Specification List (Enterprise Bill of Materials) */}
           <div className="p-5 rounded-xl bg-[#090e21] border border-slate-800">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
               <h3 className="text-sm font-bold text-white uppercase tracking-wider flex items-center gap-2">
@@ -1114,14 +1684,48 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
 
             <div className="space-y-3">
               {/* Item 1 */}
-              <div className="p-3 rounded-lg bg-black/40 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                  <div className="text-[10px] text-slate-400 font-mono">EBENE 1: ANALYSE-FOKUS</div>
-                  <div className="text-sm font-bold text-white">{selectedFocus.title}</div>
-                  <div className="text-xs text-slate-400">{selectedFocus.subtitle} · {selectedFocus.keyMetrics.join(', ')}</div>
+              <div className="p-3.5 rounded-lg bg-black/40 border border-slate-800 flex flex-col justify-between gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <div className="text-[10px] text-slate-400 font-mono">EBENE 1: ANALYSE-FOKUS &amp; MULTI-ASSET LOGIK</div>
+                    <div className="text-sm font-bold text-white">{selectedFocus.title}</div>
+                    <div className="text-xs text-slate-400">{selectedFocus.subtitle}</div>
+                  </div>
+                  <div className="text-right font-mono text-xs text-emerald-400 font-bold">
+                    {selectedFocus.bafinStandard}
+                  </div>
                 </div>
-                <div className="text-right font-mono text-xs text-emerald-400 font-bold">
-                  {selectedFocus.bafinStandard}
+
+                {/* Sub-Items: Assets, Indicators & Patterns */}
+                <div className="pt-2 border-t border-slate-800/80 flex flex-wrap gap-1.5 items-center text-[10px] font-mono">
+                  <span className="text-slate-500 uppercase">Assets:</span>
+                  {(config.selectedAssetClasses || []).map((a) => (
+                    <span key={a} className="px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+                      {a}
+                    </span>
+                  ))}
+                  <span className="text-slate-500 uppercase ml-2">Logik:</span>
+                  <span className="px-1.5 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold">
+                    {config.logicalOperator || 'AND'}
+                  </span>
+                  <span className="text-slate-500 uppercase ml-2">Indikatoren ({(config.selectedIndicators || []).length}):</span>
+                  {(config.selectedIndicators || []).map((indId) => {
+                    const ind = MASTER_INDICATORS_CATALOG.find((i) => i.id === indId);
+                    return (
+                      <span key={indId} className="px-1.5 py-0.5 rounded bg-white/5 text-slate-300 border border-white/10">
+                        {ind?.shortName || indId}
+                      </span>
+                    );
+                  })}
+                  <span className="text-slate-500 uppercase ml-2">Muster ({(config.selectedPatterns || []).length}):</span>
+                  {(config.selectedPatterns || []).map((patId) => {
+                    const pat = MASTER_PATTERNS_CATALOG.find((p) => p.id === patId);
+                    return (
+                      <span key={patId} className="px-1.5 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">
+                        {pat?.name.split(' (')[0] || patId}
+                      </span>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -1138,17 +1742,36 @@ export const PipelineBuilder: React.FC<PipelineBuilderProps> = ({
               </div>
 
               {/* Item 3 */}
-              <div className="p-3 rounded-lg bg-black/40 border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                  <div className="text-[10px] text-slate-400 font-mono">EBENE 3: INGESTION GATEWAYS ({selectedProviders.length})</div>
-                  <div className="text-sm font-bold text-white">
-                    {selectedProviders.map((p) => p.name).join(' · ')}
+              <div className="p-3.5 rounded-lg bg-black/40 border border-slate-800 flex flex-col justify-between gap-2">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <div className="text-[10px] text-slate-400 font-mono">
+                      EBENE 3: INGESTION GATEWAYS &amp; NEWS APIS ({selectedProviders.length + (config.selectedNewsApis || []).length})
+                    </div>
+                    <div className="text-sm font-bold text-white">
+                      {selectedProviders.map((p) => p.name).join(' · ')}
+                    </div>
+                    <div className="text-xs text-slate-400">Multi-Asset Normalisierung &amp; Failover-Kette</div>
                   </div>
-                  <div className="text-xs text-slate-400">Multi-Asset Normalisierung &amp; Failover-Kette</div>
+                  <div className="text-right font-mono text-xs text-cyan-300 font-bold">
+                    {calculationSummary.totalMonthlyCostEur.toFixed(2)} € / Mo
+                  </div>
                 </div>
-                <div className="text-right font-mono text-xs text-cyan-300 font-bold">
-                  {calculationSummary.totalMonthlyCostEur.toFixed(2)} € / Mo
-                </div>
+
+                {/* Sub-Items: Active News APIs */}
+                {(config.selectedNewsApis || []).length > 0 && (
+                  <div className="pt-2 border-t border-slate-800/80 flex flex-wrap gap-1.5 items-center text-[10px] font-mono">
+                    <span className="text-slate-500 uppercase">News APIs ({(config.selectedNewsApis || []).length}):</span>
+                    {(config.selectedNewsApis || []).map((newsId) => {
+                      const news = MASTER_NEWS_APIS_CATALOG.find((n) => n.id === newsId);
+                      return (
+                        <span key={newsId} className="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+                          {news?.name || newsId} ({news?.category})
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
               {/* Item 4 */}
@@ -1214,16 +1837,21 @@ def calculate_buffett_score(ticker, financial_history_10y):
         "is_undervalued": margin_of_safety > 0.25,
         "evidence_hash": "sha256_merkle_root_verified"
     }`
-                      : `// Capital-AI Provider Contract Blueprint
+                      : `// Capital-AI Provider Contract Blueprint (AP-001 / AP-003 / AP-006)
 import { z } from 'zod';
 
 export const ConfiguredPipelineContract = z.object({
   screenerFocus: z.literal('${config.analysisFocusId}'),
   latencyInterval: z.literal('${config.latencyIntervalId}'),
   selectedProviders: z.array(z.string()).default(${JSON.stringify(config.providerIds)}),
+  selectedNewsApis: z.array(z.string()).default(${JSON.stringify(config.selectedNewsApis || [])}),
+  selectedIndicators: z.array(z.string()).default(${JSON.stringify(config.selectedIndicators || [])}),
+  selectedPatterns: z.array(z.string()).default(${JSON.stringify(config.selectedPatterns || [])}),
+  selectedAssetClasses: z.array(z.string()).default(${JSON.stringify(config.selectedAssetClasses || [])}),
+  logicalOperator: z.enum(['AND', 'OR']).default('${config.logicalOperator || 'AND'}'),
   cachingTier: z.literal('${config.cachingId}'),
   evidenceCompliance: z.literal('${config.evidenceId}'),
-  budgetLimitEur: z.number().max(40.0).default(8.5),
+  budgetLimitEur: z.number().max(40.0).default(${calculationSummary.totalMonthlyCostEur}),
   bafinComplianceScore: z.literal(${calculationSummary.bafinScore}),
 });`,
                     'blueprint'
@@ -1271,6 +1899,11 @@ export const ConfiguredPipelineContract = z.object({
   screenerFocus: z.literal('${config.analysisFocusId}'),
   latencyInterval: z.literal('${config.latencyIntervalId}'),
   selectedProviders: z.array(z.string()).default(${JSON.stringify(config.providerIds)}),
+  selectedNewsApis: z.array(z.string()).default(${JSON.stringify(config.selectedNewsApis || [])}),
+  selectedIndicators: z.array(z.string()).default(${JSON.stringify(config.selectedIndicators || [])}),
+  selectedPatterns: z.array(z.string()).default(${JSON.stringify(config.selectedPatterns || [])}),
+  selectedAssetClasses: z.array(z.string()).default(${JSON.stringify(config.selectedAssetClasses || [])}),
+  logicalOperator: z.enum(['AND', 'OR']).default('${config.logicalOperator || 'AND'}'),
   cachingTier: z.literal('${config.cachingId}'),
   evidenceCompliance: z.literal('${config.evidenceId}'),
   budgetLimitEur: z.number().max(40.0).default(${calculationSummary.totalMonthlyCostEur}),
@@ -1294,7 +1927,7 @@ export const ConfiguredPipelineContract = z.object({
                 onClick={onNavigateFounder}
                 className="px-5 py-2.5 rounded-xl bg-amber-400 text-black font-bold text-xs shadow-lg hover:bg-amber-300 flex items-center gap-2 cursor-pointer"
               >
-                <span>Zur Founder &amp; Tokenomics Suite</span>
+                <span>Zum Studio Hub (Architektur &amp; Blueprints)</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             )}

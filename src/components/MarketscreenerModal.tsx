@@ -19,6 +19,7 @@ import {
   ArrowRight,
   ShieldCheck,
   Search,
+  Newspaper,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -30,6 +31,7 @@ export interface MarketscreenerModalProps {
   onOpenWhaleRadar: () => void;
   onOpenModule: (moduleId: string) => void;
   onViewAllMarkets: () => void;
+  onNavigate?: (path: string) => void;
 }
 
 export const MarketscreenerModal: React.FC<MarketscreenerModalProps> = ({
@@ -40,6 +42,7 @@ export const MarketscreenerModal: React.FC<MarketscreenerModalProps> = ({
   onOpenWhaleRadar,
   onOpenModule,
   onViewAllMarkets,
+  onNavigate,
 }) => {
   if (!isOpen) return null;
 
@@ -80,6 +83,35 @@ export const MarketscreenerModal: React.FC<MarketscreenerModalProps> = ({
 
           {/* Tools Grid */}
           <div className="p-4 space-y-2.5 overflow-y-auto scrollbar-thin">
+            {/* 0. Enterprise Screener Table (NEW) */}
+            <div
+              onClick={() => {
+                onClose();
+                onNavigate?.('/screener');
+              }}
+              className="p-3.5 rounded-xl bg-gradient-to-r from-cyan-950/40 via-[#0d1633] to-[#090e21] border border-cyan-500/50 hover:border-cyan-400 transition-all cursor-pointer flex items-center justify-between group shadow-lg shadow-cyan-500/10"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <BarChart3 className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-cyan-300 transition-colors">
+                      Enterprise Screener &amp; Scorer Table
+                    </h3>
+                    <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-bold">
+                      50 KOMPONENTEN
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-300 mt-0.5">
+                    13-Spalten Rangliste mit Hard-Gates, Konfidenz-Audit und 1-Click Explainability (/screener)
+                  </p>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-cyan-400 group-hover:translate-x-1 transition-all shrink-0 ml-2" />
+            </div>
+
             {/* 1. Buffett Value Check */}
             <div
               onClick={() => {
@@ -138,7 +170,36 @@ export const MarketscreenerModal: React.FC<MarketscreenerModalProps> = ({
               <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-white group-hover:translate-x-1 transition-all shrink-0 ml-2" />
             </div>
 
-            {/* 3. KI-Sektor-Rotation */}
+            {/* 3. AI Newsfeed & NLP-Sentiment */}
+            <div
+              onClick={() => {
+                onClose();
+                onOpenModule('ai-newsfeed');
+              }}
+              className="p-3.5 rounded-xl bg-black/40 border border-slate-800 hover:border-rose-500/50 hover:bg-rose-950/10 transition-all cursor-pointer flex items-center justify-between group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Newspaper className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-xs sm:text-sm font-bold text-white group-hover:text-rose-300 transition-colors">
+                      AI Newsfeed &amp; Sentiment
+                    </h3>
+                    <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 font-bold border border-rose-500/30">
+                      NLP-SENTIMENT
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-400 mt-0.5">
+                    Echtzeit NLP-Newsfeed-Impact (+ / - / neutral), SEC Filings, BaFin-Warnungen &amp; Makro-News
+                  </p>
+                </div>
+              </div>
+              <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-white group-hover:translate-x-1 transition-all shrink-0 ml-2" />
+            </div>
+
+            {/* 4. KI-Sektor-Rotation */}
             <div
               onClick={() => {
                 onClose();

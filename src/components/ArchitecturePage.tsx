@@ -445,7 +445,7 @@ export const ArchitecturePage: React.FC<ArchitecturePageProps> = ({
       <div className="mb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/25 text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">
           <Cpu className="w-3.5 h-3.5 text-amber-400" />
-          <span>System-Architektur &amp; Kursdaten-Konzept</span>
+          <span>FinTech Architektur Konzepte (4-Tier)</span>
         </div>
 
         <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">

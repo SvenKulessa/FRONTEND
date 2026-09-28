@@ -6,6 +6,9 @@
 export * from './common';
 export * from './pipeline';
 export * from './registry';
+export * from './analysisComponentRegistry';
+export * from './canonicalContracts';
+export * from './dataPlausibilityValidator';
 
 // Re-export node-specific schemas
 export * from './nodes/ingestion';

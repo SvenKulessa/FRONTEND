@@ -46,6 +46,10 @@ import {
   SlidersHorizontal,
   Building2,
   Leaf,
+  FileCode,
+  Bot,
+  Gauge,
+  Sliders,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BrandLogo } from './BrandLogo';
@@ -149,27 +153,15 @@ export const Header: React.FC<HeaderProps> = ({
           )}
         </button>
 
-        {/* UNIFIED MARKETSCREENER BUTTON (Shared analysis tools) */}
+        {/* STUDIO HUB BUTTON */}
         <button
           type="button"
-          onClick={onOpenMarketscreener || onOpenAnalysis}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 text-amber-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_10px_rgba(249,191,33,0.15)] shrink-0"
-          data-analytics="header-marketscreener-btn"
-          title="Marketscreener: Buffett Value Check, Enterprise Scorer, Sektoren & Märkte"
-        >
-          <BarChart3 className="w-3.5 h-3.5 text-amber-400" />
-          <span>Marketscreener</span>
-        </button>
-
-        {/* FOUNDER SUITE BUTTON */}
-        <button
-          type="button"
-          onClick={() => onNavigate?.('/founder')}
+          onClick={() => onNavigate?.('/studio')}
           className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-500/15 hover:bg-cyan-500/25 border border-cyan-400/40 text-cyan-300 text-xs font-semibold transition-all cursor-pointer shadow-[0_0_10px_rgba(6,182,212,0.15)] shrink-0"
-          title="Founder Suite: $CPT Token-Strategie & Pipeline Builder (/founder)"
+          title="Studio Hub: Pipeline Architektur, Blueprints, Pipeline Builder, AI Kauf-Berater, Data & Providers, Analytics & Scoring, Benchmark Lab, Configurator Console (/studio)"
         >
           <Building2 className="w-3.5 h-3.5 text-cyan-400" />
-          <span>Founder</span>
+          <span>Studio Hub</span>
         </button>
 
         {/* LIVE LATENCY STATUS CHIP */}
@@ -348,6 +340,24 @@ export const Header: React.FC<HeaderProps> = ({
                         </button>
                       )}
 
+                      {/* AI Newsfeed Direct (Marketscreener & Analyse) */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onOpenModule?.('ai-newsfeed');
+                        }}
+                        className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Newspaper className="w-3.5 h-3.5 text-[#F87171] group-hover:scale-110 transition-transform" />
+                          <span>AI Newsfeed</span>
+                        </span>
+                        <span className="text-[9px] font-mono text-[#F87171] bg-[#F87171]/15 px-1.5 py-0.2 rounded border border-[#F87171]/30 font-semibold">
+                          NLP-Sentiment
+                        </span>
+                      </button>
+
                       {/* Whale Radar */}
                       {onOpenWhaleRadar && (
                         <button
@@ -388,69 +398,183 @@ export const Header: React.FC<HeaderProps> = ({
                     </div>
                   </div>
 
-                  {/* SECTION 2: FOUNDER SUITE & STRATEGIE (Untergeordnet: Pipeline Builder & Fleet Monitor) */}
+                  {/* SECTION 2: STUDIO (Studio Hub mit allen 8 Tabs als Reiter) */}
                   <div className="pt-2 border-t border-slate-800/80">
                     <div className="text-[10px] font-bold uppercase tracking-widest text-cyan-400/90 px-1 mb-2">
-                      Founder Suite
+                      Studio Hub
                     </div>
 
-                    <div className="space-y-1.5">
-                      {/* Main Founder Hub CTA */}
+                    <div className="space-y-1">
+                      {/* Main Studio Hub CTA */}
                       <button
                         type="button"
                         onClick={() => {
                           setIsMenuOpen(false);
-                          onNavigate?.('/founder');
+                          onNavigate?.('/studio');
                         }}
-                        className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-cyan-500/20 via-indigo-500/15 to-transparent border border-cyan-400/40 text-cyan-200 font-semibold text-sm hover:from-cyan-500/30 hover:to-indigo-500/25 transition-all text-left group shadow-[0_0_15px_rgba(6,182,212,0.15)] cursor-pointer"
+                        className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-cyan-500/20 via-indigo-500/15 to-transparent border border-cyan-400/40 text-cyan-200 font-semibold text-sm hover:from-cyan-500/30 hover:to-indigo-500/25 transition-all text-left group shadow-[0_0_15px_rgba(6,182,212,0.15)] cursor-pointer mb-1.5"
                       >
                         <span className="flex items-center gap-2.5">
                           <div className="w-7 h-7 rounded-lg bg-cyan-400/20 flex items-center justify-center text-cyan-300 group-hover:scale-110 transition-transform">
                             <Building2 className="w-4 h-4" />
                           </div>
                           <div>
-                            <div className="text-white font-bold leading-none">Founder Hub &amp; Token-Strategie</div>
-                            <div className="text-[10px] text-cyan-300/80 mt-1 font-normal">$CPT Ökonomie, Tiers &amp; Burn</div>
+                            <div className="text-white font-bold leading-none">Studio Hub</div>
+                            <div className="text-[10px] text-cyan-300/80 mt-1 font-normal">Alle 8 Studio-Module im Überblick</div>
                           </div>
                         </span>
                         <ChevronRight className="w-4 h-4 text-cyan-400" />
                       </button>
 
-                      {/* SUBORDINATE 1: Pipeline Builder (Alternate PC-Konfigurator) */}
+                      {/* 1. Pipeline Architektur */}
                       <button
                         type="button"
                         onClick={() => {
                           setIsMenuOpen(false);
-                          onNavigate?.('/pipeline-builder');
+                          onNavigate?.('/studio?tab=architecture');
                         }}
-                        className="w-full flex items-center justify-between py-2 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <Layers className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+                          <span>Pipeline Architektur</span>
+                        </span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-400/15 text-amber-300">
+                          16 Konzepte
+                        </span>
+                      </button>
+
+                      {/* 2. Blueprints */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/studio?tab=blueprints');
+                        }}
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <FileCode className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
+                          <span>Blueprints</span>
+                        </span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-400/15 text-cyan-300">
+                          7 Blueprints
+                        </span>
+                      </button>
+
+                      {/* 3. Pipeline Builder */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/studio?tab=builder');
+                        }}
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
                       >
                         <span className="flex items-center gap-2">
                           <span className="text-slate-600 font-mono">↳</span>
                           <SlidersHorizontal className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
-                          <span>Pipeline Builder (PC-Konfigurator)</span>
+                          <span>Pipeline Builder</span>
                         </span>
-                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-amber-400/20 text-amber-300">
-                          Alternate-Stil
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-400/15 text-amber-300">
+                          Modular
                         </span>
                       </button>
 
-                      {/* SUBORDINATE 2: Provider Fleet Status Dashboard (WP-004) */}
+                      {/* 4. AI Kauf-Berater */}
                       <button
                         type="button"
                         onClick={() => {
                           setIsMenuOpen(false);
-                          onNavigate?.('/provider-status');
+                          onNavigate?.('/studio?tab=advisor');
                         }}
-                        className="w-full flex items-center justify-between py-2 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
                       >
                         <span className="flex items-center gap-2">
                           <span className="text-slate-600 font-mono">↳</span>
-                          <Activity className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
-                          <span>Provider Fleet &amp; Health Monitor</span>
+                          <Bot className="w-3.5 h-3.5 text-purple-400 group-hover:scale-110 transition-transform" />
+                          <span>AI Kauf-Berater</span>
                         </span>
-                        <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300">
-                          WP-004
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-purple-400/15 text-purple-300">
+                          Advisor
+                        </span>
+                      </button>
+
+                      {/* 5. Data & Providers */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/studio?tab=providers');
+                        }}
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <Radio className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+                          <span>Data &amp; Providers</span>
+                        </span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-400/15 text-emerald-300">
+                          Fleet Health
+                        </span>
+                      </button>
+
+                      {/* 6. Analytics & Scoring */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/studio?tab=analytics');
+                        }}
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <BarChart3 className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+                          <span>Analytics &amp; Scoring</span>
+                        </span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-400/15 text-amber-300">
+                          50 Komponenten
+                        </span>
+                      </button>
+
+                      {/* 7. Benchmark Lab */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/studio?tab=benchmark');
+                        }}
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <Gauge className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
+                          <span>Benchmark Lab</span>
+                        </span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-400/15 text-cyan-300">
+                          Sub-45ms
+                        </span>
+                      </button>
+
+                      {/* 8. Configurator Console */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/studio?tab=console');
+                        }}
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <Sliders className="w-3.5 h-3.5 text-rose-400 group-hover:scale-110 transition-transform" />
+                          <span>Configurator Console</span>
+                        </span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-rose-400/15 text-rose-300">
+                          Admin
                         </span>
                       </button>
                     </div>
@@ -463,22 +587,6 @@ export const Header: React.FC<HeaderProps> = ({
                     </div>
 
                     <div className="space-y-1">
-                      {/* ARCHITEKTUR & KURS-DATEN PIPELINE */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/architecture');
-                        }}
-                        className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-                      >
-                        <span className="flex items-center gap-2">
-                          <Cpu className="w-3.5 h-3.5 text-blue-400" />
-                          <span>Architektur &amp; Kursdaten (4-Tier)</span>
-                        </span>
-                        <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
-                      </button>
-
                       {/* MONETARISIERUNGSKONZEPT & TARIFE */}
                       {onOpenMonetization && (
                         <button
@@ -514,23 +622,6 @@ export const Header: React.FC<HeaderProps> = ({
                           <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
                         </button>
                       )}
-                      {/* AI NEWSFEED */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onOpenModule?.('ai-newsfeed');
-                        }}
-                        className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-                      >
-                        <span className="flex items-center gap-2">
-                          <Newspaper className="w-3.5 h-3.5 text-[#F87171]" />
-                          <span>AI Newsfeed</span>
-                        </span>
-                        <span className="text-[9px] font-mono text-[#F87171] bg-[#F87171]/15 px-1.5 py-0.2 rounded border border-[#F87171]/30">
-                          NEU
-                        </span>
-                      </button>
                     </div>
                   </div>
 
@@ -687,7 +778,7 @@ export const Header: React.FC<HeaderProps> = ({
                     }}
                     className="hover:text-amber-300 transition-colors font-bold text-amber-400 cursor-pointer"
                   >
-                    Architektur
+                    FinTech Architektur
                   </button>
                   <span>•</span>
                   <button

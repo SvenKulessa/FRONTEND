@@ -7,7 +7,7 @@
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "tsx -e \"import { runProviderRegistryValidationSuite } from './src/contracts/__tests__/providerRegistry.test.ts'; import { runContractValidationSuite } from './src/contracts/__tests__/contracts.test.ts'; const r1 = runProviderRegistryValidationSuite(); const r2 = runContractValidationSuite(); if (!r1.passed || !r2.passed) process.exit(1); console.log('✓ All Provider Registry & Architecture Contracts validated successfully.');\"",
+    "test": "tsx -e \"import { runProviderRegistryValidationSuite } from './src/contracts/__tests__/providerRegistry.test.ts'; import { runContractValidationSuite } from './src/contracts/__tests__/contracts.test.ts'; import { runEnterpriseScoringSuite } from './src/contracts/__tests__/enterpriseScoring.test.ts'; const r1 = runProviderRegistryValidationSuite(); const r2 = runContractValidationSuite(); const r3 = runEnterpriseScoringSuite(); if (!r1.passed || !r2.passed || !r3.passed) { console.error(r3.failures); process.exit(1); } console.log('✓ All Provider Registry, Contracts & Enterprise Scoring Suites validated successfully.');\"",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit"
   },

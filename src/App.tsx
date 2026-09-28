@@ -52,7 +52,10 @@ import { TokenomicsPage } from './components/TokenomicsPage';
 import { PipelineBuilder } from './components/PipelineBuilder';
 import { ProviderStatusDashboard } from './components/ProviderStatusDashboard';
 import { FounderPage } from './components/FounderPage';
+import { StudioPage } from './components/StudioPage';
 import { MarketscreenerModal } from './components/MarketscreenerModal';
+import { EnterpriseScorerDashboard } from './components/EnterpriseScorerDashboard';
+import { ScreenerTable } from './components/ScreenerTable';
 
 export const LEGAL_ROUTES: LegalRoute[] = ['/faq', '/datenschutz', '/agb', '/impressum'];
 
@@ -150,13 +153,15 @@ export function resolveAppRoute(rawPath: string): string {
     return '/tokenomics';
   }
   if (
+    clean === '/studio' ||
+    clean === '/studio-hub' ||
     clean === '/founder' ||
     clean === '/founder-hub' ||
     clean === '/founder-suite' ||
     clean === '/founders' ||
     clean === '/founder-strategie'
   ) {
-    return '/founder';
+    return '/studio';
   }
   if (
     clean === '/marketscreener' ||
@@ -362,7 +367,7 @@ function AppContent() {
       });
       trackPageView('/pipeline-builder', title);
     } else if (currentRoute === '/architecture') {
-      const title = 'Capital-AI | Kursdaten-Architektur, Provider & Low-Budget Pipeline';
+      const title = 'Capital-AI | FinTech Architektur Konzepte & Low-Budget Pipeline';
       const description =
         'Technische Spezifikation der Capital-AI Marktdaten-Pipeline: Sub-45ms Latenz, Multi-Provider Failover, Zero-Trust Proxy, In-Memory Caching & Low-Budget Blueprint (<35€/Mo).';
       updatePageSEO({
@@ -381,16 +386,16 @@ function AppContent() {
         canonicalPath: '/tokenomics',
       });
       trackPageView('/tokenomics', title);
-    } else if (currentRoute === '/founder') {
-      const title = 'Capital-AI | Founder Suite, $CPT Token-Strategie & Pipeline Builder';
+    } else if (currentRoute === '/studio' || currentRoute === '/founder') {
+      const title = 'Capital-AI | Studio Hub: Pipeline Architektur, Blueprints & Builder';
       const description =
-        'Founder Hub von Capital-AI: $CPT Tokenomics & Strategie, modularer Pipeline Builder im Alternate-Stil und Provider Fleet Health Monitor.';
+        'Studio Hub von Capital-AI: 16 kanonische Datenkonzepte, 7 Produktions-Blueprints, modularer Pipeline Builder, AI Kauf-Berater und Benchmark Lab.';
       updatePageSEO({
         title,
         description,
-        canonicalPath: '/founder',
+        canonicalPath: '/studio',
       });
-      trackPageView('/founder', title);
+      trackPageView('/studio', title);
     } else if (currentRoute === '/provider-status') {
       const title = 'Capital-AI | Data Provider Status Dashboard & Health Monitor';
       const description =
@@ -548,9 +553,9 @@ function AppContent() {
             onNavigateLogin={() => navigateTo('/login')}
             onNavigateTokenomics={() => navigateTo('/tokenomics')}
           />
-        ) : currentRoute === '/founder' ? (
-          /* Dedicated Founder Suite Hub: Tokenomics & Subordinate Pipeline Builder & Provider Fleet */
-          <FounderPage
+        ) : currentRoute === '/studio' || currentRoute === '/founder' ? (
+          /* Dedicated Studio Hub: Pipeline Architektur, Blueprints, Builder, Advisor, Providers, Analytics & Benchmark Lab */
+          <StudioPage
             onBackToHome={() => navigateTo('/')}
             onNavigateLogin={() => navigateTo('/login')}
             onNavigateLegal={navigateTo}
@@ -578,6 +583,36 @@ function AppContent() {
             onNavigateLogin={() => navigateTo('/login')}
             isStandaloneView={true}
           />
+        ) : currentRoute === '/screener' || currentRoute === '/marketscreener' ? (
+          /* Dedicated Enterprise Screener & Multi-Asset Scorer View */
+          <div className="w-full text-slate-100 min-h-screen py-6 px-3 sm:px-6 space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div className="flex items-center gap-2 text-xs text-slate-400 font-mono">
+                <span>Capital-AI</span>
+                <span>/</span>
+                <span className="text-amber-400 font-bold">Enterprise Screener &amp; Scorer</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => navigateTo('/')}
+                className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-bold transition-all cursor-pointer"
+              >
+                ← Zurück zur Startseite
+              </button>
+            </div>
+            <EnterpriseScorerDashboard
+              onSelectAsset={(sym) => {
+                const found = MARKET_ASSETS.find((m) => m.symbol === sym);
+                if (found) setSelectedAsset(found);
+              }}
+            />
+            <div className="pt-4 border-t border-slate-800 space-y-3">
+              <h3 className="text-base font-bold text-white font-mono flex items-center gap-2">
+                <span>Vollständige Screener-Tabelle (Cross-Sectional Ranking)</span>
+              </h3>
+              <ScreenerTable />
+            </div>
+          </div>
         ) : LEGAL_ROUTES.includes(currentRoute as LegalRoute) ? (
           /* Dedicated Legal & FAQ View (/faq, /datenschutz, /agb, /impressum) */
           <LegalAndFaqPages
@@ -852,13 +887,11 @@ function AppContent() {
 
       {/* Unified Marketscreener & Analysis Modal */}
       <MarketscreenerModal
-        isOpen={isMarketscreenerOpen || currentRoute === '/marketscreener'}
+        isOpen={isMarketscreenerOpen}
         onClose={() => {
           setIsMarketscreenerOpen(false);
-          if (currentRoute === '/marketscreener') {
-            navigateTo('/');
-          }
         }}
+        onNavigate={navigateTo}
         onOpenAnalysis={(tab) => {
           setIsMarketscreenerOpen(false);
           if (tab) setAnalysisInitialTab(tab);

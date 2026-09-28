@@ -89,13 +89,23 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         </a>
         <span className="text-slate-600">•</span>
         <a
+          id="footer-nav-studio"
+          href="/studio"
+          onClick={(e) => handleNavClick(e, '/studio', 'studio_hub')}
+          className="hover:text-cyan-300 transition-colors cursor-pointer text-cyan-300 font-bold hover:underline underline-offset-4 flex items-center gap-1"
+          data-analytics="footer-studio"
+        >
+          Studio Hub
+        </a>
+        <span className="text-slate-600">•</span>
+        <a
           id="footer-nav-architecture"
           href="/architecture"
           onClick={(e) => handleNavClick(e, '/architecture', 'architecture')}
           className="hover:text-cyan-300 transition-colors cursor-pointer text-cyan-400 font-bold hover:underline underline-offset-4 flex items-center gap-1"
           data-analytics="footer-architecture"
         >
-          Architektur &amp; Kursdaten
+          FinTech Architektur Konzepte
         </a>
         <span className="text-slate-600">•</span>
         <a

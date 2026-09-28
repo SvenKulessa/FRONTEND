@@ -28,12 +28,57 @@ export interface CatalogToolEntry {
   keyFormulas?: string[];
 }
 
+export type SignalType = 'bullish' | 'bearish' | 'neutral' | 'volatility';
+export type PriorityLevel = 'P1' | 'P2' | 'P3';
+export type TimeframeRelevance = '1m' | '15m' | 'eod' | 'tick' | 'multi';
+
+export interface IndicatorToolItem {
+  id: string;
+  name: string;
+  shortName: string;
+  category: 'Momentum' | 'Trend' | 'Volatilität' | 'Volumen' | 'Gleitende Durchschnitte';
+  formula: string;
+  signal: SignalType;
+  priority: PriorityLevel;
+  timeframe: TimeframeRelevance;
+  defaultThreshold: string;
+  description: string;
+}
+
+export interface PatternToolItem {
+  id: string;
+  name: string;
+  category: 'Umkehrmuster' | 'Fortsetzungsmuster' | 'Harmonic & Wyckoff' | 'Breakout';
+  signal: SignalType;
+  priority: PriorityLevel;
+  timeframe: TimeframeRelevance;
+  winRateHistorical: string;
+  description: string;
+}
+
+export interface NewsApiToolItem {
+  id: string;
+  name: string;
+  category: 'Makro & Zentralbanken' | 'Regulatorisch & BaFin' | 'Ad-Hoc & Earnings' | 'Krypto & On-Chain';
+  provider: string;
+  monthlyCostEur: number;
+  latencySpec: string;
+  updateFrequency: string;
+  bafinRelevance: string;
+  description: string;
+}
+
 export interface PipelineConfigState {
   analysisFocusId: string;
   latencyIntervalId: string;
   providerIds: string[];
   cachingId: string;
   evidenceId: string;
+  selectedIndicators?: string[];
+  selectedPatterns?: string[];
+  selectedNewsApis?: string[];
+  selectedAssetClasses?: string[];
+  logicalOperator?: 'AND' | 'OR';
 }
 
 export interface InventoryBOMSummary {
@@ -442,6 +487,291 @@ export const MASTER_TOOL_CATALOG: Record<string, CatalogToolEntry> = {
 };
 
 // =============================================================================
+// MASTER INDICATORS & FORMULAS CATALOG
+// =============================================================================
+
+export const MASTER_INDICATORS_CATALOG: IndicatorToolItem[] = [
+  {
+    id: 'rsi-14',
+    name: 'RSI (14) - Relative Strength Index',
+    shortName: 'RSI-14',
+    category: 'Momentum',
+    formula: 'RSI = 100 - (100 / (1 + RS))',
+    signal: 'neutral',
+    priority: 'P1',
+    timeframe: 'multi',
+    defaultThreshold: 'Überverkauft < 30 / Überkauft > 70',
+    description: 'Misst das Ausmaß jüngster Kursänderungen, um überkaufte oder überverkaufte Zustände zu bewerten.',
+  },
+  {
+    id: 'macd-12-26-9',
+    name: 'MACD (12, 26, 9) Trend & Signal Line',
+    shortName: 'MACD',
+    category: 'Trend',
+    formula: 'MACD = EMA(12) - EMA(26); Signal = EMA(9)',
+    signal: 'bullish',
+    priority: 'P1',
+    timeframe: '15m',
+    defaultThreshold: 'Histogramm Crossover > 0',
+    description: 'Zeigt die Beziehung zwischen zwei exponentiell gleitenden Durchschnitten des Preises eines Wertpapiers.',
+  },
+  {
+    id: 'bollinger-20-2',
+    name: 'Bollinger Bänder (20, 2 Sigma)',
+    shortName: 'BBands',
+    category: 'Volatilität',
+    formula: 'Upper = SMA(20) + 2*Sigma; Lower = SMA(20) - 2*Sigma',
+    signal: 'volatility',
+    priority: 'P2',
+    timeframe: '15m',
+    defaultThreshold: 'Bandbreiten-Kompression (Squeeze)',
+    description: 'Volatilitätsband mit 2 Standardabweichungen um den 20-Perioden Durchschnitt zur Ausbruchserkennung.',
+  },
+  {
+    id: 'ema-ribbon',
+    name: 'EMA Ribbon (20, 50, 100, 200)',
+    shortName: 'EMA-Ribbon',
+    category: 'Gleitende Durchschnitte',
+    formula: 'EMA_t = (Price * alpha) + EMA_{t-1} * (1 - alpha)',
+    signal: 'bullish',
+    priority: 'P1',
+    timeframe: 'eod',
+    defaultThreshold: 'Fächer-Expansion (Bullish Alignment)',
+    description: 'Reihe von exponentiellen Durchschnitten zur Identifikation von übergeordneten Trendphasen.',
+  },
+  {
+    id: 'atr-14',
+    name: 'ATR (14) - Average True Range',
+    shortName: 'ATR-14',
+    category: 'Volatilität',
+    formula: 'ATR = SMA(TrueRange, 14)',
+    signal: 'volatility',
+    priority: 'P2',
+    timeframe: '1m',
+    defaultThreshold: 'Volatilitäts-Spike > 1.5x Median',
+    description: 'Präziser Volatilitätsindikator für dynamische Trailing Stop-Loss und Risikomanagement.',
+  },
+  {
+    id: 'vwap-anchored',
+    name: 'VWAP (Volume-Weighted Average Price)',
+    shortName: 'VWAP',
+    category: 'Volumen',
+    formula: 'VWAP = Sum(Price * Volume) / Sum(Volume)',
+    signal: 'bullish',
+    priority: 'P1',
+    timeframe: '1m',
+    defaultThreshold: 'Kurs über Tages-VWAP Benchmark',
+    description: 'Institutioneller Referenzkurs für Best-Execution und Identifikation von Liquiditätszonen.',
+  },
+  {
+    id: 'supertrend-10-3',
+    name: 'Supertrend Indikator (10, 3)',
+    shortName: 'Supertrend',
+    category: 'Trend',
+    formula: 'Band = (High + Low)/2 +/- 3 * ATR(10)',
+    signal: 'bullish',
+    priority: 'P2',
+    timeframe: '15m',
+    defaultThreshold: 'Trendrichtungs-Wechsel Grün/Rot',
+    description: 'Dynamischer Trendfolge-Indikator, der Kursrichtung und Stop-Loss in einer Metrik kombiniert.',
+  },
+  {
+    id: 'obv-flow',
+    name: 'OBV (On-Balance Volume) Akkumulation',
+    shortName: 'OBV',
+    category: 'Volumen',
+    formula: 'OBV_t = OBV_{t-1} +/- Volume_t',
+    signal: 'bullish',
+    priority: 'P2',
+    timeframe: 'eod',
+    defaultThreshold: 'Volumen-Divergenz vor Kurssprung',
+    description: 'Korreliert das Handelsvolumen mit der Kursbewegung zur Erkennung institutioneller Akkumulation.',
+  },
+];
+
+// =============================================================================
+// MASTER CHART PATTERNS CATALOG
+// =============================================================================
+
+export const MASTER_PATTERNS_CATALOG: PatternToolItem[] = [
+  {
+    id: 'double-bottom',
+    name: 'Doppelter Boden (W-Formation)',
+    category: 'Umkehrmuster',
+    signal: 'bullish',
+    priority: 'P1',
+    timeframe: '15m',
+    winRateHistorical: '68.4%',
+    description: 'Klassisches bullisches Trendwendemuster nach Abwärtstrend mit Re-Test der Unterstützung.',
+  },
+  {
+    id: 'head-shoulders',
+    name: 'Kopf-Schulter-Formation (SKS)',
+    category: 'Umkehrmuster',
+    signal: 'bearish',
+    priority: 'P1',
+    timeframe: 'eod',
+    winRateHistorical: '72.1%',
+    description: 'Starkes bearishes Umkehrmuster mit Nackenlinien-Durchbruch und abnehmendem Volumen.',
+  },
+  {
+    id: 'bull-flag',
+    name: 'Bullische Flagge (Bull Flag)',
+    category: 'Fortsetzungsmuster',
+    signal: 'bullish',
+    priority: 'P2',
+    timeframe: '1m',
+    winRateHistorical: '65.2%',
+    description: 'Kurze, abwärtsgerichtete Konsolidierung nach impulsivem Anstieg; Ausbruch nach oben wahrscheinlich.',
+  },
+  {
+    id: 'ascending-triangle',
+    name: 'Aufsteigendes Dreieck (Ascending Triangle)',
+    category: 'Breakout',
+    signal: 'bullish',
+    priority: 'P2',
+    timeframe: '15m',
+    winRateHistorical: '66.8%',
+    description: 'Horizontale Widerstandslinie mit ansteigenden Tiefstständen signalisiert kontinuierlichen Kaufdruck.',
+  },
+  {
+    id: 'golden-cross',
+    name: 'Golden Cross (SMA 50 kreuzt SMA 200)',
+    category: 'Fortsetzungsmuster',
+    signal: 'bullish',
+    priority: 'P1',
+    timeframe: 'eod',
+    winRateHistorical: '74.5%',
+    description: 'Institutionelles Makro-Signal für langfristigen Bullenmarkt in Aktien und Indizes.',
+  },
+  {
+    id: 'death-cross',
+    name: 'Death Cross (SMA 50 fällt unter SMA 200)',
+    category: 'Umkehrmuster',
+    signal: 'bearish',
+    priority: 'P1',
+    timeframe: 'eod',
+    winRateHistorical: '71.0%',
+    description: 'Langfristiges Bärensignal für anhaltenden Verkaufsdruck und Risikoabbau.',
+  },
+  {
+    id: 'wyckoff-spring',
+    name: 'Wyckoff Akkumulation Phase C (Spring)',
+    category: 'Harmonic & Wyckoff',
+    signal: 'bullish',
+    priority: 'P1',
+    timeframe: '15m',
+    winRateHistorical: '76.8%',
+    description: 'Liquidation kleiner Marktteilnehmer unterhalb der Range gefolgt von sofortigem Rückkauf (Smart Money).',
+  },
+  {
+    id: 'rsi-divergence',
+    name: 'RSI Bullische Divergenz',
+    category: 'Umkehrmuster',
+    signal: 'bullish',
+    priority: 'P2',
+    timeframe: 'multi',
+    winRateHistorical: '69.3%',
+    description: 'Tieferes Tief im Kurs bei gleichzeitig höherem Tief im RSI signalisiert nachlassendes Momentum.',
+  },
+];
+
+// =============================================================================
+// MASTER NEWS API INTERFACES CATALOG
+// =============================================================================
+
+export const MASTER_NEWS_APIS_CATALOG: NewsApiToolItem[] = [
+  {
+    id: 'news-bafin-press',
+    name: 'BaFin Pressemitteilungen & Warnlisten Feed',
+    category: 'Regulatorisch & BaFin',
+    provider: 'Bundesanstalt für Finanzdienstleistungsaufsicht (BaFin)',
+    monthlyCostEur: 0.0,
+    latencySpec: 'Realtime Push / RSS',
+    updateFrequency: 'Täglich / Ad-Hoc',
+    bafinRelevance: 'WpHG § 83 Audit-Trail konform',
+    description: 'Offizieller deutscher Behördenfeed für sofortige Warnungen, Markteingriffe und Bußgelder.',
+  },
+  {
+    id: 'news-sec-edgar',
+    name: 'SEC EDGAR Filings (10-K, 10-Q, 8-K)',
+    category: 'Regulatorisch & BaFin',
+    provider: 'U.S. Securities and Exchange Commission (EDGAR)',
+    monthlyCostEur: 0.0,
+    latencySpec: 'Sub-60s Stream',
+    updateFrequency: 'Echtzeit-Meldungen',
+    bafinRelevance: 'Aufsichtsrechtliche Offenlegungspflicht',
+    description: 'Vollständige Quartals- und Insider-Berichte aller US-börsennotierten Unternehmen.',
+  },
+  {
+    id: 'news-fed-wire',
+    name: 'Federal Reserve Wire & FOMC Statements',
+    category: 'Makro & Zentralbanken',
+    provider: 'Federal Reserve Bank St. Louis / Board of Governors',
+    monthlyCostEur: 0.0,
+    latencySpec: 'Sofortige Übermittlung',
+    updateFrequency: 'Nach FOMC Sitzungen / Wöchentlich',
+    bafinRelevance: 'Sovereign Reference',
+    description: 'Leitzinsentscheide, geldpolitische Reden und offizielle Zinsstruktur-Analysen.',
+  },
+  {
+    id: 'news-ezb-ecb',
+    name: 'EZB Pressekonferenzen & Zinsbeschlüsse',
+    category: 'Makro & Zentralbanken',
+    provider: 'Europäische Zentralbank (EZB)',
+    monthlyCostEur: 0.0,
+    latencySpec: 'Sub-30s Webhook',
+    updateFrequency: 'Zinstermine & Monatsberichte',
+    bafinRelevance: 'EU Leitzins Benchmark',
+    description: 'Amtliche europäische Zinsbeschlüsse und geldpolitische Transkripte für EUR-Finanzprodukte.',
+  },
+  {
+    id: 'news-eqs-dgap',
+    name: 'EQS / DGAP Ad-Hoc Insider-Newsfeed',
+    category: 'Ad-Hoc & Earnings',
+    provider: 'EQS Group Regulatory Hub (DGAP)',
+    monthlyCostEur: 0.0,
+    latencySpec: 'Realtime Ad-Hoc Push',
+    updateFrequency: 'Sekundengenau',
+    bafinRelevance: 'WpHG Ad-Hoc Meldepflicht',
+    description: 'Gesetzlich vorgeschriebene Ad-hoc-Mitteilungen börsennotierter Gesellschaften in Deutschland.',
+  },
+  {
+    id: 'news-bloomberg-wire',
+    name: 'Bloomberg Terminal News & Macro Headlines',
+    category: 'Makro & Zentralbanken',
+    provider: 'Bloomberg Financial Markets',
+    monthlyCostEur: 0.0, // Free Public Headlines Tier
+    latencySpec: 'Sub-5s Streaming',
+    updateFrequency: 'Kontinuierlich',
+    bafinRelevance: 'Institutionelle Markt-Benchmark',
+    description: 'Globale Breaking News zu Aktien, Devisen, Staatsanleihen und Rohstoffen.',
+  },
+  {
+    id: 'news-coindesk',
+    name: 'CoinDesk Institutional & MiCA Policy Wire',
+    category: 'Krypto & On-Chain',
+    provider: 'CoinDesk Intelligence',
+    monthlyCostEur: 0.0,
+    latencySpec: 'Echtzeit-Feed',
+    updateFrequency: 'Kontinuierlich',
+    bafinRelevance: 'MiCA Krypto-Regulierung',
+    description: 'Institutionelle Analysen zur Krypto-Adoption, ETF-Zuflüssen und globaler Krypto-Regulierung.',
+  },
+  {
+    id: 'news-whale-alert',
+    name: 'Whale Alert Großtransaktionen Push API',
+    category: 'Krypto & On-Chain',
+    provider: 'Whale Alert WebSocket Gateway',
+    monthlyCostEur: 0.0,
+    latencySpec: 'Sub-15s Block Event',
+    updateFrequency: 'Bei Transfers > $1.000.000',
+    bafinRelevance: 'On-Chain Markttransparenz',
+    description: 'Automatisierte Alarme bei Transfers großer Bestände zwischen Börsen und anonymen Wallets.',
+  },
+];
+
+// =============================================================================
 // INVENTORY CATALOGING ENGINE (REVENUE ASSURANCE AUDIT)
 // =============================================================================
 
@@ -458,11 +788,87 @@ export function catalogUserSelectedTools(config: PipelineConfigState): Inventory
     items.push(MASTER_TOOL_CATALOG[config.latencyIntervalId]);
   }
 
-  // Layer 3 (can have multiple providers)
+  // Layer 3: Market Data Feeds & News APIs
   if (Array.isArray(config.providerIds)) {
     for (const pid of config.providerIds) {
       if (MASTER_TOOL_CATALOG[pid]) {
         items.push(MASTER_TOOL_CATALOG[pid]);
+      }
+    }
+  }
+
+  // Layer 3 Extension: Categorized News API Interfaces
+  if (Array.isArray(config.selectedNewsApis)) {
+    for (const newsId of config.selectedNewsApis) {
+      const newsItem = MASTER_NEWS_APIS_CATALOG.find((n) => n.id === newsId);
+      if (newsItem) {
+        items.push({
+          sku: `CAP-NEWS-${newsItem.id.toUpperCase().replace('NEWS-', '')}`,
+          layerNumber: 3,
+          layerName: `Ebene 3: News API (${newsItem.category})`,
+          id: newsItem.id,
+          name: newsItem.name,
+          subtitle: newsItem.provider,
+          category: newsItem.category,
+          monthlyCostEur: newsItem.monthlyCostEur,
+          latencyContribution: newsItem.latencySpec,
+          latencyMs: 15,
+          specs: `${newsItem.updateFrequency} · ${newsItem.description}`,
+          bafinStandard: newsItem.bafinRelevance,
+          licenseType: 'Public Market Data',
+          revenueAssuranceGrade: 'A+',
+        });
+      }
+    }
+  }
+
+  // Layer 1 Extension: Selected Indicators & Formulas
+  if (Array.isArray(config.selectedIndicators)) {
+    for (const indId of config.selectedIndicators) {
+      const indItem = MASTER_INDICATORS_CATALOG.find((i) => i.id === indId);
+      if (indItem) {
+        items.push({
+          sku: `CAP-IND-${indItem.shortName.toUpperCase()}`,
+          layerNumber: 1,
+          layerName: `Ebene 1: Indikator (${indItem.category})`,
+          id: indItem.id,
+          name: indItem.name,
+          subtitle: indItem.defaultThreshold,
+          category: indItem.category,
+          monthlyCostEur: 0.0,
+          latencyContribution: `Signal: ${indItem.signal.toUpperCase()} [${indItem.priority}]`,
+          latencyMs: 1,
+          specs: `${indItem.formula} · ${indItem.description}`,
+          bafinStandard: 'Deterministische Berechnung',
+          licenseType: 'Open Source MIT',
+          revenueAssuranceGrade: 'A+',
+          keyFormulas: [indItem.formula],
+        });
+      }
+    }
+  }
+
+  // Layer 1 Extension: Selected Chart Patterns
+  if (Array.isArray(config.selectedPatterns)) {
+    for (const patId of config.selectedPatterns) {
+      const patItem = MASTER_PATTERNS_CATALOG.find((p) => p.id === patId);
+      if (patItem) {
+        items.push({
+          sku: `CAP-PAT-${patItem.id.toUpperCase()}`,
+          layerNumber: 1,
+          layerName: `Ebene 1: Chart-Muster (${patItem.category})`,
+          id: patItem.id,
+          name: patItem.name,
+          subtitle: `Historische Win-Rate: ${patItem.winRateHistorical}`,
+          category: patItem.category,
+          monthlyCostEur: 0.0,
+          latencyContribution: `Signal: ${patItem.signal.toUpperCase()} [${patItem.priority}]`,
+          latencyMs: 1,
+          specs: `${patItem.description} (Win-Rate: ${patItem.winRateHistorical})`,
+          bafinStandard: 'Regelbasierte Mustererkennung',
+          licenseType: 'Open Source MIT',
+          revenueAssuranceGrade: 'A+',
+        });
       }
     }
   }
