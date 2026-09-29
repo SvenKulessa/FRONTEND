@@ -44,7 +44,6 @@ import { PriceAlertToast } from './components/PriceAlertToast';
 import { PriceAlertsModal } from './components/PriceAlertsModal';
 import { MarketSentiment } from './components/MarketSentiment';
 import { SectorAnalysis } from './components/SectorAnalysis';
-import { WhaleRadarSection } from './components/WhaleRadarSection';
 import { WhaleRadarModal } from './components/WhaleRadarModal';
 import { MonetizationModal } from './components/MonetizationModal';
 import { ArchitecturePage } from './components/ArchitecturePage';
@@ -586,6 +585,7 @@ function AppContent() {
             onBackToHome={() => navigateTo('/')}
             onNavigateLogin={() => navigateTo('/login')}
             onNavigateLegal={navigateTo}
+            onNavigate={navigateTo}
           />
         ) : currentRoute === '/architecture' ? (
           /* Dedicated Architecture & Market Data Pipeline View */
@@ -641,14 +641,14 @@ function AppContent() {
             </div>
           </div>
         ) : currentRoute === '/learning' || currentRoute === '/vocabulary' ? (
-          /* Dedicated Learning Portal View (Reiter 3) */
+          /* Dedicated Learning Portal View */
           <LearningPortalPage
             onBackToHome={() => navigateTo('/')}
             onNavigateLogin={() => navigateTo('/login')}
             onNavigateTab={navigateTo}
           />
         ) : currentRoute === '/control-center' ? (
-          /* Dedicated Control Center & Roadmap View (Reiter 4) */
+          /* Dedicated Control Center & Roadmap View */
           <ControlCenterPage
             onBackToHome={() => navigateTo('/')}
             onNavigateLogin={() => navigateTo('/login')}
@@ -694,16 +694,7 @@ function AppContent() {
             {/* 4 Feature Key Pillars */}
             <KeyPillars />
 
-            {/* Market Sentiment (Fear & Greed Index & Macro Trend Radar) */}
-            <MarketSentiment
-              onStartAnalysis={() => setIsAnalysisOpen(true)}
-              onExploreMarkets={() => {
-                setMarketCategoryFilter('ALLE');
-                setIsAllMarketsOpen(true);
-              }}
-            />
-
-            {/* Sector Analysis (Sector Rotation Radar & Institutional Capital Flows) */}
+            {/* Sector Analysis (Sector Rotation Radar & Institutional Capital Flows) - SWAPPED AS REQUESTED */}
             <SectorAnalysis
               onSelectAsset={(asset) => setSelectedAsset(asset)}
               onOpenPriceAlerts={() => setIsAlertModalOpen(true)}
@@ -713,22 +704,14 @@ function AppContent() {
               }}
             />
 
-            {/* Smart Money Flow & On-Chain Whale Radar */}
-            <WhaleRadarSection
-              onOpenTerminal={() => setIsWhaleRadarOpen(true)}
-              onOpenTelegram={() => setIsWhaleRadarOpen(true)}
-              onSelectAsset={(sym) => {
-                const found = MARKET_ASSETS.find(
-                  (a) => a.symbol.toUpperCase() === sym.toUpperCase()
-                );
-                if (found) {
-                  setSelectedAsset(found);
-                } else {
-                  openWhaleRadar(sym);
-                }
+            {/* Market Sentiment (Fear & Greed Index & Macro Trend Radar) */}
+            <MarketSentiment
+              onStartAnalysis={() => setIsAnalysisOpen(true)}
+              onExploreMarkets={() => {
+                setMarketCategoryFilter('ALLE');
+                setIsAllMarketsOpen(true);
               }}
             />
-
 
             {/* Global Markets Overview */}
             <MarketOverview
@@ -742,13 +725,18 @@ function AppContent() {
             {/* Core Modules ("Unsere Kernmodule") */}
             <CoreModules
               onSelectModule={(module) => {
-                if (module.id === 'vocabulary') {
-                  setIsVocabularyOpen(true);
+                if (module.id === 'market-screener' || module.id === 'screener') {
+                  navigateTo('/screener');
+                } else if (module.id === 'learning-portal' || module.id === 'vocabulary') {
+                  navigateTo('/learning');
+                } else if (module.id === 'pipeline-builder') {
+                  navigateTo('/pipeline-builder');
                 } else {
                   setSelectedModule(module);
                 }
               }}
               onViewAllModules={() => handleOpenModuleById('enterprise-scorer')}
+              onNavigate={navigateTo}
             />
 
             {/* Footer with Slogan & Dedicated Routing Links */}

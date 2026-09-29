@@ -1,14 +1,14 @@
 /**
  * CAPITAL AI — LEARNING PORTAL & FINANZ-VOKABULAR TERMINAL
  * 
- * Zentraler 3. Reiter der Anwendung.
+ * Zentrales Learning Portal der Anwendung.
  * Beinhaltet:
  * 1. Vollständiges Market Vocabulary & Glossar (Filterbar nach Kategorien & Skill-Levels)
  * 2. Interaktive Cheat-Sheets & Guides (Fintech Pipeline, BaFin MaRisk, Buffett DCF)
  * 3. Quant- & Trader Skill-Check (Interaktives Quiz)
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   BookOpen,
   Search,
@@ -38,6 +38,7 @@ import {
   VocabularyLevel,
   VocabularyTerm,
 } from '../data/vocabularyData';
+import { SubpageSidebarNav, SubpageNavItem } from './SubpageSidebarNav';
 
 export type LearningPortalTab = 'glossar' | 'guides' | 'quiz';
 
@@ -55,6 +56,41 @@ export const LearningPortalPage: React.FC<LearningPortalPageProps> = ({
   initialTab = 'glossar',
 }) => {
   const [activeTab, setActiveTab] = useState<LearningPortalTab>(initialTab);
+
+  // Sync tab with URL search parameter
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      if (tabParam === 'glossar' || tabParam === 'guides' || tabParam === 'quiz') {
+        setActiveTab(tabParam as LearningPortalTab);
+      }
+    }
+  }, []);
+
+  const subpageItems: SubpageNavItem[] = [
+    {
+      id: 'glossar',
+      label: 'Market Vocabulary & Glossar',
+      icon: <BookOpen className="w-4 h-4 text-amber-400" />,
+      badge: `${VOCABULARY_TERMS.length}`,
+      desc: 'Finanzbegriffe & Formeln',
+    },
+    {
+      id: 'guides',
+      label: 'Cheat-Sheets & Guides',
+      icon: <Layers className="w-4 h-4 text-cyan-400" />,
+      badge: '4 Guides',
+      desc: 'DCF, MaRisk & Latenzen',
+    },
+    {
+      id: 'quiz',
+      label: 'Quant & Trader Skill-Check',
+      icon: <Award className="w-4 h-4 text-purple-400" />,
+      badge: 'Skill-Quiz',
+      desc: 'Interaktiver Wissenstest',
+    },
+  ];
 
   // Vocabulary Filter States
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -201,7 +237,7 @@ export const LearningPortalPage: React.FC<LearningPortalPageProps> = ({
             <span aria-hidden="true" className="text-slate-600">
               /
             </span>
-            <span className="text-amber-400 font-semibold">Reiter 3: Learning Portal</span>
+            <span className="text-amber-400 font-semibold">Learning Portal</span>
             <span aria-hidden="true" className="text-slate-600">
               /
             </span>
@@ -252,7 +288,16 @@ export const LearningPortalPage: React.FC<LearningPortalPageProps> = ({
         </div>
       </div>
 
-      {/* 2. LEARNING PORTAL TABS */}
+      {/* 2. SUBPAGE SIDEBAR (NACH RECHTS AUFKLAPPBAR) */}
+      <SubpageSidebarNav
+        hubTitle="Learning Portal"
+        items={subpageItems}
+        activeId={activeTab}
+        onSelect={(id) => setActiveTab(id as LearningPortalTab)}
+        accentColor="amber"
+      />
+
+      {/* 3. LEARNING PORTAL TABS */}
       <div className="flex items-center gap-1 p-1 rounded-xl bg-[#090e21] border border-slate-800/90 mb-6 overflow-x-auto scrollbar-none">
         {/* TAB 1: GLOSSAR / VOCABULARY */}
         <button

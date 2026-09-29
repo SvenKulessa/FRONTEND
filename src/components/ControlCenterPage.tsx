@@ -1,7 +1,7 @@
 /**
  * CAPITAL AI — CONTROL CENTER & MANAGEMENT KONSOLE
  * 
- * Zentraler 4. Reiter für Geschäftsführer, Founder und Kernteam-Mitglieder.
+ * Zentrales Control Center für Geschäftsführer, Founder und Kernteam-Mitglieder.
  * Beinhaltet:
  * 1. Navigationsfreundliche Roadmap (Filterbar nach 11 Projektownern, 3 Status, 5 Phasen bis v1.0)
  * 2. Executive Cockpit (v1.0 Go-Live Readiness, MaRisk Governance)
@@ -10,7 +10,7 @@
  * 5. Webanwendungs- & System-Optionen (Feature Flags, Auto-Healing)
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   ShieldCheck,
   Compass,
@@ -45,6 +45,9 @@ import {
   Building2,
   BookOpen,
   LineChart,
+  Shield,
+  Radio,
+  FileCode,
 } from 'lucide-react';
 import {
   ProjectOwner,
@@ -54,8 +57,9 @@ import {
   WORK_PACKAGES,
   WorkPackage,
 } from '../data/roadmapData';
+import { SubpageSidebarNav, SubpageNavItem } from './SubpageSidebarNav';
 
-export type ControlCenterTab = 'roadmap' | 'cockpit' | 'team' | 'cost_center' | 'system';
+export type ControlCenterTab = 'roadmap' | 'console' | 'cockpit' | 'team' | 'cost_center' | 'system';
 
 interface ControlCenterPageProps {
   onBackToHome?: () => void;
@@ -72,6 +76,69 @@ export const ControlCenterPage: React.FC<ControlCenterPageProps> = ({
 }) => {
   // Navigation Tabs inside Control Center
   const [activeTab, setActiveTab] = useState<ControlCenterTab>(initialTab);
+
+  // Sync tab with URL search parameter
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      if (
+        tabParam === 'roadmap' ||
+        tabParam === 'console' ||
+        tabParam === 'cockpit' ||
+        tabParam === 'team' ||
+        tabParam === 'cost_center' ||
+        tabParam === 'system'
+      ) {
+        setActiveTab(tabParam as ControlCenterTab);
+      }
+    }
+  }, []);
+
+  const subpageItems: SubpageNavItem[] = [
+    {
+      id: 'roadmap',
+      label: 'Roadmap (v1.0 Go-Live)',
+      icon: <Compass className="w-4 h-4 text-rose-400" />,
+      badge: `${WORK_PACKAGES.length} APs`,
+      desc: '11 Projektowner & 5 Phasen',
+    },
+    {
+      id: 'console',
+      label: 'Configurator Console',
+      icon: <Sliders className="w-4 h-4 text-rose-400" />,
+      badge: 'Admin',
+      desc: '50-Komponenten & Shadow-Run',
+    },
+    {
+      id: 'cockpit',
+      label: 'Executive Cockpit',
+      icon: <Activity className="w-4 h-4 text-amber-400" />,
+      badge: 'GF & Founder',
+      desc: 'SLA, Reifegrad & MaRisk',
+    },
+    {
+      id: 'team',
+      label: 'Team & Rollen (11 Owner)',
+      icon: <Users className="w-4 h-4 text-cyan-400" />,
+      badge: '11 Leads',
+      desc: 'Verantwortungsmatrix',
+    },
+    {
+      id: 'cost_center',
+      label: 'Cost Center & Finanzen',
+      icon: <DollarSign className="w-4 h-4 text-emerald-400" />,
+      badge: '40 € Cap',
+      desc: 'AP-006 Budget-Governance',
+    },
+    {
+      id: 'system',
+      label: 'Webanwendung & System',
+      icon: <Server className="w-4 h-4 text-purple-400" />,
+      badge: 'Optionen',
+      desc: 'Feature Flags & WORM',
+    },
+  ];
 
   // Roadmap Filters
   const [selectedOwner, setSelectedOwner] = useState<string>('ALL');
@@ -197,12 +264,13 @@ export const ControlCenterPage: React.FC<ControlCenterPageProps> = ({
             <span aria-hidden="true" className="text-slate-600">
               /
             </span>
-            <span className="text-rose-400 font-semibold">Reiter 4: Control Center</span>
+            <span className="text-rose-400 font-semibold">Control Center</span>
             <span aria-hidden="true" className="text-slate-600">
               /
             </span>
             <span className="text-amber-400 font-medium">
               {activeTab === 'roadmap' && 'Roadmap (v1.0 Go-Live)'}
+              {activeTab === 'console' && 'Configurator Console & Audit'}
               {activeTab === 'cockpit' && 'Executive Cockpit (GF & Founder)'}
               {activeTab === 'team' && 'Team & Rollen (11 Projektowner)'}
               {activeTab === 'cost_center' && 'Cost Center & Finanzen (AP-006)'}
@@ -274,7 +342,16 @@ export const ControlCenterPage: React.FC<ControlCenterPageProps> = ({
         </div>
       </div>
 
-      {/* 2. CONTROL CENTER TABS NAVIGATION */}
+      {/* 2. SUBPAGE SIDEBAR (NACH RECHTS AUFKLAPPBAR) */}
+      <SubpageSidebarNav
+        hubTitle="Control Center"
+        items={subpageItems}
+        activeId={activeTab}
+        onSelect={(id) => setActiveTab(id as ControlCenterTab)}
+        accentColor="rose"
+      />
+
+      {/* 3. CONTROL CENTER TABS NAVIGATION */}
       <div className="flex items-center gap-1 p-1 rounded-xl bg-[#090e21] border border-slate-800/90 mb-6 overflow-x-auto scrollbar-none">
         {/* TAB 1: ROADMAP (PRIMARY) */}
         <button
@@ -291,6 +368,21 @@ export const ControlCenterPage: React.FC<ControlCenterPageProps> = ({
           <span className="text-[10px] px-1.5 py-0.2 rounded bg-black/30 font-mono">
             {WORK_PACKAGES.length} APs
           </span>
+        </button>
+
+        {/* TAB 2: CONFIGURATOR CONSOLE (MOVED TO CONTROL CENTER) */}
+        <button
+          type="button"
+          onClick={() => setActiveTab('console')}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
+            activeTab === 'console'
+              ? 'bg-rose-500 text-white font-bold shadow-sm'
+              : 'text-slate-300 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          <Sliders className="w-3.5 h-3.5" />
+          <span>Configurator Console</span>
+          <span className="text-[10px] px-1.5 py-0.2 rounded bg-black/30 font-mono">Admin</span>
         </button>
 
         {/* TAB 2: EXECUTIVE COCKPIT */}
@@ -352,7 +444,7 @@ export const ControlCenterPage: React.FC<ControlCenterPageProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* TAB CONTENT 1: ROADMAP (THE PRIMARY REQUESTED REITER)                     */}
+      {/* TAB CONTENT 1: ROADMAP (THE PRIMARY V1.0 GO-LIVE ROADMAP)                 */}
       {/* ========================================================================= */}
       {activeTab === 'roadmap' && (
         <div className="space-y-6">
@@ -937,6 +1029,153 @@ export const ControlCenterPage: React.FC<ControlCenterPageProps> = ({
               </div>
             </div>
           )}
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* TAB CONTENT: CONFIGURATOR CONSOLE & AUDIT (SET INTO CONTROL CENTER)       */}
+      {/* ========================================================================= */}
+      {activeTab === 'console' && (
+        <div className="space-y-6">
+          <div className="p-6 rounded-2xl bg-gradient-to-r from-rose-500/15 via-[#0d1530] to-purple-500/15 border border-rose-500/30">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 text-xs font-mono text-rose-400 mb-1">
+                  <Shield className="w-4 h-4" />
+                  <span>INTERNAL ADMIN &amp; GOVERNANCE CONSOLE • FEATURE-FLAGGED</span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                  Pipeline Configurator &amp; Audit Console
+                </h2>
+                <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                  Zentrale Überwachung von Provider-Flotte, 50-Komponenten-Ausführungsstatus,
+                  Schatten-Benchmarking, Daten-Plausibilitätsfehlern und Replay-Evidence im Control Center.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                <span className="text-xs font-mono px-3 py-1.5 rounded-xl bg-black/60 text-emerald-400 border border-emerald-500/30 font-bold">
+                  Zero Secrets Exposed (Audit OK)
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Top 4 KPI Panels */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="p-4 rounded-xl bg-[#090e21] border border-slate-800">
+              <div className="text-[10px] font-mono text-slate-400 uppercase">Provider Flotte (Health)</div>
+              <div className="text-2xl font-extrabold font-mono text-emerald-400 mt-1">4 / 4 Online</div>
+              <div className="text-[11px] text-slate-400 mt-0.5">Binance, Kraken, 12Data, SEC</div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-[#090e21] border border-slate-800">
+              <div className="text-[10px] font-mono text-slate-400 uppercase">Komponenten-Status</div>
+              <div className="text-2xl font-extrabold font-mono text-cyan-400 mt-1">44 Active • 6 Shadow</div>
+              <div className="text-[11px] text-slate-400 mt-0.5">50 / 50 Registriert</div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-[#090e21] border border-slate-800">
+              <div className="text-[10px] font-mono text-slate-400 uppercase">Plausibilitäts-Verletzungen</div>
+              <div className="text-2xl font-extrabold font-mono text-emerald-400 mt-1">0 Fehler</div>
+              <div className="text-[11px] text-slate-400 mt-0.5">11 / 11 Regeln bestanden</div>
+            </div>
+
+            <div className="p-4 rounded-xl bg-[#090e21] border border-slate-800">
+              <div className="text-[10px] font-mono text-slate-400 uppercase">Aktive Config-Version</div>
+              <div className="text-2xl font-extrabold font-mono text-white mt-1">v2.5.0-prod</div>
+              <div className="text-[11px] text-purple-300 mt-0.5">Shadow: v2.6.0 (10% Sample)</div>
+            </div>
+          </div>
+
+          {/* Configurator Panels */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Panel 1: Component Execution Matrix */}
+            <div className="p-5 rounded-2xl bg-[#090e21] border border-slate-800 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono flex items-center gap-2">
+                  <Cpu className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>Komponenten-Ausführungsstatus (Top 50)</span>
+                </h3>
+                <span className="text-[10px] font-mono text-slate-400">100% Type-Safe</span>
+              </div>
+              <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+                {[
+                  { id: 'market_integrity_gate', name: 'Market Integrity Gate', domain: 'data-quality', status: 'ACTIVE', gate: true },
+                  { id: 'data_quality_scorer', name: 'Data Quality Scorer', domain: 'data-quality', status: 'ACTIVE', gate: true },
+                  { id: 'liquidity_eligibility_scorer', name: 'Liquidity Eligibility Scorer', domain: 'risk-controls', status: 'ACTIVE', gate: true },
+                  { id: 'spread_slippage_risk_scorer', name: 'Spread & Slippage Risk Scorer', domain: 'risk-controls', status: 'ACTIVE', gate: false },
+                  { id: 'multi_timeframe_trend_regime_scorer', name: 'Multi-Timeframe Trend Scorer', domain: 'scoring', status: 'ACTIVE', gate: false },
+                  { id: 'fundamental_quality_scorer', name: 'Piotroski & Moat Quality Scorer', domain: 'scoring', status: 'ACTIVE', gate: false },
+                  { id: 'bot_manipulation_risk_scorer', name: 'Bot Manipulation Risk Scorer', domain: 'risk-controls', status: 'ACTIVE', gate: true },
+                  { id: 'final_rank_confidence_evidence_scorer', name: 'Final Composite & Evidence Scorer', domain: 'ranking', status: 'ACTIVE', gate: true },
+                  { id: 'options_positioning_gamma_scorer', name: 'Options Gamma Exposure (GEX)', domain: 'market-intelligence', status: 'SHADOW', gate: false },
+                  { id: 'onchain_flow_holder_behavior_scorer', name: 'On-Chain Flow & Whale Scorer', domain: 'market-intelligence', status: 'ACTIVE', gate: false },
+                ].map((c) => (
+                  <div key={c.id} className="p-2.5 rounded-xl bg-black/40 border border-slate-800/80 flex items-center justify-between text-xs">
+                    <div>
+                      <div className="font-bold text-white flex items-center gap-2">
+                        <span>{c.name}</span>
+                        {c.gate && (
+                          <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-400/10 text-amber-300 border border-amber-400/20">
+                            GATE
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-[10px] text-slate-500 font-mono">{c.domain} • {c.id}</div>
+                    </div>
+                    <span
+                      className={`text-[9px] font-mono px-2 py-0.5 rounded font-bold ${
+                        c.status === 'ACTIVE'
+                          ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/20'
+                          : 'bg-purple-500/15 text-purple-300 border border-purple-500/20'
+                      }`}
+                    >
+                      {c.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Panel 2: Shadow-Mode Benchmarking & Diff */}
+            <div className="p-5 rounded-2xl bg-[#090e21] border border-slate-800 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono flex items-center gap-2">
+                  <Layers className="w-3.5 h-3.5 text-purple-400" />
+                  <span>Schatten-Modus &amp; Konfigurations-Diff</span>
+                </h3>
+                <span className="text-[10px] font-mono text-purple-300">Parallel 10% Canary</span>
+              </div>
+              <div className="space-y-3 text-xs">
+                <div className="p-3 rounded-xl bg-black/40 border border-slate-800 space-y-2">
+                  <div className="flex items-center justify-between text-[11px] font-mono">
+                    <span className="text-slate-400">Baseline (v2.5.0-prod):</span>
+                    <span className="text-emerald-400 font-bold">P95: 38ms • CPU: 12%</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[11px] font-mono">
+                    <span className="text-slate-400">Canary Shadow (v2.6.0):</span>
+                    <span className="text-purple-300 font-bold">P95: 34ms • CPU: 11% (-10%)</span>
+                  </div>
+                  <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-emerald-400 to-purple-400 rounded-full w-full" />
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-black/40 border border-slate-800 space-y-1.5">
+                  <div className="text-[10px] font-mono uppercase text-slate-400">Audit-Trail &amp; Replay Evidence:</div>
+                  <div className="text-[11px] font-mono text-slate-300 flex items-center justify-between">
+                    <span>Letzter Merkle-Root Proof:</span>
+                    <span className="text-amber-400 font-mono">0x7f4a...8b9c (OK)</span>
+                  </div>
+                  <div className="text-[11px] font-mono text-slate-300 flex items-center justify-between">
+                    <span>WORM-Archivierung (WpHG § 83):</span>
+                    <span className="text-emerald-400 font-bold">Aktiv (5 Jahre unveränderbar)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

@@ -54,6 +54,7 @@ import {
   Compass,
   GraduationCap,
   Users,
+  Server,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BrandLogo } from './BrandLogo';
@@ -95,6 +96,7 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [expandedHub, setExpandedHub] = useState<string | null>('studio');
   const [expandedClass, setExpandedClass] = useState<MainCategory | null>('KRYPTO');
   const { activeAlertsCount, triggeredAlertsCount } = usePriceAlerts();
 
@@ -160,7 +162,7 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* CENTER: DIE 4 HAUPTREITER (Marketscreener, Studio Hub, Learning Portal, Control Center) */}
       <nav aria-label="Hauptnavigation" className="hidden lg:flex items-center gap-1 p-1 rounded-xl bg-black/40 border border-slate-800/80 shadow-inner">
-        {/* Reiter 1: Marketscreener */}
+        {/* Marketscreener */}
         <button
           type="button"
           onClick={() => onNavigate?.('/')}
@@ -169,13 +171,13 @@ export const Header: React.FC<HeaderProps> = ({
               ? 'bg-amber-400 text-black font-extrabold shadow-sm'
               : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
           }`}
-          title="Reiter 1: Marketscreener (Echtzeit-Marktdaten & Scorer)"
+          title="Marketscreener (Echtzeit-Marktdaten & Scorer)"
         >
           <LineChart className="w-3.5 h-3.5" />
           <span>Marketscreener</span>
         </button>
 
-        {/* Reiter 2: Studio Hub */}
+        {/* Studio Hub */}
         <button
           type="button"
           onClick={() => onNavigate?.('/studio')}
@@ -184,13 +186,13 @@ export const Header: React.FC<HeaderProps> = ({
               ? 'bg-cyan-500 text-black font-extrabold shadow-sm'
               : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
           }`}
-          title="Reiter 2: Studio Hub (8 Module: Architektur, Builder, Blueprints, etc.)"
+          title="Studio Hub (7 Module: Architektur, Builder, Blueprints, etc.)"
         >
           <Building2 className="w-3.5 h-3.5" />
           <span>Studio Hub</span>
         </button>
 
-        {/* Reiter 3: Learning Portal */}
+        {/* Learning Portal */}
         <button
           type="button"
           onClick={() => onNavigate?.('/learning')}
@@ -199,13 +201,13 @@ export const Header: React.FC<HeaderProps> = ({
               ? 'bg-amber-400 text-black font-extrabold shadow-sm'
               : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
           }`}
-          title="Reiter 3: Learning Portal (Vocabulary, Glossar & Cheat-Sheets)"
+          title="Learning Portal (Vocabulary, Glossar & Cheat-Sheets)"
         >
           <BookOpen className="w-3.5 h-3.5" />
           <span>Learning Portal</span>
         </button>
 
-        {/* Reiter 4: Control Center */}
+        {/* Control Center */}
         <button
           type="button"
           onClick={() => onNavigate?.('/control-center')}
@@ -214,7 +216,7 @@ export const Header: React.FC<HeaderProps> = ({
               ? 'bg-rose-500 text-white font-extrabold shadow-sm'
               : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
           }`}
-          title="Reiter 4: Control Center (v1.0 Roadmap, Cockpit & Governance)"
+          title="Control Center (v1.0 Roadmap, Cockpit, Console & Governance)"
         >
           <ShieldCheck className="w-3.5 h-3.5" />
           <span>Control Center</span>
@@ -348,518 +350,367 @@ export const Header: React.FC<HeaderProps> = ({
                   </a>
                 </div>
 
-                {/* Navigation Sections */}
+                {/* Navigation Sections: DIE 4 HAUPTHUBS (GLEICHE GRAFIKARCHITEKTUR WIE ASSETKLASSEN) */}
                 <div className="mt-5 space-y-4">
-                  {/* SECTION 1: MARKETSCREENER & ANALYSE */}
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400/90 px-1 mb-2">
-                      Marketscreener &amp; Analyse
+                  <div className="space-y-2">
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400/90 px-1 mb-1">
+                      Plattform Hubs &amp; Navigation
                     </div>
 
-                    <div className="space-y-1.5">
-                      {/* Unified Marketscreener CTA */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          if (onOpenMarketscreener) onOpenMarketscreener();
-                          else onOpenAnalysis?.();
-                        }}
-                        className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/15 to-transparent border border-amber-400/40 text-amber-200 font-semibold text-sm hover:from-amber-500/30 hover:to-orange-500/25 transition-all text-left group shadow-[0_0_15px_rgba(249,191,33,0.12)] cursor-pointer"
-                      >
-                        <span className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
-                            <BarChart3 className="w-4 h-4" />
-                          </div>
-                          <div>
-                            <div className="text-white font-bold leading-none">Marketscreener Hub</div>
-                            <div className="text-[10px] text-amber-300/80 mt-1 font-normal">Buffett Check, Scorer &amp; Märkte</div>
-                          </div>
-                        </span>
-                        <ChevronRight className="w-4 h-4 text-amber-400" />
-                      </button>
-
-                      {/* Buffett Value Check Direct */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onOpenModule?.('buffett-value');
-                        }}
-                        className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-                      >
-                        <span className="flex items-center gap-2">
-                          <Leaf className="w-3.5 h-3.5 text-emerald-400" />
-                          <span>Buffett Value Check</span>
-                        </span>
-                        <span className="text-[9px] font-mono text-emerald-400 font-semibold">Margin of Safety</span>
-                      </button>
-
-                      {/* Enterprise Scorer Direct */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onOpenModule?.('enterprise-scorer');
-                        }}
-                        className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-                      >
-                        <span className="flex items-center gap-2">
-                          <Zap className="w-3.5 h-3.5 text-purple-400" />
-                          <span>Enterprise Scorer (0-100)</span>
-                        </span>
-                        <span className="text-[9px] font-mono text-purple-400 font-semibold">Multi-Faktor</span>
-                      </button>
-
-                      {/* KI-Sektor-Analyse */}
-                      {onOpenSectorAnalysis && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            onOpenSectorAnalysis();
+                    {[
+                      {
+                        id: 'marketscreener',
+                        name: 'Market Screener Hub',
+                        color: '#F5B014',
+                        icon: <LineChart className="w-3.5 h-3.5" />,
+                        badge: '5 Module',
+                        tabs: [
+                          {
+                            id: 'screener',
+                            name: 'Multi Asset Screener Terminal',
+                            icon: <LineChart className="w-3.5 h-3.5 text-amber-400" />,
+                            badge: 'Sub-45ms',
+                            shortDesc: 'Echtzeit Cross-Sectional Ranking über alle 5 Haupt-Assetklassen mit 50 Quant-Dimensionen',
+                            tags: ['Aktien', 'Krypto', 'Forex', 'Rohstoffe'],
+                            onClick: () => {
+                              if (onOpenMarketscreener) onOpenMarketscreener();
+                              else onOpenAnalysis?.();
+                            },
+                          },
+                          {
+                            id: 'buffett',
+                            name: 'Buffett Value Check',
+                            icon: <Leaf className="w-3.5 h-3.5 text-emerald-400" />,
+                            badge: 'Moat & DCF',
+                            shortDesc: 'Burggraben-Kriterien, ROE > 15% & Margin of Safety nach Warren Buffett',
+                            tags: ['Burggraben', 'DCF', 'FCF Yield'],
+                            onClick: () => onOpenModule?.('buffett-value'),
+                          },
+                          {
+                            id: 'scorer',
+                            name: 'Enterprise Scorer (0-100)',
+                            icon: <Zap className="w-3.5 h-3.5 text-purple-400" />,
+                            badge: 'Multi-Faktor',
+                            shortDesc: 'Fundamentaldaten, Cashflows & Altman Z-Score Bewertung in einer Kennzahl',
+                            tags: ['Multi-Faktor', 'Z-Score', 'Piotroski'],
+                            onClick: () => onOpenModule?.('enterprise-scorer'),
+                          },
+                          {
+                            id: 'sector',
+                            name: 'KI-Sektor-Rotation',
+                            icon: <Layers className="w-3.5 h-3.5 text-cyan-400" />,
+                            badge: 'Kapitalfluss',
+                            shortDesc: 'Sektor-Rotations-Radar & institutionelle Liquiditätsströme in Echtzeit',
+                            tags: ['Rotation', 'Makro', 'Kapitalfluss'],
+                            onClick: () => onOpenSectorAnalysis?.(),
+                          },
+                          {
+                            id: 'newsfeed',
+                            name: 'AI Newsfeed',
+                            icon: <Newspaper className="w-3.5 h-3.5 text-[#F87171]" />,
+                            badge: 'NLP-Sentiment',
+                            shortDesc: 'NLP-Sentiment-Impact & kuratierte Marktnachrichten mit Auswirkungs-Score',
+                            tags: ['NLP', 'Sentiment', 'Breaking News'],
+                            onClick: () => onOpenModule?.('ai-newsfeed'),
+                          },
+                          {
+                            id: 'alerts',
+                            name: 'PriceAlerts & Schwellenwerte',
+                            icon: <Bell className="w-3.5 h-3.5 text-amber-400" />,
+                            badge: `${activeAlertsCount} aktiv`,
+                            shortDesc: 'Echtzeit-Preisalarme, Ausbruchssignale & Schwellenwert-Überwachung',
+                            tags: ['Alarme', 'Benachrichtigungen'],
+                            onClick: () => onOpenPriceAlerts?.(),
+                          },
+                        ],
+                      },
+                      {
+                        id: 'studio',
+                        name: 'Studio Hub',
+                        color: '#06B6D4',
+                        icon: <Building2 className="w-3.5 h-3.5" />,
+                        badge: '7 Tabs',
+                        tabs: [
+                          {
+                            id: 'architecture',
+                            name: 'Pipeline Architektur',
+                            icon: <Layers className="w-3.5 h-3.5 text-amber-400" />,
+                            badge: '16 Konzepte',
+                            shortDesc: 'Vollständige 5-Ebenen Ingestion-Architektur & BaFin WORM Spezifikation',
+                            tags: ['Layer 1-5', 'BaFin', 'WORM'],
+                            onClick: () => onNavigate?.('/studio?tab=architecture'),
+                          },
+                          {
+                            id: 'blueprints',
+                            name: 'Blueprints & Schemata',
+                            icon: <FileCode className="w-3.5 h-3.5 text-cyan-400" />,
+                            badge: '7 Schemata',
+                            shortDesc: 'Bereitstellbare Integrations-Vorlagen für TradingView, Python & Bloomberg',
+                            tags: ['TradingView', 'Python', 'Pandas'],
+                            onClick: () => onNavigate?.('/studio?tab=blueprints'),
+                          },
+                          {
+                            id: 'builder',
+                            name: 'Pipeline Builder',
+                            icon: <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-400" />,
+                            badge: 'Modular',
+                            shortDesc: 'Interaktiver Konfigurator mit strikter 40 € / Monat Budget-Garantie',
+                            tags: ['Bill of Materials', '40 € Cap'],
+                            onClick: () => onNavigate?.('/studio?tab=builder'),
+                          },
+                          {
+                            id: 'advisor',
+                            name: 'AI Kauf-Berater',
+                            icon: <Bot className="w-3.5 h-3.5 text-purple-400" />,
+                            badge: 'Advisor',
+                            shortDesc: 'KI-gestützter Architekt für Latenz-, Lizenz- & MaRisk-Optimierung',
+                            tags: ['KI-Berater', 'Revenue Assurance'],
+                            onClick: () => onNavigate?.('/studio?tab=advisor'),
+                          },
+                          {
+                            id: 'providers',
+                            name: 'Data & Providers',
+                            icon: <Radio className="w-3.5 h-3.5 text-emerald-400" />,
+                            badge: 'Fleet Health',
+                            shortDesc: 'Latenz- & Ausführungsstatus der autorisierten Provider-Gateways',
+                            tags: ['Kraken', 'Binance', '12Data'],
+                            onClick: () => onNavigate?.('/studio?tab=providers'),
+                          },
+                          {
+                            id: 'analytics',
+                            name: 'Analytics & Scoring',
+                            icon: <BarChart3 className="w-3.5 h-3.5 text-amber-400" />,
+                            badge: '50 Faktoren',
+                            shortDesc: '50-Komponenten Multi-Faktor Engine & Z-Score Berechnung',
+                            tags: ['Z-Score', '50 Quants'],
+                            onClick: () => onNavigate?.('/studio?tab=analytics'),
+                          },
+                          {
+                            id: 'benchmark',
+                            name: 'Benchmark Lab',
+                            icon: <Gauge className="w-3.5 h-3.5 text-cyan-400" />,
+                            badge: 'Sub-45ms',
+                            shortDesc: 'Live Conflation Stress-Testing & deterministisches Schatten-Benchmarking',
+                            tags: ['Conflation', 'Sub-45ms'],
+                            onClick: () => onNavigate?.('/studio?tab=benchmark'),
+                          },
+                        ],
+                      },
+                      {
+                        id: 'learning',
+                        name: 'Learning Portal',
+                        color: '#F9BF21',
+                        icon: <BookOpen className="w-3.5 h-3.5" />,
+                        badge: '3 Bereiche',
+                        tabs: [
+                          {
+                            id: 'glossar',
+                            name: 'Market Vocabulary & Glossar',
+                            icon: <BookOpen className="w-3.5 h-3.5 text-amber-400" />,
+                            badge: '480+ Begriffe',
+                            shortDesc: 'Umfassendes Finanz- und Krypto-Lexikon mit praxiserprobten Faustformeln',
+                            tags: ['Lexikon', 'Faustformeln', 'Formeln'],
+                            onClick: () => onNavigate?.('/learning?tab=glossar'),
+                          },
+                          {
+                            id: 'guides',
+                            name: 'Cheat-Sheets & Guides',
+                            icon: <Layers className="w-3.5 h-3.5 text-cyan-400" />,
+                            badge: '4 Guides',
+                            shortDesc: 'Spickzettel für Buffett Value Investing, BaFin WORM & Latenz-Architektur',
+                            tags: ['DCF', 'MaRisk', 'Cheatsheets'],
+                            onClick: () => onNavigate?.('/learning?tab=guides'),
+                          },
+                          {
+                            id: 'quiz',
+                            name: 'Quant & Trader Skill-Check',
+                            icon: <GraduationCap className="w-3.5 h-3.5 text-purple-400" />,
+                            badge: 'Quiz',
+                            shortDesc: 'Interaktiver Wissenstest mit Sofort-Auswertung & Skill-Level Einstufung',
+                            tags: ['Skill-Test', 'Zertifikat'],
+                            onClick: () => onNavigate?.('/learning?tab=quiz'),
+                          },
+                        ],
+                      },
+                      {
+                        id: 'control-center',
+                        name: 'Control Center',
+                        color: '#F43F5E',
+                        icon: <ShieldCheck className="w-3.5 h-3.5" />,
+                        badge: '6 Bereiche',
+                        tabs: [
+                          {
+                            id: 'roadmap',
+                            name: 'Roadmap (v1.0 Go-Live)',
+                            icon: <Compass className="w-3.5 h-3.5 text-rose-400" />,
+                            badge: '11 Owner',
+                            shortDesc: 'Navigationsfreundliche Roadmap filterbar nach 11 Projektownern & 5 Phasen',
+                            tags: ['11 Owner', '5 Phasen', 'AP-001..011'],
+                            onClick: () => onNavigate?.('/control-center?tab=roadmap'),
+                          },
+                          {
+                            id: 'console',
+                            name: 'Configurator Console',
+                            icon: <Sliders className="w-3.5 h-3.5 text-rose-400" />,
+                            badge: 'Admin & Audit',
+                            shortDesc: 'Shadow-Run Orchestrierung, 50-Komponenten Health & BaFin Revisionskontrolle',
+                            tags: ['Shadow Run', 'Audit Trail', 'Governance'],
+                            onClick: () => onNavigate?.('/control-center?tab=console'),
+                          },
+                          {
+                            id: 'cockpit',
+                            name: 'Executive Cockpit',
+                            icon: <Activity className="w-3.5 h-3.5 text-amber-400" />,
+                            badge: 'GF & Founder',
+                            shortDesc: 'SLA-Monitoring, MaRisk Compliance-Score & Schnell-Aktionen für Geschäftsführung',
+                            tags: ['GF / Founder', 'MaRisk', 'KPIs'],
+                            onClick: () => onNavigate?.('/control-center?tab=cockpit'),
+                          },
+                          {
+                            id: 'team',
+                            name: 'Team & Rollen',
+                            icon: <Users className="w-3.5 h-3.5 text-cyan-400" />,
+                            badge: '11 Leads',
+                            shortDesc: 'Verantwortlichkeits- und Berechtigungsmatrix aller 11 Projektverantwortlichen',
+                            tags: ['Rollenmatrix', 'Leads'],
+                            onClick: () => onNavigate?.('/control-center?tab=team'),
+                          },
+                          {
+                            id: 'cost_center',
+                            name: 'Cost Center & Finanzen',
+                            icon: <DollarSign className="w-3.5 h-3.5 text-emerald-400" />,
+                            badge: '40 € Cap',
+                            shortDesc: 'AP-006 Budget-Governance & monatliche Kostenkontrolle unter 40 €',
+                            tags: ['Finanzen', 'AP-006', 'Budget-Cap'],
+                            onClick: () => onNavigate?.('/control-center?tab=cost_center'),
+                          },
+                          {
+                            id: 'system',
+                            name: 'Webanwendung & System',
+                            icon: <Server className="w-3.5 h-3.5 text-purple-400" />,
+                            badge: 'Optionen',
+                            shortDesc: 'Feature Flags, Auto-Healing & WORM-Archivierungsstatus für Administratoren',
+                            tags: ['Feature Flags', 'System-Optionen'],
+                            onClick: () => onNavigate?.('/control-center?tab=system'),
+                          },
+                        ],
+                      },
+                    ].map((hub) => {
+                      const isExpanded = expandedHub === hub.id;
+                      return (
+                        <div
+                          key={hub.id}
+                          className="rounded-xl border border-slate-800/80 bg-[#060c1d]/90 overflow-hidden transition-all"
+                          style={{
+                            borderColor: isExpanded ? `${hub.color}50` : undefined,
                           }}
-                          className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
                         >
-                          <span className="flex items-center gap-2">
-                            <Layers className="w-3.5 h-3.5 text-cyan-400" />
-                            <span>KI-Sektor-Rotation</span>
-                          </span>
-                          <span className="text-[9px] font-mono text-cyan-400 font-semibold">Kapitalfluss</span>
-                        </button>
-                      )}
+                          {/* Hub Header Button */}
+                          <button
+                            type="button"
+                            onClick={() => setExpandedHub(isExpanded ? null : hub.id)}
+                            className="w-full flex items-center justify-between p-2.5 text-left hover:bg-white/5 transition-colors cursor-pointer"
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <div
+                                className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 border"
+                                style={{
+                                  backgroundColor: `${hub.color}18`,
+                                  borderColor: `${hub.color}35`,
+                                  color: hub.color,
+                                }}
+                              >
+                                {hub.icon}
+                              </div>
+                              <div className="min-w-0">
+                                <span className="text-[12.5px] font-bold text-white block truncate">
+                                  {hub.name}
+                                </span>
+                              </div>
+                            </div>
 
-                      {/* AI Newsfeed Direct (Marketscreener & Analyse) */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onOpenModule?.('ai-newsfeed');
-                        }}
-                        className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <Newspaper className="w-3.5 h-3.5 text-[#F87171] group-hover:scale-110 transition-transform" />
-                          <span>AI Newsfeed</span>
-                        </span>
-                        <span className="text-[9px] font-mono text-[#F87171] bg-[#F87171]/15 px-1.5 py-0.2 rounded border border-[#F87171]/30 font-semibold">
-                          NLP-Sentiment
-                        </span>
-                      </button>
+                            <div className="flex items-center gap-2 shrink-0">
+                              <span
+                                className="text-[9.5px] font-mono font-bold px-1.5 py-0.5 rounded border"
+                                style={{
+                                  color: hub.color,
+                                  backgroundColor: `${hub.color}10`,
+                                  borderColor: `${hub.color}30`,
+                                }}
+                              >
+                                {hub.badge}
+                              </span>
+                              <ChevronDown
+                                className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
+                                  isExpanded ? 'rotate-180 text-white' : ''
+                                }`}
+                              />
+                            </div>
+                          </button>
 
-                      {/* Whale Radar */}
-                      {onOpenWhaleRadar && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            onOpenWhaleRadar();
-                          }}
-                          className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-                        >
-                          <span className="flex items-center gap-2">
-                            <Radio className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-                            <span>Whale Radar &amp; Smart Money</span>
-                          </span>
-                          <span className="text-[9px] font-mono text-cyan-400 font-semibold">On-Chain</span>
-                        </button>
-                      )}
-
-                      {/* PriceAlerts */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onOpenPriceAlerts?.();
-                        }}
-                        className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-                      >
-                        <span className="flex items-center gap-2">
-                          <Bell className="w-3.5 h-3.5 text-amber-400" />
-                          <span>PriceAlerts &amp; Schwellenwerte</span>
-                        </span>
-                        {activeAlertsCount > 0 && (
-                          <span className="text-[9px] font-mono text-amber-400 font-bold bg-amber-400/20 px-1.5 py-0.2 rounded-full">
-                            {activeAlertsCount} aktiv
-                          </span>
-                        )}
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* SECTION 2: STUDIO (Studio Hub mit allen 8 Tabs als Reiter) */}
-                  <div className="pt-2 border-t border-slate-800/80">
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-cyan-400/90 px-1 mb-2">
-                      Studio Hub
-                    </div>
-
-                    <div className="space-y-1">
-                      {/* Main Studio Hub CTA */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/studio');
-                        }}
-                        className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-cyan-500/20 via-indigo-500/15 to-transparent border border-cyan-400/40 text-cyan-200 font-semibold text-sm hover:from-cyan-500/30 hover:to-indigo-500/25 transition-all text-left group shadow-[0_0_15px_rgba(6,182,212,0.15)] cursor-pointer mb-1.5"
-                      >
-                        <span className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded-lg bg-cyan-400/20 flex items-center justify-center text-cyan-300 group-hover:scale-110 transition-transform">
-                            <Building2 className="w-4 h-4" />
-                          </div>
-                          <div>
-                            <div className="text-white font-bold leading-none">Studio Hub</div>
-                            <div className="text-[10px] text-cyan-300/80 mt-1 font-normal">Alle 8 Studio-Tabs im Überblick</div>
-                          </div>
-                        </span>
-                        <ChevronRight className="w-4 h-4 text-cyan-400" />
-                      </button>
-
-                      {/* 1. Pipeline Architektur */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/studio?tab=architecture');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <Layers className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
-                          <span>Pipeline Architektur</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-400/15 text-amber-300">
-                          16 Konzepte
-                        </span>
-                      </button>
-
-                      {/* 2. Blueprints */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/studio?tab=blueprints');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <FileCode className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
-                          <span>Blueprints</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-400/15 text-cyan-300">
-                          7 Blueprints
-                        </span>
-                      </button>
-
-                      {/* 3. Pipeline Builder */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/studio?tab=builder');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <SlidersHorizontal className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
-                          <span>Pipeline Builder</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-400/15 text-amber-300">
-                          Modular
-                        </span>
-                      </button>
-
-                      {/* 4. AI Kauf-Berater */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/studio?tab=advisor');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <Bot className="w-3.5 h-3.5 text-purple-400 group-hover:scale-110 transition-transform" />
-                          <span>AI Kauf-Berater</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-purple-400/15 text-purple-300">
-                          Advisor
-                        </span>
-                      </button>
-
-                      {/* 5. Data & Providers */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/studio?tab=providers');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <Radio className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
-                          <span>Data &amp; Providers</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-400/15 text-emerald-300">
-                          Fleet Health
-                        </span>
-                      </button>
-
-                      {/* 6. Analytics & Scoring */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/studio?tab=analytics');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <BarChart3 className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
-                          <span>Analytics &amp; Scoring</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-400/15 text-amber-300">
-                          50 Komponenten
-                        </span>
-                      </button>
-
-                      {/* 7. Benchmark Lab */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/studio?tab=benchmark');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <Gauge className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
-                          <span>Benchmark Lab</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-400/15 text-cyan-300">
-                          Sub-45ms
-                        </span>
-                      </button>
-
-                      {/* 8. Configurator Console */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/studio?tab=console');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <Sliders className="w-3.5 h-3.5 text-rose-400 group-hover:scale-110 transition-transform" />
-                          <span>Configurator Console</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-rose-400/15 text-rose-300">
-                          Admin
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* SECTION 3: LEARNING PORTAL (Reiter 3) */}
-                  <div className="pt-2 border-t border-slate-800/80">
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400/90 px-1 mb-2">
-                      Reiter 3: Learning Portal
-                    </div>
-
-                    <div className="space-y-1">
-                      {/* Main Learning Portal CTA */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/learning');
-                        }}
-                        className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/15 to-transparent border border-amber-400/40 text-amber-200 font-semibold text-sm hover:from-amber-500/30 transition-all text-left group shadow-[0_0_15px_rgba(245,176,20,0.12)] cursor-pointer mb-1.5"
-                      >
-                        <span className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
-                            <BookOpen className="w-4 h-4" />
-                          </div>
-                          <div>
-                            <div className="text-white font-bold leading-none">Learning Portal</div>
-                            <div className="text-[10px] text-amber-300/80 mt-1 font-normal">Vocabulary, Glossar &amp; Guides</div>
-                          </div>
-                        </span>
-                        <ChevronRight className="w-4 h-4 text-amber-400" />
-                      </button>
-
-                      {/* Sub-item: Vocabulary & Glossar */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/learning?tab=glossar');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <BookOpen className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
-                          <span>Market Vocabulary &amp; Glossar</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-400/15 text-amber-300">
-                          Lexikon
-                        </span>
-                      </button>
-
-                      {/* Sub-item: Cheat-Sheets & Guides */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/learning?tab=guides');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <Layers className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
-                          <span>Cheat-Sheets &amp; Formeln</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-400/15 text-cyan-300">
-                          Guides
-                        </span>
-                      </button>
-
-                      {/* Sub-item: Quant & Trader Skill-Check */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/learning?tab=quiz');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <GraduationCap className="w-3.5 h-3.5 text-purple-400 group-hover:scale-110 transition-transform" />
-                          <span>Quant &amp; Trader Skill-Check</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-purple-400/15 text-purple-300">
-                          Quiz
-                        </span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* SECTION 4: CONTROL CENTER (Reiter 4) */}
-                  <div className="pt-2 border-t border-slate-800/80">
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-rose-400/90 px-1 mb-2">
-                      Reiter 4: Control Center
-                    </div>
-
-                    <div className="space-y-1">
-                      {/* Main Control Center CTA */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/control-center');
-                        }}
-                        className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-500/20 via-pink-500/15 to-transparent border border-rose-400/40 text-rose-200 font-semibold text-sm hover:from-rose-500/30 transition-all text-left group shadow-[0_0_15px_rgba(244,63,94,0.15)] cursor-pointer mb-1.5"
-                      >
-                        <span className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded-lg bg-rose-500/20 flex items-center justify-center text-rose-300 group-hover:scale-110 transition-transform">
-                            <ShieldCheck className="w-4 h-4" />
-                          </div>
-                          <div>
-                            <div className="text-white font-bold leading-none">Control Center</div>
-                            <div className="text-[10px] text-rose-300/80 mt-1 font-normal">v1.0 Roadmap, GF Cockpit &amp; Cost Center</div>
-                          </div>
-                        </span>
-                        <ChevronRight className="w-4 h-4 text-rose-400" />
-                      </button>
-
-                      {/* Sub-item: Roadmap */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/control-center?tab=roadmap');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <Compass className="w-3.5 h-3.5 text-rose-400 group-hover:scale-110 transition-transform" />
-                          <span>Roadmap (v1.0 Go-Live)</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-rose-400/15 text-rose-300">
-                          11 Owner
-                        </span>
-                      </button>
-
-                      {/* Sub-item: Executive Cockpit */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/control-center?tab=cockpit');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <Activity className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
-                          <span>Executive Cockpit (GF &amp; Founder)</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-400/15 text-amber-300">
-                          Governance
-                        </span>
-                      </button>
-
-                      {/* Sub-item: Team & Rollen */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/control-center?tab=team');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <Users className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
-                          <span>Team &amp; Rollen (11 Owner)</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-400/15 text-cyan-300">
-                          Matrix
-                        </span>
-                      </button>
-
-                      {/* Sub-item: Cost Center & Finanzen */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          onNavigate?.('/control-center?tab=cost_center');
-                        }}
-                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
-                      >
-                        <span className="flex items-center gap-2">
-                          <span className="text-slate-600 font-mono">↳</span>
-                          <DollarSign className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
-                          <span>Cost Center &amp; Finanzen (AP-006)</span>
-                        </span>
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-400/15 text-emerald-300">
-                          40 € Cap
-                        </span>
-                      </button>
-                    </div>
+                          {/* Sub-tabs List Accordion */}
+                          <AnimatePresence initial={false}>
+                            {isExpanded && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.2 }}
+                                className="overflow-hidden border-t border-slate-800/60 bg-black/25"
+                              >
+                                <div className="p-2 space-y-1.5">
+                                  {hub.tabs.map((tab) => (
+                                    <div
+                                      key={tab.id}
+                                      onClick={() => {
+                                        setIsMenuOpen(false);
+                                        tab.onClick();
+                                      }}
+                                      className="p-2 rounded-lg bg-slate-900/70 hover:bg-slate-800/90 border border-slate-800/80 hover:border-slate-700 transition-all cursor-pointer group"
+                                    >
+                                      <div className="flex items-center justify-between">
+                                        <span className="text-[11.5px] font-bold text-slate-200 group-hover:text-amber-300 transition-colors flex items-center gap-2">
+                                          <span className="text-slate-500 font-mono text-[10px]">↳</span>
+                                          {tab.icon}
+                                          <span>{tab.name}</span>
+                                        </span>
+                                        {tab.badge && (
+                                          <span
+                                            className="text-[9.5px] font-mono font-bold px-1 rounded border"
+                                            style={{
+                                              color: hub.color,
+                                              backgroundColor: `${hub.color}15`,
+                                              borderColor: `${hub.color}30`,
+                                            }}
+                                          >
+                                            {tab.badge}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <p className="text-[10px] text-slate-400 mt-0.5 leading-snug line-clamp-2 pl-4">
+                                        {tab.shortDesc}
+                                      </p>
+                                      {tab.tags && (
+                                        <div className="flex items-center gap-1 mt-1.5 flex-wrap pl-4">
+                                          {tab.tags.map((tag) => (
+                                            <span
+                                              key={tag}
+                                              className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/5 border border-white/5 text-slate-300"
+                                            >
+                                              {tag}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      )}
+                                    </div>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </div>
+                      );
+                    })}
                   </div>
 
                   {/* SECTION 5: SYSTEM & MEHR */}

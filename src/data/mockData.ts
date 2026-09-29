@@ -59,6 +59,75 @@ export const MARKET_ASSETS: MarketAsset[] = [
 
 export const CORE_MODULES: CoreModule[] = [
   {
+    id: 'market-screener',
+    title: 'Multi Asset Market Screener',
+    description: 'Echtzeit-Screener über Aktien, Krypto, Forex & Rohstoffe.',
+    iconType: 'screener',
+    tagline: 'Cross-Sectional Multi-Asset Ranking in Sub-45ms',
+    brandColor: '#06B6D4', // Cyan
+    accentColor: '#67E8F9',
+    details: {
+      useCase: 'Erkennt Alpha-Chancen über alle Anlageklassen mit 50-Faktoren Quantitative Ranking, Z-Scores und Outlier-Filtern.',
+      features: [
+        'Echtzeit Cross-Sectional Ranking über alle 5 Haupt-Assetklassen',
+        'Filter nach KGV, ROE, FCF-Yield, Volatilität & Momentum',
+        'Sub-45ms Tick-Normalisierung über autorisierte Provider-Gateways',
+      ],
+      sampleMetrics: [
+        { label: 'Gescannte Assets', value: '500+', score: 'Echtzeit' },
+        { label: 'Ranking-Faktoren', value: '50 Dimensionen', score: 'Quant-Grade' },
+        { label: 'Latenz-Schnitt', value: '38 ms', score: 'Sub-45ms' },
+        { label: 'BaFin MaRisk Gate', value: 'Aktiv', score: 'Compliant' },
+      ],
+    },
+  },
+  {
+    id: 'learning-portal',
+    title: 'Learning Platform',
+    description: 'Interaktives Glossar, Formel-Guides & Quant Skill-Check.',
+    iconType: 'book',
+    tagline: 'Vom Einsteiger zum versierten Marktbeobachter & Quant',
+    brandColor: '#F9BF21', // Gold
+    accentColor: '#FDE047',
+    details: {
+      useCase: 'Interaktives Wissensportal mit Finanz-Vokabular, mathematischen Berechnungsformeln (DCF, ROE, Sharpe), Cheat-Sheets und Quiz.',
+      features: [
+        'Vollständiges Glossar mit praxiserprobten Faustformeln & Regeln',
+        'Spickzettel für Buffett Value Investing & BaFin WORM Archivierung',
+        'Interaktiver Quant & Trader Skill-Check mit Wissensbewertung',
+      ],
+      sampleMetrics: [
+        { label: 'Eingetragene Fachbegriffe', value: '480+', score: 'Wachsend' },
+        { label: 'Themenbereiche', value: '5 Kategorien', score: 'Strukturiert' },
+        { label: 'Cheat-Sheets', value: '4 Kern-Guides', score: 'Praxisnah' },
+        { label: 'Interaktiver Test', value: 'Skill-Check', score: 'Verfügbar' },
+      ],
+    },
+  },
+  {
+    id: 'pipeline-builder',
+    title: 'Pipeline Builder',
+    description: 'Modulare Datenpipeline für TradingView & Python.',
+    iconType: 'builder',
+    tagline: 'Institutionelle Enterprise Marktdaten-Pipeline konfigurieren',
+    brandColor: '#10B981', // Emerald
+    accentColor: '#6EE7B7',
+    details: {
+      useCase: 'Konfigurieren Sie maßgeschneiderte Ingestion-Pipelines über 5 Ebenen mit strikter 40 € / Monat Budget-Garantie (AP-006).',
+      features: [
+        '5 Architektur-Ebenen von Screener bis BaFin Evidence Storage',
+        'Revenue Assurance Bill of Materials mit Restbudget-Kontrolle',
+        'One-Click Export für TradingView, MetaTrader, Pandas & Bloomberg',
+      ],
+      sampleMetrics: [
+        { label: 'Architektur-Ebenen', value: '5 Layers', score: 'Modular' },
+        { label: 'Verfügbare Tools', value: '50+ Komponenten', score: 'Katalog' },
+        { label: 'Monatsbudget-Cap', value: '40,00 €', score: 'AP-006' },
+        { label: 'Export-Formate', value: '6 Plattformen', score: 'Instant' },
+      ],
+    },
+  },
+  {
     id: 'enterprise-scorer',
     title: 'Enterprise Scorer',
     description: 'KI-gestützte Analyse mit transparenter Methodik.',

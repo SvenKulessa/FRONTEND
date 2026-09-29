@@ -57,7 +57,7 @@ export interface CoreModule {
   id: string;
   title: string;
   description: string;
-  iconType: 'brain' | 'leaf' | 'book' | 'news';
+  iconType: 'brain' | 'leaf' | 'book' | 'news' | 'screener' | 'builder';
   tagline: string;
   brandColor?: string; // Hex color from Brand Manifest v6.0
   accentColor?: string;
