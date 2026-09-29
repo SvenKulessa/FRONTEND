@@ -53,6 +53,8 @@ import { PipelineBuilder } from './components/PipelineBuilder';
 import { ProviderStatusDashboard } from './components/ProviderStatusDashboard';
 import { FounderPage } from './components/FounderPage';
 import { StudioPage } from './components/StudioPage';
+import { LearningPortalPage } from './components/LearningPortalPage';
+import { ControlCenterPage } from './components/ControlCenterPage';
 import { MarketscreenerModal } from './components/MarketscreenerModal';
 import { EnterpriseScorerDashboard } from './components/EnterpriseScorerDashboard';
 import { ScreenerTable } from './components/ScreenerTable';
@@ -99,13 +101,29 @@ export function resolveAppRoute(rawPath: string): string {
     return '/impressum';
   }
   if (
+    clean === '/learning' ||
+    clean === '/learning-portal' ||
+    clean === '/lernportal' ||
+    clean === '/wissen' ||
     clean === '/vocabulary' ||
     clean === '/glossar' ||
     clean === '/lexikon' ||
     clean === '/market-vocabulary' ||
     clean === '/dictionary'
   ) {
-    return '/vocabulary';
+    return '/learning';
+  }
+  if (
+    clean === '/control-center' ||
+    clean === '/control' ||
+    clean === '/admin' ||
+    clean === '/cost-center' ||
+    clean === '/roadmap' ||
+    clean === '/management' ||
+    clean === '/gf' ||
+    clean === '/founder-control'
+  ) {
+    return '/control-center';
   }
   if (
     clean === '/pricing' ||
@@ -323,17 +341,26 @@ function AppContent() {
         canonicalPath: '/impressum',
       });
       trackPageView('/impressum', title);
-    } else if (currentRoute === '/vocabulary') {
-      const title = 'Capital-AI | Market Vocabulary & Finanz-Glossar';
+    } else if (currentRoute === '/learning' || currentRoute === '/vocabulary') {
+      const title = 'Capital-AI | Learning Portal: Market Vocabulary & Glossar';
       const description =
         'Umfassendes Finanz- & Quant-Glossar von Capital-AI: Fachbegriffe verständlich erklärt mit Berechnungsformeln und Praxisbeispielen.';
       updatePageSEO({
         title,
         description,
-        canonicalPath: '/vocabulary',
+        canonicalPath: '/learning',
       });
-      trackPageView('/vocabulary', title);
-      setIsVocabularyOpen(true);
+      trackPageView('/learning', title);
+    } else if (currentRoute === '/control-center') {
+      const title = 'Capital-AI | Control Center: Roadmap & Governance Console';
+      const description =
+        'Control Center von Capital-AI: Navigationsfreundliche v1.0 Roadmap nach 11 Projektownern, Executive Cockpit und Cost Center.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/control-center',
+      });
+      trackPageView('/control-center', title);
     } else if (currentRoute === '/pricing') {
       const title = 'Capital-AI | Preise, Tarife & Monetarisierungskonzept';
       const description =
@@ -613,6 +640,20 @@ function AppContent() {
               <ScreenerTable />
             </div>
           </div>
+        ) : currentRoute === '/learning' || currentRoute === '/vocabulary' ? (
+          /* Dedicated Learning Portal View (Reiter 3) */
+          <LearningPortalPage
+            onBackToHome={() => navigateTo('/')}
+            onNavigateLogin={() => navigateTo('/login')}
+            onNavigateTab={navigateTo}
+          />
+        ) : currentRoute === '/control-center' ? (
+          /* Dedicated Control Center & Roadmap View (Reiter 4) */
+          <ControlCenterPage
+            onBackToHome={() => navigateTo('/')}
+            onNavigateLogin={() => navigateTo('/login')}
+            onNavigateTab={navigateTo}
+          />
         ) : LEGAL_ROUTES.includes(currentRoute as LegalRoute) ? (
           /* Dedicated Legal & FAQ View (/faq, /datenschutz, /agb, /impressum) */
           <LegalAndFaqPages
@@ -624,6 +665,7 @@ function AppContent() {
           <>
             {/* Header */}
             <Header
+              currentRoute={currentRoute}
               onOpenMarketscreener={() => setIsMarketscreenerOpen(true)}
               onOpenAnalysis={() => setIsAnalysisOpen(true)}
               onOpenSectorAnalysis={handleOpenSectorAnalysis}

@@ -87,46 +87,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         >
           Preise &amp; Tarife
         </a>
-        <span className="text-slate-600">•</span>
-        <a
-          id="footer-nav-studio"
-          href="/studio"
-          onClick={(e) => handleNavClick(e, '/studio', 'studio_hub')}
-          className="hover:text-cyan-300 transition-colors cursor-pointer text-cyan-300 font-bold hover:underline underline-offset-4 flex items-center gap-1"
-          data-analytics="footer-studio"
-        >
-          Studio Hub
-        </a>
-        <span className="text-slate-600">•</span>
-        <a
-          id="footer-nav-architecture"
-          href="/architecture"
-          onClick={(e) => handleNavClick(e, '/architecture', 'architecture')}
-          className="hover:text-cyan-300 transition-colors cursor-pointer text-cyan-400 font-bold hover:underline underline-offset-4 flex items-center gap-1"
-          data-analytics="footer-architecture"
-        >
-          FinTech Architektur Konzepte
-        </a>
-        <span className="text-slate-600">•</span>
-        <a
-          id="footer-nav-pipeline-builder"
-          href="/pipeline-builder"
-          onClick={(e) => handleNavClick(e, '/pipeline-builder', 'pipeline_builder')}
-          className="hover:text-emerald-300 transition-colors cursor-pointer text-emerald-400 font-bold hover:underline underline-offset-4 flex items-center gap-1"
-          data-analytics="footer-pipeline-builder"
-        >
-          Pipeline Builder
-        </a>
-        <span className="text-slate-600">•</span>
-        <a
-          id="footer-nav-tokenomics"
-          href="/tokenomics"
-          onClick={(e) => handleNavClick(e, '/tokenomics', 'tokenomics')}
-          className="hover:text-amber-300 transition-colors cursor-pointer text-amber-400 font-bold hover:underline underline-offset-4 flex items-center gap-1"
-          data-analytics="footer-tokenomics"
-        >
-          $CPT Tokenomics
-        </a>
       </div>
 
 

@@ -50,6 +50,10 @@ import {
   Bot,
   Gauge,
   Sliders,
+  LineChart,
+  Compass,
+  GraduationCap,
+  Users,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BrandLogo } from './BrandLogo';
@@ -59,6 +63,7 @@ import { trackLoginClick } from '../utils/analytics';
 import { usePriceAlerts } from '../context/PriceAlertsContext';
 
 interface HeaderProps {
+  currentRoute?: string;
   onOpenAnalysis?: () => void;
   onOpenSectorAnalysis?: () => void;
   onOpenModule?: (moduleId: string) => void;
@@ -74,6 +79,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
+  currentRoute,
   onOpenAnalysis,
   onOpenSectorAnalysis,
   onOpenModule,
@@ -91,6 +97,26 @@ export const Header: React.FC<HeaderProps> = ({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [expandedClass, setExpandedClass] = useState<MainCategory | null>('KRYPTO');
   const { activeAlertsCount, triggeredAlertsCount } = usePriceAlerts();
+
+  // Active Hub Calculation for the 4 Reiter
+  const isMarketscreenerActive =
+    !currentRoute ||
+    currentRoute === '/' ||
+    currentRoute === '/marketscreener' ||
+    currentRoute === '/screener';
+  const isStudioActive =
+    currentRoute === '/studio' ||
+    currentRoute === '/architecture' ||
+    currentRoute === '/pipeline-builder';
+  const isLearningActive =
+    currentRoute === '/learning' ||
+    currentRoute === '/vocabulary' ||
+    currentRoute === '/glossar';
+  const isControlActive =
+    currentRoute === '/control-center' ||
+    currentRoute === '/admin' ||
+    currentRoute === '/roadmap' ||
+    currentRoute === '/cost-center';
 
   const renderClassIcon = (id: MainCategory) => {
     switch (id) {
@@ -110,7 +136,7 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="relative z-30 w-full px-4 sm:px-6 pt-3.5 pb-2.5 flex items-center justify-between select-none">
+    <header className="relative z-30 w-full px-3 sm:px-6 pt-3.5 pb-2.5 flex items-center justify-between select-none">
       {/* LEFT SIDE: Hamburger Navigation Button & Brand Logo */}
       <div className="flex items-center space-x-3">
         {/* Hamburger Menu Button on the Left */}
@@ -131,6 +157,69 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         />
       </div>
+
+      {/* CENTER: DIE 4 HAUPTREITER (Marketscreener, Studio Hub, Learning Portal, Control Center) */}
+      <nav aria-label="Hauptnavigation" className="hidden lg:flex items-center gap-1 p-1 rounded-xl bg-black/40 border border-slate-800/80 shadow-inner">
+        {/* Reiter 1: Marketscreener */}
+        <button
+          type="button"
+          onClick={() => onNavigate?.('/')}
+          className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs transition-all cursor-pointer ${
+            isMarketscreenerActive
+              ? 'bg-amber-400 text-black font-extrabold shadow-sm'
+              : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
+          }`}
+          title="Reiter 1: Marketscreener (Echtzeit-Marktdaten & Scorer)"
+        >
+          <LineChart className="w-3.5 h-3.5" />
+          <span>Marketscreener</span>
+        </button>
+
+        {/* Reiter 2: Studio Hub */}
+        <button
+          type="button"
+          onClick={() => onNavigate?.('/studio')}
+          className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs transition-all cursor-pointer ${
+            isStudioActive
+              ? 'bg-cyan-500 text-black font-extrabold shadow-sm'
+              : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
+          }`}
+          title="Reiter 2: Studio Hub (8 Module: Architektur, Builder, Blueprints, etc.)"
+        >
+          <Building2 className="w-3.5 h-3.5" />
+          <span>Studio Hub</span>
+        </button>
+
+        {/* Reiter 3: Learning Portal */}
+        <button
+          type="button"
+          onClick={() => onNavigate?.('/learning')}
+          className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs transition-all cursor-pointer ${
+            isLearningActive
+              ? 'bg-amber-400 text-black font-extrabold shadow-sm'
+              : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
+          }`}
+          title="Reiter 3: Learning Portal (Vocabulary, Glossar & Cheat-Sheets)"
+        >
+          <BookOpen className="w-3.5 h-3.5" />
+          <span>Learning Portal</span>
+        </button>
+
+        {/* Reiter 4: Control Center */}
+        <button
+          type="button"
+          onClick={() => onNavigate?.('/control-center')}
+          className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs transition-all cursor-pointer ${
+            isControlActive
+              ? 'bg-rose-500 text-white font-extrabold shadow-sm'
+              : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
+          }`}
+          title="Reiter 4: Control Center (v1.0 Roadmap, Cockpit & Governance)"
+        >
+          <ShieldCheck className="w-3.5 h-3.5" />
+          <span>Control Center</span>
+        </button>
+      </nav>
 
       {/* RIGHT SIDE: Live Status Chip & Login Button */}
       <div className="flex items-center space-x-2">
@@ -420,7 +509,7 @@ export const Header: React.FC<HeaderProps> = ({
                           </div>
                           <div>
                             <div className="text-white font-bold leading-none">Studio Hub</div>
-                            <div className="text-[10px] text-cyan-300/80 mt-1 font-normal">Alle 8 Studio-Module im Überblick</div>
+                            <div className="text-[10px] text-cyan-300/80 mt-1 font-normal">Alle 8 Studio-Tabs im Überblick</div>
                           </div>
                         </span>
                         <ChevronRight className="w-4 h-4 text-cyan-400" />
@@ -580,7 +669,200 @@ export const Header: React.FC<HeaderProps> = ({
                     </div>
                   </div>
 
-                  {/* SECTION 3: SYSTEM & PLATTFORM */}
+                  {/* SECTION 3: LEARNING PORTAL (Reiter 3) */}
+                  <div className="pt-2 border-t border-slate-800/80">
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400/90 px-1 mb-2">
+                      Reiter 3: Learning Portal
+                    </div>
+
+                    <div className="space-y-1">
+                      {/* Main Learning Portal CTA */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/learning');
+                        }}
+                        className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-amber-500/20 via-orange-500/15 to-transparent border border-amber-400/40 text-amber-200 font-semibold text-sm hover:from-amber-500/30 transition-all text-left group shadow-[0_0_15px_rgba(245,176,20,0.12)] cursor-pointer mb-1.5"
+                      >
+                        <span className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-amber-400/20 flex items-center justify-center text-amber-300 group-hover:scale-110 transition-transform">
+                            <BookOpen className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <div className="text-white font-bold leading-none">Learning Portal</div>
+                            <div className="text-[10px] text-amber-300/80 mt-1 font-normal">Vocabulary, Glossar &amp; Guides</div>
+                          </div>
+                        </span>
+                        <ChevronRight className="w-4 h-4 text-amber-400" />
+                      </button>
+
+                      {/* Sub-item: Vocabulary & Glossar */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/learning?tab=glossar');
+                        }}
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <BookOpen className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+                          <span>Market Vocabulary &amp; Glossar</span>
+                        </span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-400/15 text-amber-300">
+                          Lexikon
+                        </span>
+                      </button>
+
+                      {/* Sub-item: Cheat-Sheets & Guides */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/learning?tab=guides');
+                        }}
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <Layers className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
+                          <span>Cheat-Sheets &amp; Formeln</span>
+                        </span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-400/15 text-cyan-300">
+                          Guides
+                        </span>
+                      </button>
+
+                      {/* Sub-item: Quant & Trader Skill-Check */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/learning?tab=quiz');
+                        }}
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <GraduationCap className="w-3.5 h-3.5 text-purple-400 group-hover:scale-110 transition-transform" />
+                          <span>Quant &amp; Trader Skill-Check</span>
+                        </span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-purple-400/15 text-purple-300">
+                          Quiz
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* SECTION 4: CONTROL CENTER (Reiter 4) */}
+                  <div className="pt-2 border-t border-slate-800/80">
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-rose-400/90 px-1 mb-2">
+                      Reiter 4: Control Center
+                    </div>
+
+                    <div className="space-y-1">
+                      {/* Main Control Center CTA */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/control-center');
+                        }}
+                        className="w-full flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-rose-500/20 via-pink-500/15 to-transparent border border-rose-400/40 text-rose-200 font-semibold text-sm hover:from-rose-500/30 transition-all text-left group shadow-[0_0_15px_rgba(244,63,94,0.15)] cursor-pointer mb-1.5"
+                      >
+                        <span className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-rose-500/20 flex items-center justify-center text-rose-300 group-hover:scale-110 transition-transform">
+                            <ShieldCheck className="w-4 h-4" />
+                          </div>
+                          <div>
+                            <div className="text-white font-bold leading-none">Control Center</div>
+                            <div className="text-[10px] text-rose-300/80 mt-1 font-normal">v1.0 Roadmap, GF Cockpit &amp; Cost Center</div>
+                          </div>
+                        </span>
+                        <ChevronRight className="w-4 h-4 text-rose-400" />
+                      </button>
+
+                      {/* Sub-item: Roadmap */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/control-center?tab=roadmap');
+                        }}
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <Compass className="w-3.5 h-3.5 text-rose-400 group-hover:scale-110 transition-transform" />
+                          <span>Roadmap (v1.0 Go-Live)</span>
+                        </span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-rose-400/15 text-rose-300">
+                          11 Owner
+                        </span>
+                      </button>
+
+                      {/* Sub-item: Executive Cockpit */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/control-center?tab=cockpit');
+                        }}
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <Activity className="w-3.5 h-3.5 text-amber-400 group-hover:scale-110 transition-transform" />
+                          <span>Executive Cockpit (GF &amp; Founder)</span>
+                        </span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-400/15 text-amber-300">
+                          Governance
+                        </span>
+                      </button>
+
+                      {/* Sub-item: Team & Rollen */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/control-center?tab=team');
+                        }}
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <Users className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
+                          <span>Team &amp; Rollen (11 Owner)</span>
+                        </span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-cyan-400/15 text-cyan-300">
+                          Matrix
+                        </span>
+                      </button>
+
+                      {/* Sub-item: Cost Center & Finanzen */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/control-center?tab=cost_center');
+                        }}
+                        className="w-full flex items-center justify-between py-1.5 px-3 pl-6 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer group"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="text-slate-600 font-mono">↳</span>
+                          <DollarSign className="w-3.5 h-3.5 text-emerald-400 group-hover:scale-110 transition-transform" />
+                          <span>Cost Center &amp; Finanzen (AP-006)</span>
+                        </span>
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-400/15 text-emerald-300">
+                          40 € Cap
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* SECTION 5: SYSTEM & MEHR */}
                   <div className="pt-2 border-t border-slate-800/80">
                     <div className="text-[10px] font-bold uppercase tracking-widest text-slate-500 px-1 mb-2">
                       System &amp; Mehr
@@ -605,23 +887,21 @@ export const Header: React.FC<HeaderProps> = ({
                         </button>
                       )}
 
-                      {/* MARKT-VOKABULAR */}
-                      {onOpenVocabulary && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            onOpenVocabulary();
-                          }}
-                          className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
-                        >
-                          <span className="flex items-center gap-2">
-                            <BookOpen className="w-3.5 h-3.5 text-emerald-400" />
-                            <span>Markt-Glossar &amp; Vokabular</span>
-                          </span>
-                          <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
-                        </button>
-                      )}
+                      {/* $CPT TOKENOMICS */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          onNavigate?.('/tokenomics');
+                        }}
+                        className="w-full flex items-center justify-between py-2 px-3 rounded-lg text-xs text-slate-300 hover:text-white hover:bg-white/5 transition-all cursor-pointer"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Coins className="w-3.5 h-3.5 text-amber-400" />
+                          <span>$CPT Tokenomics &amp; Staking</span>
+                        </span>
+                        <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
+                      </button>
                     </div>
                   </div>
 

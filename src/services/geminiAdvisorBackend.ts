@@ -65,7 +65,7 @@ export async function handleAdvisorRequest(payload: AdvisorRequestPayload): Prom
         },
       });
 
-      const systemInstruction = `Du bist der "Capital-AI Systems Architect & Revenue Assurance Advisor" für institutionelle Fintech-Pipelines (PC-Konfigurator Stil nach Alternate).
+      const systemInstruction = `Du bist der "Capital-AI Systems Architect & Revenue Assurance Advisor" für institutionelle Fintech-Pipelines und modulare Datenarchitekturen.
 Deine Kernkompetenzen:
 1. Scientist Stack: Quantitative Formeln (Buffett Value Check: ROE > 15%, Margin of Safety, DCF; Sharpe / Sortino Ratio; Value-at-Risk; Monotone Sequenzierung; Outlier-Filter).
 2. Fintech & BaFin / MiCA Compliance: WpHG § 83 Archivierungspflichten, MaRisk Mindestanforderungen, Unveränderbare WORM / SHA-256 Merkle Evidence.

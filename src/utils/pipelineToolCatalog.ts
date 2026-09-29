@@ -2,7 +2,7 @@
  * CAPITAL AI — PIPELINE TOOL INVENTORY & REVENUE ASSURANCE CATALOG (WP-004 / AP-006)
  *
  * Implements a strict, institutional inventory and cataloging system for user-selected tools
- * across all 5 architecture layers (Alternate PC-Konfigurator Style):
+ * across all 5 architecture layers (Modular Pipeline Builder):
  * 1. Screener & Analysis Focus (e.g. Buffett Value Check, BaFin Scorer, Whale Radar)
  * 2. Timing & Latency Requirements (e.g. EOD, 15m Delayed, 1m Intraday, Sub-20ms Tick)
  * 3. Data Ingestion Gateways (e.g. TwelveData, FRED, Binance, Kraken, Alchemy, CCXT)

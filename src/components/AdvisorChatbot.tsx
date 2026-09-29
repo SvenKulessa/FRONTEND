@@ -97,7 +97,7 @@ export const AdvisorChatbot: React.FC<AdvisorChatbotProps> = ({
       id: 'welcome',
       sender: 'advisor',
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      text: 'Willkommen beim **Capital-AI Systems Architect & Kaufberater**! Ich unterstütze Sie bei der Konfiguration Ihrer BaFin-konformen Datenpipeline (Alternate PC-Konfigurator-Stil). Welches Screener-Tool oder welches Latenzbudget möchten Sie konfigurieren?',
+      text: 'Willkommen beim **Capital-AI Systems Architect & Kaufberater**! Ich unterstütze Sie bei der Konfiguration Ihrer BaFin-konformen Datenpipeline (modulare Pipeline-Architektur). Welches Screener-Tool oder welches Latenzbudget möchten Sie konfigurieren?',
       thoughtProcess: `[SCIENTIST PURCHASE ADVISOR INITIALIZATION]
 - Live-Inventar erkannt: ${catalogUserSelectedTools(currentConfig).items.map((i) => i.name).join(' | ')}
 - Kostenkontrolle: Strikte Revenue Assurance Obergrenze von 40,00 € / Monat (AP-006).
@@ -756,7 +756,7 @@ export const AdvisorChatbot: React.FC<AdvisorChatbotProps> = ({
               <span>Schritt-für-Schritt Konfigurations-Leitfaden</span>
             </div>
             <p className="text-[11px] text-slate-400 mt-1">
-              Verstehen Sie wie beim PC-Kauf auf Alternate, wie die 5 Ebenen ineinandergreifen, 
+              Verstehen Sie modular, wie die 5 Ebenen ineinandergreifen, 
               um maximale Signalqualität bei minimalen Lizenzkosten zu erzielen.
             </p>
           </div>
@@ -816,7 +816,7 @@ export const AdvisorChatbot: React.FC<AdvisorChatbotProps> = ({
                       onClick={() => onStepChange(s.step)}
                       className="text-[10px] font-mono text-cyan-300 hover:text-cyan-200 underline cursor-pointer"
                     >
-                      Im Konfigurator öffnen →
+                      Im Pipeline Builder öffnen →
                     </button>
                   )}
                 </div>
