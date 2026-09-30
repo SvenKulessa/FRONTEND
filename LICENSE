@@ -1,0 +1,44 @@
+MIT License with Commercial Production & Design Grant
+
+Copyright (c) 2026 Sven Kulessa / Capital-AI Technologies GmbH
+Project: Capital-AI Enterprise Market Intelligence & Data Pipeline Platform
+Licensed User: Sven Kulessa (sven.kulessa@gmail.com)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software, visual design system, UI/UX components, and associated
+documentation and media files (the "Software and Assets"), to deal in the
+Software and Assets without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, sell, deploy, host,
+and/or commercialize copies of the Software and Assets in production, and to
+permit persons to whom the Software and Assets are furnished to do so, subject
+to the following conditions:
+
+1. COMMERCIAL PRODUCTION PERMISSION:
+The visual designs, user interfaces, branding concepts, color architecture,
+data pipelines, algorithmic scoring schemas, and all generated image assets
+located in this repository are explicitly licensed for unrestricted commercial
+and productive operation, including SaaS hosting, enterprise client deployments,
+investor showcases, marketing campaigns, and mobile/web application packaging.
+
+2. ASSET & IMAGE CLEARANCE:
+All synthetic and generated image assets (including but not limited to:
+- src/assets/images/capital_ai_wide_banner_1789999064950.jpg
+- src/assets/images/capital_ai_full_logo_1789997869885.jpg
+- src/assets/images/capital_ai_brand_emblem_1789997857835.jpg
+- src/assets/images/glowing_earth_nodes_1789997454893.jpg
+as well as all custom SVG icons and component architecture specifications)
+are certified as cleared of third-party copyright claims and are transferred
+to the Licensee for unrestricted productive commercial use worldwide.
+See DESIGN_AND_ASSET_LICENSE.md for the full legal certificate and asset manifest.
+
+3. COPYRIGHT NOTICE:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE AND ASSETS ARE PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
+OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE AND ASSETS OR THE USE
+OR OTHER DEALINGS IN THE SOFTWARE AND ASSETS.

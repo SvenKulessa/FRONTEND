@@ -54,6 +54,7 @@ import { PipelineConfigState } from '../utils/pipelineToolCatalog';
 import { ScoringEngineService } from '../services/scoringEngine';
 import { PipelineConfiguratorService } from '../services/pipelineConfigurator';
 import { SubpageSidebarNav, SubpageNavItem } from './SubpageSidebarNav';
+import { HubTabsAccordionArchitecture, HubTabItem } from './HubTabsAccordionArchitecture';
 
 export type StudioTabKey =
   | 'architecture'
@@ -253,6 +254,80 @@ export const StudioPage: React.FC<StudioPageProps> = ({
     },
   ];
 
+  // Studio Hub Tabs mit gleicher Grafikarchitektur wie Assetklassen
+  const studioHubTabs: HubTabItem[] = [
+    {
+      id: 'architecture',
+      name: 'Pipeline Architektur',
+      shortDesc: 'Vollständige 5-Ebenen Ingestion-Architektur & BaFin WORM Spezifikation mit 16 Data-Konzepten.',
+      icon: <Layers className="w-4 h-4 text-amber-400" />,
+      color: '#F5B014',
+      badge: '16 Konzepte',
+      tags: ['Layer 1-5', 'BaFin WORM', 'Ringpuffer', 'Conflation'],
+      path: '/studio/architecture',
+    },
+    {
+      id: 'blueprints',
+      name: 'Blueprints & Schemata',
+      shortDesc: 'Bereitstellbare Integrations-Vorlagen für TradingView, Python & Bloomberg mit Export.',
+      icon: <FileCode className="w-4 h-4 text-cyan-400" />,
+      color: '#06B6D4',
+      badge: '7 Schemata',
+      tags: ['TradingView', 'Python SDK', 'WebSocket API', 'CSV Export'],
+      path: '/studio/blueprints',
+    },
+    {
+      id: 'builder',
+      name: 'Pipeline Builder',
+      shortDesc: 'Interaktiver Konfigurator mit strikter 40 € / Monat Budget-Garantie (AP-006).',
+      icon: <SlidersHorizontal className="w-4 h-4 text-emerald-400" />,
+      color: '#10B981',
+      badge: '40 € Cap',
+      tags: ['BOM Konfigurator', '40 € Cap', 'Cost Breakdown'],
+      path: '/studio/builder',
+    },
+    {
+      id: 'advisor',
+      name: 'AI Kauf-Berater',
+      shortDesc: 'KI-gestützter Architekt für Latenz-, Lizenz- & MaRisk-Optimierung und Revenue Assurance.',
+      icon: <Bot className="w-4 h-4 text-purple-400" />,
+      color: '#8D26FF',
+      badge: 'Advisor',
+      tags: ['KI-Berater', 'Revenue Assurance', 'Latency Advisor'],
+      path: '/studio/advisor',
+    },
+    {
+      id: 'providers',
+      name: 'Data & Providers',
+      shortDesc: 'Latenz- & Ausführungsstatus der autorisierten Provider-Gateways mit Health-Monitoring.',
+      icon: <Radio className="w-4 h-4 text-emerald-400" />,
+      color: '#10B981',
+      badge: 'Fleet Health',
+      tags: ['Kraken', 'Binance', 'TwelveData', 'Latenz-Monitor'],
+      path: '/studio/providers',
+    },
+    {
+      id: 'analytics',
+      name: 'Analytics & Scoring',
+      shortDesc: '50-Komponenten Multi-Faktor Engine & Z-Score Berechnung mit BaFin Audit Trail.',
+      icon: <BarChart3 className="w-4 h-4 text-amber-400" />,
+      color: '#F5B014',
+      badge: '50 Faktoren',
+      tags: ['Z-Score', '50 Quants', 'Scoring Engine'],
+      path: '/studio/analytics',
+    },
+    {
+      id: 'benchmark',
+      name: 'Benchmark Lab',
+      shortDesc: 'Live Conflation Stress-Testing & deterministisches Schatten-Benchmarking mit Sub-45ms Latenz.',
+      icon: <Gauge className="w-4 h-4 text-cyan-400" />,
+      color: '#06B6D4',
+      badge: 'Sub-45ms',
+      tags: ['Conflation', 'Sub-45ms', 'Stress-Test'],
+      path: '/studio/benchmark',
+    },
+  ];
+
   return (
     <div className="w-full text-slate-100 min-h-screen py-4 sm:py-6 px-2 sm:px-6 relative">
       {/* ========================================================================= */}
@@ -334,108 +409,19 @@ export const StudioPage: React.FC<StudioPageProps> = ({
       />
 
       {/* ========================================================================= */}
-      {/* 3. STUDIO HUB TABS (Die 7 Studio-Tabs im Überblick)                      */}
+      {/* 3. STUDIO HUB TABS (GLEICHE GRAFIKARCHITEKTUR WIE ASSETKLASSEN: AUFKLAPPBAR) */}
       {/* ========================================================================= */}
-      <div className="flex items-center gap-1 p-1 rounded-xl bg-[#090e21] border border-slate-800/90 mb-6 overflow-x-auto scrollbar-none">
-        {/* TAB 1: Pipeline Architektur */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('architecture')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'architecture'
-              ? 'bg-amber-400 text-black font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <Layers className="w-3.5 h-3.5" />
-          <span>Pipeline Architektur</span>
-        </button>
-
-        {/* TAB 2: Blueprints */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('blueprints')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'blueprints'
-              ? 'bg-cyan-500 text-black font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <FileCode className="w-3.5 h-3.5" />
-          <span>Blueprints</span>
-          <span className="text-[10px] px-1.5 py-0.2 rounded bg-black/30 font-mono">7</span>
-        </button>
-
-        {/* TAB 3: Pipeline Builder */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('builder')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'builder'
-              ? 'bg-amber-400 text-black font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <SlidersHorizontal className="w-3.5 h-3.5" />
-          <span>Pipeline Builder</span>
-        </button>
-
-        {/* TAB 4: AI Kauf-Berater */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('advisor')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'advisor'
-              ? 'bg-purple-500 text-white font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <Bot className="w-3.5 h-3.5" />
-          <span>AI Kauf-Berater</span>
-        </button>
-
-        {/* TAB 5: Data & Providers */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('providers')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'providers'
-              ? 'bg-emerald-500 text-black font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <Radio className="w-3.5 h-3.5" />
-          <span>Data &amp; Providers</span>
-        </button>
-
-        {/* TAB 6: Analytics & Scoring */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('analytics')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'analytics'
-              ? 'bg-amber-400 text-black font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <BarChart3 className="w-3.5 h-3.5" />
-          <span>Analytics &amp; Scoring</span>
-        </button>
-
-        {/* TAB 7: Benchmark Lab */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('benchmark')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'benchmark'
-              ? 'bg-cyan-500 text-black font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <Gauge className="w-3.5 h-3.5" />
-          <span>Benchmark Lab</span>
-        </button>
-      </div>
+      <HubTabsAccordionArchitecture
+        hubTitle="Studio Hub"
+        hubBadge="7 Architektur-Bereiche"
+        hubColor="#06B6D4"
+        tabs={studioHubTabs}
+        activeTabId={activeTab}
+        onSelectTab={(tabId, path) => {
+          setActiveTab(tabId as StudioTabKey);
+          onNavigate?.(path);
+        }}
+      />
 
       {/* ========================================================================= */}
       {/* TAB CONTENT 1: PIPELINE ARCHITEKTUR (All 16 Data Concepts)                */}

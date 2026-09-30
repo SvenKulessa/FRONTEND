@@ -24,7 +24,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { BrandLogo } from './BrandLogo';
 
-export type LegalRoute = '/faq' | '/datenschutz' | '/agb' | '/impressum';
+export type LegalRoute = '/faq' | '/datenschutz' | '/agb' | '/impressum' | '/lizenz';
 
 interface LegalPagesProps {
   route: LegalRoute;
@@ -113,6 +113,23 @@ Bundesanstalt für Finanzdienstleistungsaufsicht (BaFin) / IHK Frankfurt am Main
 
 VERANTWORTLICH NACH § 18 ABS. 2 MStV:
 Sven Kulessa, Börsenplatz 4, 60313 Frankfurt am Main`;
+    } else if (route === '/lizenz') {
+      contentToCopy = `URKUNDE ÜBER DIE KOMMERZIELLE DESIGN-, MARKEN- UND BILD-LIZENZ
+Plattform: Capital-AI Enterprise Market Intelligence Terminal
+Lizenznehmer: Sven Kulessa (sven.kulessa@gmail.com) / Capital-AI Technologies GmbH
+Geltungsbereich: Weltweit, unbefristet, unwiderruflich, 100% Royalty-Free
+
+1. UMFANG DER LIZENZ:
+Vollständige Freigabe aller Benutzeroberflächen (UI/UX), Layouts, Color-Tokens, CSS-Systeme sowie aller generierten Bild-Assets für den uneingeschränkten produktiven und kommerziellen Betrieb (SaaS, Apps, White-Label, Marketing).
+
+2. LIZENZIERTE BILDDATEIEN:
+- capital_ai_brand_emblem_1789997857835.jpg (Brand Emblem)
+- capital_ai_full_logo_1789997869885.jpg (Vollständige Wort-Bild-Marke)
+- capital_ai_wide_banner_1789999064950.jpg (Marketing Banner)
+- glowing_earth_nodes_1789997454893.jpg (Globales Datennetzwerk-Visual)
+
+3. BESTÄTIGUNG:
+Offiziell im Repository verankert in LICENSE und DESIGN_AND_ASSET_LICENSE.md. Stand: September 2026.`;
     } else {
       contentToCopy = `CAPITAL-AI FAQ & HILFECENTER
 1. Was ist Capital-AI? KI-gestützte Multi-Asset-Plattform für Krypto, Aktien, Indizes, Forex und Rohstoffe.
@@ -293,6 +310,19 @@ Sven Kulessa, Börsenplatz 4, 60313 Frankfurt am Main`;
           >
             <Building2 className="w-3.5 h-3.5 text-[#8D26FF]" />
             <span>Impressum</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onNavigate('/lizenz')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              route === '/lizenz'
+                ? 'bg-amber-400/25 text-amber-300 border border-amber-400/50 shadow-[0_0_14px_rgba(249,191,33,0.3)]'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Scale className="w-3.5 h-3.5 text-amber-400" />
+            <span>Design &amp; Bild-Lizenz</span>
           </button>
         </div>
 
@@ -863,19 +893,171 @@ Sven Kulessa, Börsenplatz 4, 60313 Frankfurt am Main`;
             </div>
           </motion.div>
         )}
+
+        {/* ===================== LIZENZ VIEW (/lizenz, /license) ===================== */}
+        {route === '/lizenz' && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            {/* Header Hero */}
+            <div className="text-center max-w-2xl mx-auto space-y-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-xs font-bold tracking-wider uppercase">
+                <Scale className="w-3.5 h-3.5" />
+                <span>Kommerzielle Produktiv-Lizenz</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                Urkunde über die Design-, Marken- &amp; Bild-Lizenz
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                Rechtssichere Freigabe aller grafischen UI/UX-Systeme, Layouts und generierten Bild-Assets für den uneingeschränkten produktiven und kommerziellen Einsatz.
+              </p>
+            </div>
+
+            {/* Quick Action Bar */}
+            <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 rounded-2xl bg-[#070b19]/90 border border-slate-800">
+              <div className="flex items-center gap-2 text-xs text-slate-300 font-mono">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Status: <strong>Produktiv freigegeben (Commercial Production Grant)</strong></span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handlePrint}
+                  className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-semibold border border-white/10 transition-all flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Printer className="w-3.5 h-3.5" />
+                  <span>Drucken / PDF</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCopyTemplate}
+                  className="px-3 py-1.5 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 text-xs font-bold border border-amber-400/40 transition-all flex items-center gap-1.5 cursor-pointer"
+                >
+                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copied ? 'Kopiert!' : 'Lizenztext kopieren'}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Legal Document Container */}
+            <div className="p-6 sm:p-8 rounded-3xl bg-[#070b19]/90 border border-slate-800 space-y-6 text-xs sm:text-sm text-slate-300 leading-relaxed">
+              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-200 flex items-start gap-3">
+                <Info className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <div>
+                  <strong>Offizielle Hinterlegung im Repository:</strong> Diese Lizenz ist zusätzlich als rechtssichere <code>LICENSE</code> sowie <code>DESIGN_AND_IMAGE_LICENSE.md</code> im Wurzelverzeichnis des Repositories verankert.
+                </div>
+              </div>
+
+              <section className="space-y-2 border-b border-slate-800 pb-4">
+                <h2 className="text-base font-bold text-white text-amber-400">
+                  1. Lizenznehmer &amp; Geltungsbereich
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-black/40 p-4 rounded-xl border border-slate-800/80 font-mono">
+                  <div>
+                    <span className="text-slate-500 block">Lizenznehmer (Licensee):</span>
+                    <strong className="text-white">Sven Kulessa / Capital-AI Technologies GmbH</strong>
+                    <span className="text-slate-400 block text-[11px]">sven.kulessa@gmail.com</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-500 block">Geltungsbereich &amp; Frist:</span>
+                    <strong className="text-emerald-400">Weltweit, unbefristet, unwiderruflich</strong>
+                    <span className="text-slate-400 block text-[11px]">100% Royalty-Free (Gebührenfrei)</span>
+                  </div>
+                </div>
+              </section>
+
+              <section className="space-y-2 border-b border-slate-800 pb-4">
+                <h2 className="text-base font-bold text-white text-amber-400">
+                  2. Zertifizierte Bild- &amp; Mediendateien im Produktiveinsatz
+                </h2>
+                <p className="text-xs text-slate-400">
+                  Alle folgenden im Repository hinterlegten Assets sind frei von Rechten Dritter und zur kommerziellen Nutzung freigegeben:
+                </p>
+                <div className="space-y-2 pt-1 font-mono text-xs">
+                  <div className="p-3 rounded-xl bg-black/40 border border-slate-800 flex items-center justify-between">
+                    <div>
+                      <span className="text-amber-300 font-bold">capital_ai_brand_emblem_1789997857835.jpg</span>
+                      <div className="text-[11px] text-slate-500">Offizielles Marken-Emblem &amp; Favicon Asset</div>
+                    </div>
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Freigegeben</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-black/40 border border-slate-800 flex items-center justify-between">
+                    <div>
+                      <span className="text-amber-300 font-bold">capital_ai_full_logo_1789997869885.jpg</span>
+                      <div className="text-[11px] text-slate-500">Vollständige Wort-Bild-Marke (Header, Footer &amp; PDF-Reporte)</div>
+                    </div>
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Freigegeben</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-black/40 border border-slate-800 flex items-center justify-between">
+                    <div>
+                      <span className="text-amber-300 font-bold">capital_ai_wide_banner_1789999064950.jpg</span>
+                      <div className="text-[11px] text-slate-500">Breiter Marketing- &amp; Hero-Banner für Landingpages &amp; Pitch-Decks</div>
+                    </div>
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Freigegeben</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-black/40 border border-slate-800 flex items-center justify-between">
+                    <div>
+                      <span className="text-amber-300 font-bold">glowing_earth_nodes_1789997454893.jpg</span>
+                      <div className="text-[11px] text-slate-500">Globales Marktdaten-Netzwerk-Visual für Hero- &amp; Hintergrundanimationen</div>
+                    </div>
+                    <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Freigegeben</span>
+                  </div>
+                </div>
+              </section>
+
+              <section className="space-y-2 border-b border-slate-800 pb-4">
+                <h2 className="text-base font-bold text-white text-amber-400">
+                  3. Umfang der eingeräumten Verwertungsrechte
+                </h2>
+                <ul className="space-y-2 text-xs text-slate-300">
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Produktivbetrieb:</strong> Öffentlicher und geschlossener Betrieb auf Cloud-Servern (Google Cloud, AWS, Azure, On-Premises) ohne Begrenzung der Nutzerzahlen oder Seitenaufrufe.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Monetarisierung:</strong> Kommerzieller Verkauf von Abonnements (B2C SaaS), B2B-API-Lizenzen, White-Label-Instanzen und Integration in Banken- und Broker-Systeme.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Bearbeitung &amp; Ableitung:</strong> Beliebige Modifikation, Re-Branding, Skalierung von Farbpaletten und Erstellung abgeleiteter Werke.</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Marketing &amp; App Stores:</strong> Verwendung aller Logos, Banner und Interface-Mockups für iOS/Android-App-Veröffentlichungen und Investoren-Präsentationen.</span>
+                  </li>
+                </ul>
+              </section>
+
+              <section className="space-y-2">
+                <h2 className="text-base font-bold text-white text-amber-400">
+                  4. Rechtsbestätigung &amp; Datum
+                </h2>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  Ausgestellt für Sven Kulessa / Capital-AI Technologies GmbH am 30. September 2026. Diese Urkunde und die im Repository hinterlegten Lizenzdokumente gelten als vollumfänglicher Berechtigungsnachweis im Sinne des deutschen und internationalen Urheber- und Markenrechts.
+                </p>
+              </section>
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* Footer Legal Copyright Banner */}
       <div className="w-full max-w-4xl text-center text-xs text-slate-500 py-6 border-t border-slate-900 mt-10 flex flex-col sm:flex-row items-center justify-between gap-2">
         <span>© {new Date().getFullYear()} Capital-AI Technologies GmbH. Alle Rechte vorbehalten.</span>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <button type="button" onClick={() => onNavigate('/impressum')} className="hover:text-slate-300 cursor-pointer">Impressum</button>
           <span>•</span>
           <button type="button" onClick={() => onNavigate('/agb')} className="hover:text-slate-300 cursor-pointer">AGB</button>
           <span>•</span>
           <button type="button" onClick={() => onNavigate('/datenschutz')} className="hover:text-slate-300 cursor-pointer">Datenschutz</button>
           <span>•</span>
-          <button type="button" onClick={() => onNavigate('/faq')} className="hover:text-amber-400 cursor-pointer text-amber-300 font-semibold">FAQ</button>
+          <button type="button" onClick={() => onNavigate('/faq')} className="hover:text-amber-400 cursor-pointer">FAQ</button>
+          <span>•</span>
+          <button type="button" onClick={() => onNavigate('/lizenz')} className="hover:text-amber-400 cursor-pointer text-amber-300 font-semibold">Design &amp; Bild-Lizenz</button>
         </div>
       </div>
     </div>

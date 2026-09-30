@@ -39,6 +39,7 @@ import {
   VocabularyTerm,
 } from '../data/vocabularyData';
 import { SubpageSidebarNav, SubpageNavItem } from './SubpageSidebarNav';
+import { HubTabsAccordionArchitecture, HubTabItem } from './HubTabsAccordionArchitecture';
 
 export type LearningPortalTab = 'glossar' | 'guides' | 'quiz';
 
@@ -226,6 +227,40 @@ export const LearningPortalPage: React.FC<LearningPortalPageProps> = ({
     },
   ];
 
+  // Learning Portal Tabs mit gleicher Grafikarchitektur wie Assetklassen
+  const learningHubTabs: HubTabItem[] = [
+    {
+      id: 'glossar',
+      name: 'Market Vocabulary & Glossar',
+      shortDesc: 'Umfassendes Finanz- und Krypto-Lexikon mit praxiserprobten Faustformeln und Suchfiltern.',
+      icon: <BookOpen className="w-4 h-4 text-amber-400" />,
+      color: '#F5B014',
+      badge: `${VOCABULARY_TERMS.length} Begriffe`,
+      tags: ['Lexikon', 'Faustformeln', 'Formeln', 'Finanzwissen'],
+      path: '/learning/glossar',
+    },
+    {
+      id: 'guides',
+      name: 'Cheat-Sheets & Guides',
+      shortDesc: 'Spickzettel für Buffett Value Investing, BaFin WORM & Latenz-Architektur mit Best Practices.',
+      icon: <Layers className="w-4 h-4 text-cyan-400" />,
+      color: '#06B6D4',
+      badge: '4 Guides',
+      tags: ['DCF', 'MaRisk', 'Cheatsheets', 'BaFin WORM'],
+      path: '/learning/guides',
+    },
+    {
+      id: 'quiz',
+      name: 'Quant & Trader Skill-Check',
+      shortDesc: 'Interaktiver Wissenstest mit Sofort-Auswertung, Punkteerfassung & Skill-Level Einstufung.',
+      icon: <GraduationCap className="w-4 h-4 text-purple-400" />,
+      color: '#8D26FF',
+      badge: 'Interaktiv',
+      tags: ['Skill-Test', 'Zertifikat', 'Quiz', 'Auswertung'],
+      path: '/learning/quiz',
+    },
+  ];
+
   return (
     <div className="w-full text-slate-100 min-h-screen py-4 sm:py-6 px-2 sm:px-6 relative">
       {/* 1. TOP HEADER CONTRACT (Breadcrumb + Controls) */}
@@ -297,53 +332,18 @@ export const LearningPortalPage: React.FC<LearningPortalPageProps> = ({
         accentColor="amber"
       />
 
-      {/* 3. LEARNING PORTAL TABS */}
-      <div className="flex items-center gap-1 p-1 rounded-xl bg-[#090e21] border border-slate-800/90 mb-6 overflow-x-auto scrollbar-none">
-        {/* TAB 1: GLOSSAR / VOCABULARY */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('glossar')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'glossar'
-              ? 'bg-amber-400 text-black font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <BookOpen className="w-3.5 h-3.5" />
-          <span>Market Vocabulary &amp; Glossar</span>
-          <span className="text-[10px] px-1.5 py-0.2 rounded bg-black/30 font-mono">
-            {VOCABULARY_TERMS.length}
-          </span>
-        </button>
-
-        {/* TAB 2: CHEAT-SHEETS & GUIDES */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('guides')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'guides'
-              ? 'bg-cyan-500 text-black font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <Layers className="w-3.5 h-3.5" />
-          <span>Cheat-Sheets &amp; Guides</span>
-        </button>
-
-        {/* TAB 3: QUIZ & SKILL-CHECK */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('quiz')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'quiz'
-              ? 'bg-purple-500 text-white font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <Award className="w-3.5 h-3.5" />
-          <span>Quant &amp; Trader Skill-Check</span>
-        </button>
-      </div>
+      {/* 3. LEARNING PORTAL TABS (GLEICHE GRAFIKARCHITEKTUR WIE ASSETKLASSEN: AUFKLAPPBAR) */}
+      <HubTabsAccordionArchitecture
+        hubTitle="Learning Portal"
+        hubBadge="Wissens-Terminal"
+        hubColor="#F5B014"
+        tabs={learningHubTabs}
+        activeTabId={activeTab}
+        onSelectTab={(tabId, path) => {
+          setActiveTab(tabId as LearningPortalTab);
+          onNavigateTab?.(path);
+        }}
+      />
 
       {/* ========================================================================= */}
       {/* TAB CONTENT 1: MARKET VOCABULARY & GLOSSAR                                */}

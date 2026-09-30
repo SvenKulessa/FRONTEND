@@ -58,6 +58,7 @@ import {
   WorkPackage,
 } from '../data/roadmapData';
 import { SubpageSidebarNav, SubpageNavItem } from './SubpageSidebarNav';
+import { HubTabsAccordionArchitecture, HubTabItem } from './HubTabsAccordionArchitecture';
 
 export type ControlCenterTab = 'roadmap' | 'console' | 'cockpit' | 'team' | 'cost_center' | 'system';
 
@@ -137,6 +138,70 @@ export const ControlCenterPage: React.FC<ControlCenterPageProps> = ({
       icon: <Server className="w-4 h-4 text-purple-400" />,
       badge: 'Optionen',
       desc: 'Feature Flags & WORM',
+    },
+  ];
+
+  // Control Center Tabs mit gleicher Grafikarchitektur wie Assetklassen
+  const controlCenterHubTabs: HubTabItem[] = [
+    {
+      id: 'roadmap',
+      name: 'Roadmap (v1.0 Go-Live)',
+      shortDesc: 'Navigationsfreundliche Roadmap filterbar nach 11 Projektownern & 5 Phasen bis v1.0.',
+      icon: <Compass className="w-4 h-4 text-rose-400" />,
+      color: '#F43F5E',
+      badge: `${WORK_PACKAGES.length} APs`,
+      tags: ['11 Owner', '5 Phasen', 'AP-001..011', 'Milestones'],
+      path: '/control-center/roadmap',
+    },
+    {
+      id: 'console',
+      name: 'Configurator Console',
+      shortDesc: 'Shadow-Run Orchestrierung, 50-Komponenten Health & BaFin Revisionskontrolle für Admins.',
+      icon: <Sliders className="w-4 h-4 text-rose-400" />,
+      color: '#F43F5E',
+      badge: 'Admin & Audit',
+      tags: ['Shadow Run', 'Audit Trail', 'Governance', 'Health-Check'],
+      path: '/control-center/console',
+    },
+    {
+      id: 'cockpit',
+      name: 'Executive Cockpit',
+      shortDesc: 'SLA-Monitoring, MaRisk Compliance-Score & Schnell-Aktionen für Geschäftsführung & Founder.',
+      icon: <Activity className="w-4 h-4 text-amber-400" />,
+      color: '#F5B014',
+      badge: 'GF & Founder',
+      tags: ['GF / Founder', 'MaRisk', 'KPIs', 'SLA 99.98%'],
+      path: '/control-center/cockpit',
+    },
+    {
+      id: 'team',
+      name: 'Team & Rollen',
+      shortDesc: 'Verantwortlichkeits- und Berechtigungsmatrix aller 11 Projektverantwortlichen.',
+      icon: <Users className="w-4 h-4 text-cyan-400" />,
+      color: '#06B6D4',
+      badge: '11 Leads',
+      tags: ['Rollenmatrix', 'Leads', 'Berechtigungen'],
+      path: '/control-center/team',
+    },
+    {
+      id: 'cost_center',
+      name: 'Cost Center & Finanzen',
+      shortDesc: 'AP-006 Budget-Governance & monatliche Kostenkontrolle strikt unter 40 € / Monat.',
+      icon: <DollarSign className="w-4 h-4 text-emerald-400" />,
+      color: '#10B981',
+      badge: '40 € Cap',
+      tags: ['Finanzen', 'AP-006', 'Budget-Cap', '40 € Limit'],
+      path: '/control-center/cost-center',
+    },
+    {
+      id: 'system',
+      name: 'Webanwendung & System',
+      shortDesc: 'Feature Flags, Auto-Healing & WORM-Archivierungsstatus für System-Administratoren.',
+      icon: <Server className="w-4 h-4 text-purple-400" />,
+      color: '#8D26FF',
+      badge: 'Optionen',
+      tags: ['Feature Flags', 'System-Optionen', 'Auto-Healing'],
+      path: '/control-center/system',
     },
   ];
 
@@ -351,97 +416,18 @@ export const ControlCenterPage: React.FC<ControlCenterPageProps> = ({
         accentColor="rose"
       />
 
-      {/* 3. CONTROL CENTER TABS NAVIGATION */}
-      <div className="flex items-center gap-1 p-1 rounded-xl bg-[#090e21] border border-slate-800/90 mb-6 overflow-x-auto scrollbar-none">
-        {/* TAB 1: ROADMAP (PRIMARY) */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('roadmap')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'roadmap'
-              ? 'bg-rose-500 text-white font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <Compass className="w-3.5 h-3.5" />
-          <span>Roadmap (v1.0 Go-Live)</span>
-          <span className="text-[10px] px-1.5 py-0.2 rounded bg-black/30 font-mono">
-            {WORK_PACKAGES.length} APs
-          </span>
-        </button>
-
-        {/* TAB 2: CONFIGURATOR CONSOLE (MOVED TO CONTROL CENTER) */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('console')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'console'
-              ? 'bg-rose-500 text-white font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <Sliders className="w-3.5 h-3.5" />
-          <span>Configurator Console</span>
-          <span className="text-[10px] px-1.5 py-0.2 rounded bg-black/30 font-mono">Admin</span>
-        </button>
-
-        {/* TAB 2: EXECUTIVE COCKPIT */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('cockpit')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'cockpit'
-              ? 'bg-amber-400 text-black font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <Activity className="w-3.5 h-3.5" />
-          <span>Executive Cockpit</span>
-        </button>
-
-        {/* TAB 3: TEAM & ROLLEN */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('team')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'team'
-              ? 'bg-cyan-500 text-black font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <Users className="w-3.5 h-3.5" />
-          <span>Team &amp; Rollen (11 Owner)</span>
-        </button>
-
-        {/* TAB 4: COST CENTER & FINANZEN */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('cost_center')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'cost_center'
-              ? 'bg-emerald-500 text-black font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <DollarSign className="w-3.5 h-3.5" />
-          <span>Cost Center &amp; Finanzen</span>
-          <span className="text-[10px] px-1.5 py-0.2 rounded bg-black/30 font-mono">40 € Cap</span>
-        </button>
-
-        {/* TAB 5: SYSTEM & WEBAPPLICATION */}
-        <button
-          type="button"
-          onClick={() => setActiveTab('system')}
-          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
-            activeTab === 'system'
-              ? 'bg-purple-500 text-white font-bold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5'
-          }`}
-        >
-          <Server className="w-3.5 h-3.5" />
-          <span>Webanwendung &amp; System</span>
-        </button>
-      </div>
+      {/* 3. CONTROL CENTER TABS NAVIGATION (GLEICHE GRAFIKARCHITEKTUR WIE ASSETKLASSEN: AUFKLAPPBAR) */}
+      <HubTabsAccordionArchitecture
+        hubTitle="Control Center"
+        hubBadge="GF & Founder Konsole"
+        hubColor="#F43F5E"
+        tabs={controlCenterHubTabs}
+        activeTabId={activeTab}
+        onSelectTab={(tabId, path) => {
+          setActiveTab(tabId as ControlCenterTab);
+          onNavigateTab?.(path);
+        }}
+      />
 
       {/* ========================================================================= */}
       {/* TAB CONTENT 1: ROADMAP (THE PRIMARY V1.0 GO-LIVE ROADMAP)                 */}

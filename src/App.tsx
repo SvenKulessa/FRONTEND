@@ -51,14 +51,53 @@ import { TokenomicsPage } from './components/TokenomicsPage';
 import { PipelineBuilder } from './components/PipelineBuilder';
 import { ProviderStatusDashboard } from './components/ProviderStatusDashboard';
 import { FounderPage } from './components/FounderPage';
-import { StudioPage } from './components/StudioPage';
-import { LearningPortalPage } from './components/LearningPortalPage';
-import { ControlCenterPage } from './components/ControlCenterPage';
+import { StudioPage, StudioTabKey } from './components/StudioPage';
+import { LearningPortalPage, LearningPortalTab } from './components/LearningPortalPage';
+import { ControlCenterPage, ControlCenterTab } from './components/ControlCenterPage';
+import { MarketScreenerPage, MarketScreenerTab } from './components/MarketScreenerPage';
 import { MarketscreenerModal } from './components/MarketscreenerModal';
 import { EnterpriseScorerDashboard } from './components/EnterpriseScorerDashboard';
 import { ScreenerTable } from './components/ScreenerTable';
 
 export const LEGAL_ROUTES: LegalRoute[] = ['/faq', '/datenschutz', '/agb', '/impressum'];
+
+export function resolveMarketScreenerTab(path: string): MarketScreenerTab {
+  const p = path.toLowerCase();
+  if (p.includes('buffett')) return 'buffett';
+  if (p.includes('scorer') || p.includes('score')) return 'scorer';
+  if (p.includes('sector') || p.includes('rotation')) return 'sector';
+  if (p.includes('news') || p.includes('feed')) return 'newsfeed';
+  if (p.includes('alert')) return 'alerts';
+  return 'terminal';
+}
+
+export function resolveStudioTab(path: string): StudioTabKey {
+  const p = path.toLowerCase();
+  if (p.includes('blueprint')) return 'blueprints';
+  if (p.includes('builder') || p.includes('konfigurator')) return 'builder';
+  if (p.includes('advisor') || p.includes('berater')) return 'advisor';
+  if (p.includes('provider') || p.includes('fleet')) return 'providers';
+  if (p.includes('analytic') || p.includes('scoring')) return 'analytics';
+  if (p.includes('benchmark')) return 'benchmark';
+  return 'architecture';
+}
+
+export function resolveLearningTab(path: string): LearningPortalTab {
+  const p = path.toLowerCase();
+  if (p.includes('guide') || p.includes('cheat')) return 'guides';
+  if (p.includes('quiz') || p.includes('skill')) return 'quiz';
+  return 'glossar';
+}
+
+export function resolveControlCenterTab(path: string): ControlCenterTab {
+  const p = path.toLowerCase();
+  if (p.includes('console') || p.includes('audit')) return 'console';
+  if (p.includes('cockpit') || p.includes('gf')) return 'cockpit';
+  if (p.includes('team') || p.includes('rolle')) return 'team';
+  if (p.includes('cost') || p.includes('finanz') || p.includes('budget')) return 'cost_center';
+  if (p.includes('system') || p.includes('option') || p.includes('flag')) return 'system';
+  return 'roadmap';
+}
 
 /**
  * Robust route normalizer supporting case-insensitivity, trailing slashes,
@@ -99,8 +138,31 @@ export function resolveAppRoute(rawPath: string): string {
   ) {
     return '/impressum';
   }
+
+  // Market Screener Hub & Tab Pfade
+  if (
+    clean === '/marketscreener' ||
+    clean.startsWith('/marketscreener/') ||
+    clean === '/screener' ||
+    clean.startsWith('/screener/') ||
+    clean === '/buffett' ||
+    clean === '/buffett-value' ||
+    clean === '/enterprise-scorer' ||
+    clean === '/scorer' ||
+    clean === '/sector-analysis' ||
+    clean === '/ai-newsfeed' ||
+    clean === '/newsfeed' ||
+    clean === '/price-alerts' ||
+    clean === '/alerts' ||
+    clean === '/market-screener'
+  ) {
+    return '/marketscreener';
+  }
+
+  // Learning Portal Hub & Tab Pfade
   if (
     clean === '/learning' ||
+    clean.startsWith('/learning/') ||
     clean === '/learning-portal' ||
     clean === '/lernportal' ||
     clean === '/wissen' ||
@@ -108,22 +170,34 @@ export function resolveAppRoute(rawPath: string): string {
     clean === '/glossar' ||
     clean === '/lexikon' ||
     clean === '/market-vocabulary' ||
+    clean === '/guides' ||
+    clean === '/cheatsheets' ||
+    clean === '/quiz' ||
+    clean === '/skill-check' ||
     clean === '/dictionary'
   ) {
     return '/learning';
   }
+
+  // Control Center Hub & Tab Pfade
   if (
     clean === '/control-center' ||
+    clean.startsWith('/control-center/') ||
     clean === '/control' ||
     clean === '/admin' ||
     clean === '/cost-center' ||
     clean === '/roadmap' ||
+    clean === '/console' ||
+    clean === '/cockpit' ||
+    clean === '/team' ||
+    clean === '/system' ||
     clean === '/management' ||
     clean === '/gf' ||
     clean === '/founder-control'
   ) {
     return '/control-center';
   }
+
   if (
     clean === '/pricing' ||
     clean === '/preise' ||
@@ -169,9 +243,17 @@ export function resolveAppRoute(rawPath: string): string {
   ) {
     return '/tokenomics';
   }
+
+  // Studio Hub & Tab Pfade
   if (
     clean === '/studio' ||
+    clean.startsWith('/studio/') ||
     clean === '/studio-hub' ||
+    clean === '/blueprints' ||
+    clean === '/advisor' ||
+    clean === '/benchmark' ||
+    clean === '/benchmark-lab' ||
+    clean === '/analytics' ||
     clean === '/founder' ||
     clean === '/founder-hub' ||
     clean === '/founder-suite' ||
@@ -180,14 +262,7 @@ export function resolveAppRoute(rawPath: string): string {
   ) {
     return '/studio';
   }
-  if (
-    clean === '/marketscreener' ||
-    clean === '/screener' ||
-    clean === '/analyse-tools' ||
-    clean === '/market-screener'
-  ) {
-    return '/marketscreener';
-  }
+
   if (
     clean === '/provider-status' ||
     clean === '/providers' ||
@@ -212,6 +287,12 @@ function AppContent() {
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
     if (typeof window !== 'undefined') {
       return resolveAppRoute(window.location.pathname);
+    }
+    return '/';
+  });
+  const [currentPath, setCurrentPath] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return window.location.pathname + window.location.search;
     }
     return '/';
   });
@@ -253,8 +334,10 @@ function AppContent() {
     initGoogleAnalytics();
 
     const parseUrlState = () => {
+      const fullPath = window.location.pathname + window.location.search;
       const resolved = resolveAppRoute(window.location.pathname);
       setCurrentRoute(resolved);
+      setCurrentPath(fullPath);
 
       // Check URL query parameters for shared analysis links
       try {
@@ -448,10 +531,11 @@ function AppContent() {
   const navigateTo = (path: string) => {
     const targetRoute = resolveAppRoute(path);
 
-    if (window.location.pathname.toLowerCase() !== targetRoute) {
-      window.history.pushState({}, '', targetRoute);
+    if (typeof window !== 'undefined' && window.location.pathname.toLowerCase() !== path.toLowerCase()) {
+      window.history.pushState({}, '', path);
     }
     setCurrentRoute(targetRoute);
+    setCurrentPath(path);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -582,6 +666,7 @@ function AppContent() {
         ) : currentRoute === '/studio' || currentRoute === '/founder' ? (
           /* Dedicated Studio Hub: Pipeline Architektur, Blueprints, Builder, Advisor, Providers, Analytics & Benchmark Lab */
           <StudioPage
+            initialTab={resolveStudioTab(currentPath)}
             onBackToHome={() => navigateTo('/')}
             onNavigateLogin={() => navigateTo('/login')}
             onNavigateLegal={navigateTo}
@@ -611,38 +696,18 @@ function AppContent() {
             isStandaloneView={true}
           />
         ) : currentRoute === '/screener' || currentRoute === '/marketscreener' ? (
-          /* Dedicated Enterprise Screener & Multi-Asset Scorer View */
-          <div className="w-full text-slate-100 min-h-screen py-6 px-3 sm:px-6 space-y-6">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-              <div className="flex items-center gap-2 text-xs text-slate-400 font-mono">
-                <span>Capital-AI</span>
-                <span>/</span>
-                <span className="text-amber-400 font-bold">Enterprise Screener &amp; Scorer</span>
-              </div>
-              <button
-                type="button"
-                onClick={() => navigateTo('/')}
-                className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-bold transition-all cursor-pointer"
-              >
-                ← Zurück zur Startseite
-              </button>
-            </div>
-            <EnterpriseScorerDashboard
-              onSelectAsset={(sym) => {
-                const found = MARKET_ASSETS.find((m) => m.symbol === sym);
-                if (found) setSelectedAsset(found);
-              }}
-            />
-            <div className="pt-4 border-t border-slate-800 space-y-3">
-              <h3 className="text-base font-bold text-white font-mono flex items-center gap-2">
-                <span>Vollständige Screener-Tabelle (Cross-Sectional Ranking)</span>
-              </h3>
-              <ScreenerTable />
-            </div>
-          </div>
+          /* Dedicated Market Screener Hub View mit gleicher Grafikarchitektur wie Assetklassen */
+          <MarketScreenerPage
+            initialTab={resolveMarketScreenerTab(currentPath)}
+            onBackToHome={() => navigateTo('/')}
+            onNavigateLogin={() => navigateTo('/login')}
+            onNavigateTab={navigateTo}
+            onSelectAsset={(asset) => setSelectedAsset(asset)}
+          />
         ) : currentRoute === '/learning' || currentRoute === '/vocabulary' ? (
           /* Dedicated Learning Portal View */
           <LearningPortalPage
+            initialTab={resolveLearningTab(currentPath)}
             onBackToHome={() => navigateTo('/')}
             onNavigateLogin={() => navigateTo('/login')}
             onNavigateTab={navigateTo}
@@ -650,6 +715,7 @@ function AppContent() {
         ) : currentRoute === '/control-center' ? (
           /* Dedicated Control Center & Roadmap View */
           <ControlCenterPage
+            initialTab={resolveControlCenterTab(currentPath)}
             onBackToHome={() => navigateTo('/')}
             onNavigateLogin={() => navigateTo('/login')}
             onNavigateTab={navigateTo}

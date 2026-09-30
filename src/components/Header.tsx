@@ -372,10 +372,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: 'Sub-45ms',
                             shortDesc: 'Echtzeit Cross-Sectional Ranking über alle 5 Haupt-Assetklassen mit 50 Quant-Dimensionen',
                             tags: ['Aktien', 'Krypto', 'Forex', 'Rohstoffe'],
-                            onClick: () => {
-                              if (onOpenMarketscreener) onOpenMarketscreener();
-                              else onOpenAnalysis?.();
-                            },
+                            onClick: () => onNavigate?.('/marketscreener/terminal'),
                           },
                           {
                             id: 'buffett',
@@ -384,7 +381,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: 'Moat & DCF',
                             shortDesc: 'Burggraben-Kriterien, ROE > 15% & Margin of Safety nach Warren Buffett',
                             tags: ['Burggraben', 'DCF', 'FCF Yield'],
-                            onClick: () => onOpenModule?.('buffett-value'),
+                            onClick: () => onNavigate?.('/marketscreener/buffett'),
                           },
                           {
                             id: 'scorer',
@@ -393,7 +390,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: 'Multi-Faktor',
                             shortDesc: 'Fundamentaldaten, Cashflows & Altman Z-Score Bewertung in einer Kennzahl',
                             tags: ['Multi-Faktor', 'Z-Score', 'Piotroski'],
-                            onClick: () => onOpenModule?.('enterprise-scorer'),
+                            onClick: () => onNavigate?.('/marketscreener/scorer'),
                           },
                           {
                             id: 'sector',
@@ -402,7 +399,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: 'Kapitalfluss',
                             shortDesc: 'Sektor-Rotations-Radar & institutionelle Liquiditätsströme in Echtzeit',
                             tags: ['Rotation', 'Makro', 'Kapitalfluss'],
-                            onClick: () => onOpenSectorAnalysis?.(),
+                            onClick: () => onNavigate?.('/marketscreener/sector'),
                           },
                           {
                             id: 'newsfeed',
@@ -411,7 +408,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: 'NLP-Sentiment',
                             shortDesc: 'NLP-Sentiment-Impact & kuratierte Marktnachrichten mit Auswirkungs-Score',
                             tags: ['NLP', 'Sentiment', 'Breaking News'],
-                            onClick: () => onOpenModule?.('ai-newsfeed'),
+                            onClick: () => onNavigate?.('/marketscreener/newsfeed'),
                           },
                           {
                             id: 'alerts',
@@ -420,7 +417,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: `${activeAlertsCount} aktiv`,
                             shortDesc: 'Echtzeit-Preisalarme, Ausbruchssignale & Schwellenwert-Überwachung',
                             tags: ['Alarme', 'Benachrichtigungen'],
-                            onClick: () => onOpenPriceAlerts?.(),
+                            onClick: () => onNavigate?.('/marketscreener/alerts'),
                           },
                         ],
                       },
@@ -438,7 +435,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: '16 Konzepte',
                             shortDesc: 'Vollständige 5-Ebenen Ingestion-Architektur & BaFin WORM Spezifikation',
                             tags: ['Layer 1-5', 'BaFin', 'WORM'],
-                            onClick: () => onNavigate?.('/studio?tab=architecture'),
+                            onClick: () => onNavigate?.('/studio/architecture'),
                           },
                           {
                             id: 'blueprints',
@@ -447,7 +444,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: '7 Schemata',
                             shortDesc: 'Bereitstellbare Integrations-Vorlagen für TradingView, Python & Bloomberg',
                             tags: ['TradingView', 'Python', 'Pandas'],
-                            onClick: () => onNavigate?.('/studio?tab=blueprints'),
+                            onClick: () => onNavigate?.('/studio/blueprints'),
                           },
                           {
                             id: 'builder',
@@ -456,7 +453,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: 'Modular',
                             shortDesc: 'Interaktiver Konfigurator mit strikter 40 € / Monat Budget-Garantie',
                             tags: ['Bill of Materials', '40 € Cap'],
-                            onClick: () => onNavigate?.('/studio?tab=builder'),
+                            onClick: () => onNavigate?.('/studio/builder'),
                           },
                           {
                             id: 'advisor',
@@ -465,7 +462,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: 'Advisor',
                             shortDesc: 'KI-gestützter Architekt für Latenz-, Lizenz- & MaRisk-Optimierung',
                             tags: ['KI-Berater', 'Revenue Assurance'],
-                            onClick: () => onNavigate?.('/studio?tab=advisor'),
+                            onClick: () => onNavigate?.('/studio/advisor'),
                           },
                           {
                             id: 'providers',
@@ -474,7 +471,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: 'Fleet Health',
                             shortDesc: 'Latenz- & Ausführungsstatus der autorisierten Provider-Gateways',
                             tags: ['Kraken', 'Binance', '12Data'],
-                            onClick: () => onNavigate?.('/studio?tab=providers'),
+                            onClick: () => onNavigate?.('/studio/providers'),
                           },
                           {
                             id: 'analytics',
@@ -483,7 +480,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: '50 Faktoren',
                             shortDesc: '50-Komponenten Multi-Faktor Engine & Z-Score Berechnung',
                             tags: ['Z-Score', '50 Quants'],
-                            onClick: () => onNavigate?.('/studio?tab=analytics'),
+                            onClick: () => onNavigate?.('/studio/analytics'),
                           },
                           {
                             id: 'benchmark',
@@ -492,7 +489,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: 'Sub-45ms',
                             shortDesc: 'Live Conflation Stress-Testing & deterministisches Schatten-Benchmarking',
                             tags: ['Conflation', 'Sub-45ms'],
-                            onClick: () => onNavigate?.('/studio?tab=benchmark'),
+                            onClick: () => onNavigate?.('/studio/benchmark'),
                           },
                         ],
                       },
@@ -510,7 +507,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: '480+ Begriffe',
                             shortDesc: 'Umfassendes Finanz- und Krypto-Lexikon mit praxiserprobten Faustformeln',
                             tags: ['Lexikon', 'Faustformeln', 'Formeln'],
-                            onClick: () => onNavigate?.('/learning?tab=glossar'),
+                            onClick: () => onNavigate?.('/learning/glossar'),
                           },
                           {
                             id: 'guides',
@@ -519,7 +516,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: '4 Guides',
                             shortDesc: 'Spickzettel für Buffett Value Investing, BaFin WORM & Latenz-Architektur',
                             tags: ['DCF', 'MaRisk', 'Cheatsheets'],
-                            onClick: () => onNavigate?.('/learning?tab=guides'),
+                            onClick: () => onNavigate?.('/learning/guides'),
                           },
                           {
                             id: 'quiz',
@@ -528,7 +525,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: 'Quiz',
                             shortDesc: 'Interaktiver Wissenstest mit Sofort-Auswertung & Skill-Level Einstufung',
                             tags: ['Skill-Test', 'Zertifikat'],
-                            onClick: () => onNavigate?.('/learning?tab=quiz'),
+                            onClick: () => onNavigate?.('/learning/quiz'),
                           },
                         ],
                       },
@@ -546,7 +543,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: '11 Owner',
                             shortDesc: 'Navigationsfreundliche Roadmap filterbar nach 11 Projektownern & 5 Phasen',
                             tags: ['11 Owner', '5 Phasen', 'AP-001..011'],
-                            onClick: () => onNavigate?.('/control-center?tab=roadmap'),
+                            onClick: () => onNavigate?.('/control-center/roadmap'),
                           },
                           {
                             id: 'console',
@@ -555,7 +552,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: 'Admin & Audit',
                             shortDesc: 'Shadow-Run Orchestrierung, 50-Komponenten Health & BaFin Revisionskontrolle',
                             tags: ['Shadow Run', 'Audit Trail', 'Governance'],
-                            onClick: () => onNavigate?.('/control-center?tab=console'),
+                            onClick: () => onNavigate?.('/control-center/console'),
                           },
                           {
                             id: 'cockpit',
@@ -564,7 +561,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: 'GF & Founder',
                             shortDesc: 'SLA-Monitoring, MaRisk Compliance-Score & Schnell-Aktionen für Geschäftsführung',
                             tags: ['GF / Founder', 'MaRisk', 'KPIs'],
-                            onClick: () => onNavigate?.('/control-center?tab=cockpit'),
+                            onClick: () => onNavigate?.('/control-center/cockpit'),
                           },
                           {
                             id: 'team',
@@ -573,7 +570,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: '11 Leads',
                             shortDesc: 'Verantwortlichkeits- und Berechtigungsmatrix aller 11 Projektverantwortlichen',
                             tags: ['Rollenmatrix', 'Leads'],
-                            onClick: () => onNavigate?.('/control-center?tab=team'),
+                            onClick: () => onNavigate?.('/control-center/team'),
                           },
                           {
                             id: 'cost_center',
@@ -582,7 +579,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: '40 € Cap',
                             shortDesc: 'AP-006 Budget-Governance & monatliche Kostenkontrolle unter 40 €',
                             tags: ['Finanzen', 'AP-006', 'Budget-Cap'],
-                            onClick: () => onNavigate?.('/control-center?tab=cost_center'),
+                            onClick: () => onNavigate?.('/control-center/cost-center'),
                           },
                           {
                             id: 'system',
@@ -591,7 +588,7 @@ export const Header: React.FC<HeaderProps> = ({
                             badge: 'Optionen',
                             shortDesc: 'Feature Flags, Auto-Healing & WORM-Archivierungsstatus für Administratoren',
                             tags: ['Feature Flags', 'System-Optionen'],
-                            onClick: () => onNavigate?.('/control-center?tab=system'),
+                            onClick: () => onNavigate?.('/control-center/system'),
                           },
                         ],
                       },
