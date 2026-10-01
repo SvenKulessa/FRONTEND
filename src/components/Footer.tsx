@@ -87,6 +87,36 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         >
           Preise &amp; Tarife
         </a>
+        <span className="text-slate-600">•</span>
+        <a
+          id="footer-nav-lizenz"
+          href="/lizenz"
+          onClick={(e) => handleNavClick(e, '/lizenz', 'lizenz')}
+          className="hover:text-amber-400 transition-colors cursor-pointer text-slate-400 font-medium hover:underline underline-offset-4"
+          data-analytics="footer-lizenz"
+        >
+          Design-Lizenz
+        </a>
+        <span className="text-slate-600">•</span>
+        <a
+          id="footer-nav-datenprovider-lizenzen"
+          href="/datenprovider-lizenzen"
+          onClick={(e) => handleNavClick(e, '/datenprovider-lizenzen', 'datenprovider-lizenzen')}
+          className="hover:text-cyan-400 transition-colors cursor-pointer text-cyan-300/90 font-medium hover:underline underline-offset-4"
+          data-analytics="footer-datenprovider-lizenzen"
+        >
+          Datenprovider-Lizenzen
+        </a>
+        <span className="text-slate-600">•</span>
+        <a
+          id="footer-nav-opensource-lizenzen"
+          href="/opensource-lizenzen"
+          onClick={(e) => handleNavClick(e, '/opensource-lizenzen', 'opensource-lizenzen')}
+          className="hover:text-blue-400 transition-colors cursor-pointer text-blue-300/90 font-medium hover:underline underline-offset-4"
+          data-analytics="footer-opensource-lizenzen"
+        >
+          Open-Source (OSS)
+        </a>
       </div>
 
 

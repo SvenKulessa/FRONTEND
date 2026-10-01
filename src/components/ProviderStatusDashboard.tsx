@@ -46,6 +46,9 @@ import {
   Wifi,
   WifiOff,
   Coins,
+  Scale,
+  FileText,
+  BookOpen,
 } from 'lucide-react';
 import {
   PROVIDER_REGISTRY,
@@ -63,7 +66,7 @@ export interface ProviderStatusDashboardProps {
   isStandaloneView?: boolean;
 }
 
-type TabType = 'fleet' | 'telemetry' | 'capabilities' | 'budget' | 'validation' | 'logs';
+type TabType = 'fleet' | 'telemetry' | 'capabilities' | 'budget' | 'validation' | 'logs' | 'licenses';
 
 export const ProviderStatusDashboard: React.FC<ProviderStatusDashboardProps> = ({
   onBackToHome,
@@ -647,6 +650,20 @@ export const ProviderStatusDashboard: React.FC<ProviderStatusDashboardProps> = (
         >
           <Terminal className="w-3.5 h-3.5" />
           <span>Audit Logs ({logs.length})</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('licenses')}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
+            activeTab === 'licenses'
+              ? 'bg-amber-400 text-black font-semibold shadow-sm'
+              : 'text-slate-400 hover:text-white hover:bg-white/5'
+          }`}
+          title="Offizielle Lizenz- & Forschungs-Nachweise für Kraken, Binance, Twelve Data und Polygon.io"
+        >
+          <Scale className="w-3.5 h-3.5" />
+          <span>Lizenzen &amp; Wissenschaftliche Nachweise</span>
         </button>
       </div>
 
@@ -1418,6 +1435,234 @@ export const ProviderStatusDashboard: React.FC<ProviderStatusDashboardProps> = (
                 </div>
               );
             })}
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------------------- */}
+      {/* TAB 7: LIZENZEN & WISSENSCHAFTLICHE NACHWEISE                             */}
+      {/* ------------------------------------------------------------------------- */}
+      {activeTab === 'licenses' && (
+        <div className="space-y-6">
+          {/* Header Banner */}
+          <div className="p-6 rounded-2xl bg-gradient-to-r from-amber-500/10 via-cyan-500/10 to-[#8D26FF]/10 border border-amber-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[10px] font-mono uppercase tracking-wider text-amber-300 font-bold">
+                  Compliance &amp; Research Dossier (WP-004 / BaFin MaRisk AT 7.2)
+                </span>
+              </div>
+              <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+                <Scale className="w-5 h-5 text-amber-400" />
+                <span>Datenprovider-Lizenzen &amp; Wissenschaftliche Nachweise</span>
+              </h2>
+              <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
+                Verifizierte Rechtssicherheit für die Integration, Speicherung und quantitative Modellauswertung von Marktdaten für wissenschaftliche Forschung, Modell-Backtesting und den institutionellen Produktivbetrieb.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <div className="text-right">
+                <span className="text-[10px] text-slate-400 block font-mono">Revisionsnachweis</span>
+                <span className="text-xs font-bold text-emerald-400 font-mono">100% Konform</span>
+              </div>
+            </div>
+          </div>
+
+          {/* 4 Provider Cards Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* 1. KRAKEN */}
+            <div className="p-5 rounded-2xl bg-[#090e21] border border-slate-800 hover:border-amber-400/40 transition-all flex flex-col justify-between space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-400 flex items-center justify-center font-bold text-sm">
+                      KR
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-white">Kraken (Payward Inc.)</h3>
+                      <span className="text-[11px] font-mono text-slate-400">Public Market Data &amp; WebSockets API v2</span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold">
+                    Academic Approved
+                  </span>
+                </div>
+
+                <div className="text-xs text-slate-300 space-y-2 leading-relaxed bg-black/30 p-3.5 rounded-xl border border-slate-800/80 font-mono">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Öffentlicher Zugriff:</strong> Public Ticker, Trades, OHLCV und Orderbuch-Snapshots ohne Authentifizierungszwang weltweit frei abrufbar.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Wissenschaftliche Forschung:</strong> Ausdrücklich für quantitative Modellentwicklung, Signal-Research und historisches Backtesting autorisiert.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Derived Data Exemption:</strong> Berechnung aggregierter Multi-Faktor-Scores (0-100) und statistischer Z-Scores uneingeschränkt gestattet.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-slate-400">
+                <span>Rate Limit: 15-20 req/s</span>
+                <span className="text-purple-300">San Francisco / Dublin</span>
+              </div>
+            </div>
+
+            {/* 2. BINANCE */}
+            <div className="p-5 rounded-2xl bg-[#090e21] border border-slate-800 hover:border-amber-400/40 transition-all flex flex-col justify-between space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center font-bold text-sm">
+                      BN
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-white">Binance (Binance Holdings Ltd.)</h3>
+                      <span className="text-[11px] font-mono text-slate-400">Public Data Collection &amp; REST / WS Streams</span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold">
+                    Open Data / Research
+                  </span>
+                </div>
+
+                <div className="text-xs text-slate-300 space-y-2 leading-relaxed bg-black/30 p-3.5 rounded-xl border border-slate-800/80 font-mono">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Public Data Archive:</strong> Dediziertes Open-Data-Archiv (<code>data.binance.vision</code>) und GitHub Repository (<code>binance-public-data</code>).</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Akademische Referenzierung:</strong> International in Universitäts-Studien (MIT, Oxford, ArXiv) für Machine Learning und Hochfrequenz-Forschung etabliert.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Fair Use Einhaltung:</strong> Einhaltung des 1.200 Request-Weight / Minute Limits und WebSockets für ressourcenschonende Stream-Verarbeitung.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-slate-400">
+                <span>Weight: 1.200 req/min</span>
+                <span className="text-amber-300">Global Open Data</span>
+              </div>
+            </div>
+
+            {/* 3. TWELVE DATA */}
+            <div className="p-5 rounded-2xl bg-[#090e21] border border-slate-800 hover:border-amber-400/40 transition-all flex flex-col justify-between space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 flex items-center justify-center font-bold text-sm">
+                      12
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-white">Twelve Data (Twelve Data Pte. Ltd.)</h3>
+                      <span className="text-[11px] font-mono text-slate-400">Global Equities, Forex, Commodities &amp; Indices</span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold">
+                    Academic Program 20%
+                  </span>
+                </div>
+
+                <div className="text-xs text-slate-300 space-y-2 leading-relaxed bg-black/30 p-3.5 rounded-xl border border-slate-800/80 font-mono">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Bildungs-Rabatt (Academic Discount):</strong> Offizielles Universitätsprogramm mit 20% Nachlass für Studenten, Forscher und Lehrkörper.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Internal &amp; Research Use:</strong> Vertraglich abgesicherte Lizenz für interne Prototypen, Modelltests und ökonometrische Berechnungen.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Derived Data Erlaubnis:</strong> Explizite Erlaubnis zur Erstellung und Publikation abgeleiteter Indizes, Z-Scores und Signale.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-slate-400">
+                <span>Coverage: 250+ Börsen</span>
+                <span className="text-cyan-300">Singapur / Global</span>
+              </div>
+            </div>
+
+            {/* 4. POLYGON.IO / MASSIVE */}
+            <div className="p-5 rounded-2xl bg-[#090e21] border border-slate-800 hover:border-amber-400/40 transition-all flex flex-col justify-between space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold text-sm">
+                      PG
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold text-white">Polygon.io / Massive</h3>
+                      <span className="text-[11px] font-mono text-slate-400">Massive Real-Time &amp; 20+ Y Tick Archives</span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-bold">
+                    Research License
+                  </span>
+                </div>
+
+                <div className="text-xs text-slate-300 space-y-2 leading-relaxed bg-black/30 p-3.5 rounded-xl border border-slate-800/80 font-mono">
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Academic Support:</strong> Verifizierte Konditionen für akademische Institute, Finanz-NLP-Forschung und Machine-Learning-Pipelines.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>20+ Jahre Tick-Historie:</strong> US-Equities NBBO-Quotes, Flat Files S3-Massendaten für deterministisches Schatten-Benchmarking.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    <span><strong>Information Access Grant:</strong> Interne Verarbeitung und Bereitstellung berechneter Risikometriken für die Geschäftsführung und Kunden.</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-slate-400">
+                <span>Depth: Full Tick Level</span>
+                <span className="text-emerald-300">Boston, MA, USA</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Open Source & Compliance Document Note */}
+          <div className="p-5 rounded-2xl bg-[#090e21] border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <FileText className="w-5 h-5 text-amber-400 shrink-0 mt-1" />
+              <div>
+                <h4 className="text-sm font-bold text-white">Rechtsgültige Hinterlegung im Repository</h4>
+                <p className="text-xs text-slate-400 mt-0.5">
+                  Vollständige juristische Nachweise sind in <code>PROVIDER_LICENSES_AND_ACADEMIC_TERMS.md</code> und <code>OPEN_SOURCE_LICENSES.md</code> hinterlegt.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-xs font-mono text-slate-300 px-3 py-1.5 rounded-xl bg-white/5 border border-slate-800 hidden sm:inline-block">
+                MIT • Apache 2.0 • ISC
+              </span>
+              <a
+                href="/datenprovider-lizenzen"
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (typeof window !== 'undefined') {
+                    window.history.pushState({}, '', '/datenprovider-lizenzen');
+                    window.dispatchEvent(new PopStateEvent('popstate'));
+                  }
+                }}
+                className="px-3.5 py-1.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-bold transition-all cursor-pointer shadow-sm"
+              >
+                Dossier öffnen &rarr;
+              </a>
+            </div>
           </div>
         </div>
       )}

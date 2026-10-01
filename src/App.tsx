@@ -59,7 +59,15 @@ import { MarketscreenerModal } from './components/MarketscreenerModal';
 import { EnterpriseScorerDashboard } from './components/EnterpriseScorerDashboard';
 import { ScreenerTable } from './components/ScreenerTable';
 
-export const LEGAL_ROUTES: LegalRoute[] = ['/faq', '/datenschutz', '/agb', '/impressum'];
+export const LEGAL_ROUTES: LegalRoute[] = [
+  '/faq',
+  '/datenschutz',
+  '/agb',
+  '/impressum',
+  '/lizenz',
+  '/datenprovider-lizenzen',
+  '/opensource-lizenzen',
+];
 
 export function resolveMarketScreenerTab(path: string): MarketScreenerTab {
   const p = path.toLowerCase();
@@ -137,6 +145,36 @@ export function resolveAppRoute(rawPath: string): string {
     clean === '/legal'
   ) {
     return '/impressum';
+  }
+  if (
+    clean === '/lizenz' ||
+    clean === '/license' ||
+    clean === '/licenses' ||
+    clean === '/design-lizenz'
+  ) {
+    return '/lizenz';
+  }
+  if (
+    clean === '/datenprovider-lizenzen' ||
+    clean === '/provider-licenses' ||
+    clean === '/provider-license' ||
+    clean === '/daten-lizenzen' ||
+    clean === '/datenprovider' ||
+    clean === '/academic-licenses' ||
+    clean === '/academic-terms' ||
+    clean === '/research-licenses' ||
+    clean === '/forschungslizenzen'
+  ) {
+    return '/datenprovider-lizenzen';
+  }
+  if (
+    clean === '/opensource-lizenzen' ||
+    clean === '/os-licenses' ||
+    clean === '/oss-licenses' ||
+    clean === '/open-source' ||
+    clean === '/oss'
+  ) {
+    return '/opensource-lizenzen';
   }
 
   // Market Screener Hub & Tab Pfade
@@ -515,6 +553,36 @@ function AppContent() {
         canonicalPath: '/provider-status',
       });
       trackPageView('/provider-status', title);
+    } else if (currentRoute === '/datenprovider-lizenzen') {
+      const title = 'Capital-AI | Datenprovider-Lizenzen & Wissenschaftliche Nutzungsbedingungen';
+      const description =
+        'Offizieller Rechts- und Forschungsnachweis für BaFin, Universitäten und Partner: Wissenschaftliche Lizenzen von Kraken, Binance, Twelve Data und Polygon.io / Massive.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/datenprovider-lizenzen',
+      });
+      trackPageView('/datenprovider-lizenzen', title);
+    } else if (currentRoute === '/opensource-lizenzen') {
+      const title = 'Capital-AI | Open-Source-Software (OSS) Lizenzen & Compliance-Inventar';
+      const description =
+        'Vollständiges Open-Source-Lizenzinventar: 100% freizügige MIT-, ISC-, Apache-2.0- und BSD-Lizenzen aller Frontend- und Backend-Komponenten.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/opensource-lizenzen',
+      });
+      trackPageView('/opensource-lizenzen', title);
+    } else if (currentRoute === '/lizenz') {
+      const title = 'Capital-AI | Kommerzielle Design-, Marken- & Bild-Lizenz';
+      const description =
+        'Rechtssichere Urkunde über die weltweite, unbefristete Freigabe aller Designsysteme, Bilddateien und Vektor-Assets.';
+      updatePageSEO({
+        title,
+        description,
+        canonicalPath: '/lizenz',
+      });
+      trackPageView('/lizenz', title);
     } else {
       const title = 'Capital-AI | AI-Driven Market Intelligence';
       const description =

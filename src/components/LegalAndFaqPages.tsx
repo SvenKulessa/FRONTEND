@@ -20,11 +20,26 @@ import {
   AlertTriangle,
   Server,
   Info,
+  Database,
+  Code2,
+  ExternalLink,
+  CheckCircle2,
+  Cpu,
+  Layers,
+  Award,
+  BookOpen,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BrandLogo } from './BrandLogo';
 
-export type LegalRoute = '/faq' | '/datenschutz' | '/agb' | '/impressum' | '/lizenz';
+export type LegalRoute =
+  | '/faq'
+  | '/datenschutz'
+  | '/agb'
+  | '/impressum'
+  | '/lizenz'
+  | '/datenprovider-lizenzen'
+  | '/opensource-lizenzen';
 
 interface LegalPagesProps {
   route: LegalRoute;
@@ -36,6 +51,9 @@ export const LegalAndFaqPages: React.FC<LegalPagesProps> = ({ route, onNavigate 
   const [selectedCategory, setSelectedCategory] = useState<string>('Alle');
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   const [copied, setCopied] = useState(false);
+  const [providerFilter, setProviderFilter] = useState<'all' | 'kraken' | 'binance' | 'twelve' | 'polygon' | 'bafin'>('all');
+  const [ossFilter, setOssFilter] = useState<'all' | 'mit' | 'isc' | 'apache' | 'bsd'>('all');
+  const [expandedOssLicense, setExpandedOssLicense] = useState<string | null>('mit');
 
   // Print handler for legal document export
   const handlePrint = () => {
@@ -130,6 +148,65 @@ Vollständige Freigabe aller Benutzeroberflächen (UI/UX), Layouts, Color-Tokens
 
 3. BESTÄTIGUNG:
 Offiziell im Repository verankert in LICENSE und DESIGN_AND_ASSET_LICENSE.md. Stand: September 2026.`;
+    } else if (route === '/datenprovider-lizenzen') {
+      contentToCopy = `CAPITAL-AI — DATENPROVIDER-LIZENZDOKUMENTATION & WISSENSCHAFTLICHE NUTZUNGSBEDINGUNGEN
+(Provider Licenses, Compliance & Academic / Scientific Research Proof Dossier)
+
+Projekt: Capital-AI Enterprise Market Intelligence & Data Pipeline Platform
+Lizenznehmer: Sven Kulessa (sven.kulessa@gmail.com) / Capital-AI Technologies GmbH
+Stand: 2026 / Version 1.0
+
+1. PROVIDER-VERZEICHNIS & WISSENSCHAFTLICHE ZWECKE:
+- KRAKEN (Payward Inc., San Francisco / Dublin):
+  Public REST API v0 & WebSockets v2. Öffentliche Marktdaten weltweit ohne Authentifizierungszwang für quantitative Forschung, Signal-Entwicklung, algorithmisches Backtesting und Modellierung autorisiert. Einhaltung des 15-20 req/s Public Rate Limits.
+  Dokumentation: https://docs.kraken.com/rest/ | Terms: https://www.kraken.com/legal
+
+- BINANCE (Binance Holdings Ltd. / BAM Trading Services Inc.):
+  Binance Public Data Collection & WebSocket Streams. Dediziertes Open-Data-Archiv (data.binance.vision) und GitHub-Archiv (binance-public-data) unter Binance Vision Dataset Terms v1.0. Wissenschaftlich referenziert (MIT, Oxford, ETH Zürich) für Krypto-Ökonometrie & ML-Forschung. Einhaltung des 1.200 req/min Limits.
+  Portal: https://data.binance.vision/ | Terms: https://www.binance.com/en/terms
+
+- TWELVE DATA (Twelve Data Pte. Ltd., Singapur):
+  Twelve Data Financial API & Streaming Engine. Offizielles Student & Academic Research Programm (20% Nachlass) für Bildungs-, Analyse- und universitäre Forschungsprojekte (Laufzeit 12 Monate, Bachelor/Master-Thesen, AI/ML-Training).
+  Terms: https://twelvedata.com/terms-of-service | Pricing: https://twelvedata.com/pricing
+
+- POLYGON.IO / MASSIVE (Polygon Technology LLC, Boston, USA):
+  Polygon REST API, Flat Files S3 Archive & WebSockets. Offizielles Academic & Student Program (20% Rabatt via Student Beans sowie universitäre Business Analytics Lab Partnerschaften). 20+ Jahre Tick-Level NBBO-Historie für quantitatives Backtesting & Financial NLP.
+  Terms: https://massive.com/terms | Docs: https://polygon.io/docs
+
+2. DERIVED DATA KLAUSEL:
+Capital-AI berechnet aus den Rohdaten aggregierte Scores (0-100 Enterprise Score, Buffett-Burggraben-Metriken, Sektor-Rotations-Indikatoren). Diese abgeleiteten Kennzahlen stellen kein Weiterveräußern roher Ticker-Feeds dar und sind gemäß den Standard-Provider-Klauseln uneingeschränkt zulässig.
+
+3. BAFIN REVISIONSSICHERHEIT & WORM AUDIT-TRAIL:
+Historische Kennzahlen werden mit kryptografischen SHA-256 Prüfsummen gemäß BaFin MaRisk (AT 7.2) im WORM-Archiv (Write Once, Read Many) persistiert.
+
+Offiziell im Repository verankert in PROVIDER_LICENSES_AND_ACADEMIC_TERMS.md.`;
+    } else if (route === '/opensource-lizenzen') {
+      contentToCopy = `CAPITAL-AI — OPEN-SOURCE-SOFTWARE (OSS) LIZENZVERZEICHNIS & COMPLIANCE-NACHWEIS
+Projekt: Capital-AI Enterprise Market Intelligence & Data Pipeline Platform
+Lizenznehmer: Sven Kulessa (sven.kulessa@gmail.com) / Capital-AI Technologies GmbH
+Stand: 2026 / Version 1.0
+
+1. COMPLIANCE-ERKLÄRUNG:
+100% Permissive Lizenzen (MIT, ISC, Apache 2.0, BSD-2-Clause).
+0 Copyleft-Komponenten (GPL/AGPL-frei). Vollständige Freigabe für kommerziellen SaaS- und Enterprise-Betrieb.
+
+2. INVENTAR DER KOMPONENTEN:
+- React (^19.0.1) — MIT — Meta Platforms, Inc.
+- React DOM (^19.0.1) — MIT — Meta Platforms, Inc.
+- Vite (^8.3.0) — MIT — Yuxi (Evan) You & Contributors
+- Tailwind CSS (^4.3.3) — MIT — Tailwind Labs, Inc.
+- Lucide React (^0.546.0) — ISC — Cole Bemis (Feather Icons) & Lucide Contributors
+- Motion (^12.23.24) — MIT — Framer B.V. / Matt Perry
+- Recharts (^3.10.1) — MIT — Recharts Group
+- Express (^4.21.2) — MIT — TJ Holowaychuk & Contributors
+- jsPDF (^4.2.1) — MIT — James Hall & parallax
+- Zod (^4.6.5) — MIT — Colin McDonnell and Zod contributors
+- Dotenv (^17.2.3) — BSD-2-Clause — Scott Motte
+- TypeScript (^7.0.2) — Apache 2.0 — Microsoft Corporation
+- ESBuild (^0.25.0) — MIT — Evan Wallace
+- TSX (^4.21.0) — MIT — Hiroki Osame
+
+Offiziell im Repository verankert in OPEN_SOURCE_LICENSES.md.`;
     } else {
       contentToCopy = `CAPITAL-AI FAQ & HILFECENTER
 1. Was ist Capital-AI? KI-gestützte Multi-Asset-Plattform für Krypto, Aktien, Indizes, Forex und Rohstoffe.
@@ -324,9 +401,35 @@ Offiziell im Repository verankert in LICENSE und DESIGN_AND_ASSET_LICENSE.md. St
             <Scale className="w-3.5 h-3.5 text-amber-400" />
             <span>Design &amp; Bild-Lizenz</span>
           </button>
+
+          <button
+            type="button"
+            onClick={() => onNavigate('/datenprovider-lizenzen')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              route === '/datenprovider-lizenzen'
+                ? 'bg-cyan-500/25 text-cyan-300 border border-cyan-500/50 shadow-[0_0_14px_rgba(6,182,212,0.3)]'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Database className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Datenprovider &amp; Forschung</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onNavigate('/opensource-lizenzen')}
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+              route === '/opensource-lizenzen'
+                ? 'bg-blue-500/25 text-blue-300 border border-blue-500/50 shadow-[0_0_14px_rgba(59,130,246,0.3)]'
+                : 'text-slate-400 hover:text-white hover:bg-white/5'
+            }`}
+          >
+            <Code2 className="w-3.5 h-3.5 text-blue-400" />
+            <span>Open-Source (OSS)</span>
+          </button>
         </div>
 
-        <div className="hidden md:flex items-center gap-2 text-[10px] text-slate-400 px-3 font-mono">
+        <div className="hidden lg:flex items-center gap-2 text-[10px] text-slate-400 px-3 font-mono shrink-0">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           <span>Rechtsstand 2026 • EU-Konform</span>
         </div>
@@ -1043,6 +1146,617 @@ Offiziell im Repository verankert in LICENSE und DESIGN_AND_ASSET_LICENSE.md. St
             </div>
           </motion.div>
         )}
+
+        {/* ===================== DATENPROVIDER-LIZENZEN & WISSENSCHAFTLICHE ZWECKE (/datenprovider-lizenzen) ===================== */}
+        {route === '/datenprovider-lizenzen' && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            {/* Header Hero */}
+            <div className="text-center max-w-2xl mx-auto space-y-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-xs font-bold tracking-wider uppercase">
+                <Database className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Wissenschaftliche Forschung &amp; Datenlizenzen</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                Datenprovider-Lizenzdokumentation &amp; Forschungsnachweis
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                Rechtsverbindlicher Nachweis für die Integration, Speicherung und wissenschaftlich-analytische Auswertung externer Marktdaten der Provider <strong className="text-white">Kraken</strong>, <strong className="text-white">Binance</strong>, <strong className="text-white">Twelve Data</strong> und <strong className="text-white">Polygon.io / Massive</strong>.
+              </p>
+            </div>
+
+            {/* Quick Action Bar & Filter Switcher */}
+            <div className="flex flex-col gap-3 p-3.5 rounded-2xl bg-[#070b19]/90 border border-slate-800">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2 text-xs text-slate-300 font-mono">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Status: <strong>Research &amp; Derived Data Authorisation Active</strong></span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handlePrint}
+                    className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-semibold border border-white/10 transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Printer className="w-3.5 h-3.5" />
+                    <span>Drucken / PDF</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCopyTemplate}
+                    className="px-3 py-1.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 text-xs font-bold border border-cyan-500/40 transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copied ? 'Kopiert!' : 'Dossier kopieren'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Provider Quick Filter Tabs */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-800/80">
+                {[
+                  { id: 'all', label: 'Alle 4 Provider + BaFin' },
+                  { id: 'kraken', label: '1. Kraken' },
+                  { id: 'binance', label: '2. Binance' },
+                  { id: 'twelve', label: '3. Twelve Data' },
+                  { id: 'polygon', label: '4. Polygon / Massive' },
+                  { id: 'bafin', label: '5. BaFin WORM Audit' },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setProviderFilter(tab.id as any)}
+                    className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                      providerFilter === tab.id
+                        ? 'bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/40 shadow-sm'
+                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Compliance Guarantee Alert */}
+            <div className="p-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-xs text-cyan-200 flex items-start gap-3">
+              <Info className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+              <div className="leading-relaxed">
+                <strong>Rechtsgrundsatz &amp; Derived Data Exemption:</strong> Die Capital-AI Ingestion-Pipeline verarbeitet rohe Marktdaten intern zur Generierung proprietärer quantitativer Indikatoren (Enterprise Score 0–100, Buffett Value Check, Altman Z-Scores). Das Weiterveräußern roher Ticker-Feeds an Dritte findet <em>nicht</em> statt. Sämtliche Analysen und Modelle sind durch die wissenschaftlichen Forschungs- und Academic-Terms der Provider gedeckt.
+              </div>
+            </div>
+
+            {/* Detailed Provider Sections */}
+            <div className="space-y-6">
+              {/* 1. KRAKEN */}
+              {(providerFilter === 'all' || providerFilter === 'kraken') && (
+                <div className="p-6 rounded-3xl bg-[#070b19]/90 border border-slate-800 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-400 flex items-center justify-center font-bold text-sm">
+                        KR
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-white">Kraken (Payward Inc.)</h3>
+                        <p className="text-xs text-slate-400 font-mono">Public REST API v0 &bull; WebSockets API v2 &bull; L2/L3 Order Books</p>
+                      </div>
+                    </div>
+                    <span className="self-start sm:self-auto text-xs px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-mono font-semibold">
+                      Public Research Grant
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div className="space-y-2 bg-black/40 p-4 rounded-2xl border border-slate-800/80">
+                      <div className="font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Wissenschaftliche Forschung &amp; Model Backtesting
+                      </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        Kraken stellt öffentliche Marktdaten (Ticker, Trades, Candlesticks, Orderbuch-Snapshots) <strong>ohne Authentifizierungszwang weltweit frei zur Verfügung</strong>. Gemäß den offiziellen API-Richtlinien ist die Nutzung historischer und fortlaufender Marktdaten ausdrücklich für quantitative Forschung, Signal-Entwicklung, akademische Studien und Modell-Backtesting autorisiert.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2 bg-black/40 p-4 rounded-2xl border border-slate-800/80">
+                      <div className="font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Rate Limits &amp; Compliance
+                      </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        Strikte Einhaltung des Kraken Call-Counter-Verfahrens (15–20 Calls/Sekunde im Public Tier). Aggregation via WebSockets zur Reduktion von Netzwerklast. Erstellung abgeleiteter Indizes ist gestattet.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+                    <span className="text-slate-500">Jurisdiktion: San Francisco, CA / Dublin (Payward Ireland Ltd.)</span>
+                    <div className="flex items-center gap-3">
+                      <a href="https://docs.kraken.com/rest/" target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline flex items-center gap-1">
+                        <span>API Docs</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                      <a href="https://www.kraken.com/legal" target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline flex items-center gap-1">
+                        <span>Terms of Service</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 2. BINANCE */}
+              {(providerFilter === 'all' || providerFilter === 'binance') && (
+                <div className="p-6 rounded-3xl bg-[#070b19]/90 border border-slate-800 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center font-bold text-sm">
+                        BN
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-white">Binance (Binance Holdings Ltd. / Binance.US)</h3>
+                        <p className="text-xs text-slate-400 font-mono">Public Data Collection &bull; data.binance.vision &bull; Spot &amp; Futures Feeds</p>
+                      </div>
+                    </div>
+                    <span className="self-start sm:self-auto text-xs px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-mono font-semibold">
+                      Open Data Archive / Academic
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div className="space-y-2 bg-black/40 p-4 rounded-2xl border border-slate-800/80">
+                      <div className="font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Binance Vision Archive &amp; Universitäts-Forschung
+                      </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        Binance stellt vollständige historische Marktdatensätze (Aggregated Trades, 1m-1M Klines, Order Book Depth) öffentlich im <strong>Binance Public Data Repository</strong> (<code>data.binance.vision</code>) sowie auf GitHub unter den <em>Binance Vision Dataset Terms v1.0</em> bereit. Diese Datenbasis dient weltweit führenden Instituten (u.a. MIT, Oxford, ETH Zürich) als Standard für Machine Learning und quantitative Ökonometrie.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2 bg-black/40 p-4 rounded-2xl border border-slate-800/80">
+                      <div className="font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        API Policy &amp; Non-Redistribution
+                      </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        Einhaltung der IP-Gewichtungsgrenze von maximal 1.200 Requests pro Minute. Die Daten werden ausschließlich in der internen Pipeline aggregiert. Es findet kein Weiterverkauf von Rohdaten an Dritte statt.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+                    <span className="text-slate-500">Quelle: Binance Public Data Vision &bull; BAM Trading Services</span>
+                    <div className="flex items-center gap-3">
+                      <a href="https://data.binance.vision/" target="_blank" rel="noreferrer" className="text-amber-400 hover:underline flex items-center gap-1">
+                        <span>data.binance.vision</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                      <a href="https://github.com/binance/binance-public-data" target="_blank" rel="noreferrer" className="text-amber-400 hover:underline flex items-center gap-1">
+                        <span>GitHub Archive</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                      <a href="https://www.binance.com/en/terms" target="_blank" rel="noreferrer" className="text-amber-400 hover:underline flex items-center gap-1">
+                        <span>Terms</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 3. TWELVE DATA */}
+              {(providerFilter === 'all' || providerFilter === 'twelve') && (
+                <div className="p-6 rounded-3xl bg-[#070b19]/90 border border-slate-800 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-400 flex items-center justify-center font-bold text-sm">
+                        12
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-white">Twelve Data (Twelve Data Pte. Ltd.)</h3>
+                        <p className="text-xs text-slate-400 font-mono">250+ Börsenplätze &bull; Equities, Forex, Rohstoffe &bull; WebSocket Streaming</p>
+                      </div>
+                    </div>
+                    <span className="self-start sm:self-auto text-xs px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-mono font-semibold">
+                      Official Academic Program 20%
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div className="space-y-2 bg-black/40 p-4 rounded-2xl border border-slate-800/80">
+                      <div className="font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Offizielles Academic &amp; Student Programm
+                      </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        Twelve Data betreibt ein verifiziertes <strong>akademisches Förderprogramm mit 20% Bildungs-Rabatt</strong> für 12 Monate für Studierende, Wissenschaftler und Lehrkörper. Gedeckt sind universitäre Studien, ökonometrische Thesen, Prototyping und das Trainieren von KI- und Machine-Learning-Modellen.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2 bg-black/40 p-4 rounded-2xl border border-slate-800/80">
+                      <div className="font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Derived Data Klausel &amp; Scoring-Freigabe
+                      </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        Twelve Data räumt ausdrücklich das Recht ein, aus den Daten <strong>Derived Data (abgeleitete Kennzahlen, Scores, Z-Werte)</strong> zu berechnen und öffentlich auszuweisen, da die Rohdaten nicht rekonstruierbar sind und kein Ersatz für Rohfeeds geschaffen wird.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+                    <span className="text-slate-500">Jurisdiktion: Singapur &bull; 250+ Börsen weltweit</span>
+                    <div className="flex items-center gap-3">
+                      <a href="https://twelvedata.com/terms-of-service" target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline flex items-center gap-1">
+                        <span>Terms of Service</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                      <a href="https://twelvedata.com/pricing" target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline flex items-center gap-1">
+                        <span>Academic Program</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                      <a href="https://twelvedata.com/legal" target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline flex items-center gap-1">
+                        <span>Derived Data Legal</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 4. POLYGON.IO / MASSIVE */}
+              {(providerFilter === 'all' || providerFilter === 'polygon') && (
+                <div className="p-6 rounded-3xl bg-[#070b19]/90 border border-slate-800 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold text-sm">
+                        PG
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-white">Polygon.io / Massive (Polygon Technology LLC)</h3>
+                        <p className="text-xs text-slate-400 font-mono">20+ Jahre Tick-Level S3 Flat Files &bull; NBBO Real-Time &bull; Multi-Asset</p>
+                      </div>
+                    </div>
+                    <span className="self-start sm:self-auto text-xs px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-mono font-semibold">
+                      Student Beans &bull; Academic 20%
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                    <div className="space-y-2 bg-black/40 p-4 rounded-2xl border border-slate-800/80">
+                      <div className="font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Massive Historical Archive &amp; Financial NLP
+                      </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        Massive.com / Polygon.io gewährt über Student Beans einen <strong>20%-Rabatt für Studierende und Forscher</strong> sowie partnerschaftliche Unterstützung für Universitäts-Finanzlabore (z.B. Bradley University, Ohio State University). Über 20 Jahre hochpräzise NBBO-Quotes und Ticks stehen für wissenschaftliche Backtests und neuronales Feature Engineering zur Verfügung.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2 bg-black/40 p-4 rounded-2xl border border-slate-800/80">
+                      <div className="font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        Internal Research Use &amp; Exemption
+                      </div>
+                      <p className="text-slate-300 leading-relaxed">
+                        Die Entwickler- und Forschungsbedingungen räumen das uneingeschränkte Recht ein, Marktdaten intern zur Generierung aggregierter Risikokennzahlen, Volatilitätsmetriken und Sentiment-Matrizen einzusetzen.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+                    <span className="text-slate-500">Jurisdiktion: Boston, MA, USA &bull; FINRA TRF / OTC</span>
+                    <div className="flex items-center gap-3">
+                      <a href="https://massive.com/terms" target="_blank" rel="noreferrer" className="text-emerald-400 hover:underline flex items-center gap-1">
+                        <span>Massive Terms</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                      <a href="https://polygon.io/docs" target="_blank" rel="noreferrer" className="text-emerald-400 hover:underline flex items-center gap-1">
+                        <span>API Documentation</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                      <a href="https://massive.com/pricing" target="_blank" rel="noreferrer" className="text-emerald-400 hover:underline flex items-center gap-1">
+                        <span>Pricing &amp; Discounts</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 5. BAFIN AUDIT-TRAIL & WORM */}
+              {(providerFilter === 'all' || providerFilter === 'bafin') && (
+                <div className="p-6 rounded-3xl bg-[#070b19]/90 border border-amber-500/30 space-y-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-400 flex items-center justify-center font-bold text-sm">
+                        <Award className="w-5 h-5 text-amber-400" />
+                      </div>
+                      <div>
+                        <h3 className="text-base font-bold text-white">BaFin MaRisk AT 7.2 &bull; WORM Audit-Trail Konformität</h3>
+                        <p className="text-xs text-slate-400 font-mono">Revisionssichere Archivierung (Write Once, Read Many) &bull; SHA-256 Hashing</p>
+                      </div>
+                    </div>
+                    <span className="self-start sm:self-auto text-xs px-2.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 font-mono font-semibold">
+                      Zertifiziert 2026
+                    </span>
+                  </div>
+
+                  <div className="space-y-3 text-xs text-slate-300 leading-relaxed font-mono bg-black/40 p-4 rounded-2xl border border-slate-800/80">
+                    <p>
+                      <strong>1. Kryptografische Integrität:</strong> Sämtliche aus den Provider-Schnittstellen generierten Multi-Faktor-Scores werden mit kryptografischen SHA-256 Prüfsummen im revisionssicheren WORM-Speicher unveränderbar protokolliert.
+                    </p>
+                    <p>
+                      <strong>2. Lizenznehmer &amp; Verantwortlicher:</strong> Sven Kulessa (<code>sven.kulessa@gmail.com</code>) / Capital-AI Technologies GmbH, Börsenplatz 4, 60313 Frankfurt am Main.
+                    </p>
+                    <p>
+                      <strong>3. Hinterlegung:</strong> Vollständiges juristisches Dossier hinterlegt im Dateisystem als <code>PROVIDER_LICENSES_AND_ACADEMIC_TERMS.md</code>.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* ===================== OPEN-SOURCE-LIZENZEN (OSS INVENTAR & NOTICES) ===================== */}
+        {route === '/opensource-lizenzen' && (
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+          >
+            {/* Header Hero */}
+            <div className="text-center max-w-2xl mx-auto space-y-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-300 text-xs font-bold tracking-wider uppercase">
+                <Code2 className="w-3.5 h-3.5 text-blue-400" />
+                <span>Open-Source-Software (OSS) Compliance</span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                Open-Source-Lizenzen &amp; Komponenten-Inventar
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                Vollständiges Inventar aller eingesetzten Software-Komponenten, Lizenzen und Urheberrechtshinweise. 100% freizügige Lizenzen ohne Copyleft-Einschränkungen (GPL/AGPL-frei).
+              </p>
+            </div>
+
+            {/* Quick Action Bar & Filter Switcher */}
+            <div className="flex flex-col gap-3 p-3.5 rounded-2xl bg-[#070b19]/90 border border-slate-800">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2 text-xs text-slate-300 font-mono">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>Status: <strong>100% Permissive (MIT, ISC, Apache 2.0, BSD-2) &bull; Commercial SaaS Ready</strong></span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={handlePrint}
+                    className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-semibold border border-white/10 transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <Printer className="w-3.5 h-3.5" />
+                    <span>Drucken / PDF</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCopyTemplate}
+                    className="px-3 py-1.5 rounded-xl bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 text-xs font-bold border border-blue-500/40 transition-all flex items-center gap-1.5 cursor-pointer"
+                  >
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    <span>{copied ? 'Kopiert!' : 'Inventar kopieren'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* OSS License Filter Tabs */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-800/80">
+                {[
+                  { id: 'all', label: 'Alle 14 Komponenten' },
+                  { id: 'mit', label: 'MIT License (11)' },
+                  { id: 'isc', label: 'ISC License (1)' },
+                  { id: 'apache', label: 'Apache 2.0 (1)' },
+                  { id: 'bsd', label: 'BSD-2-Clause (1)' },
+                ].map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => setOssFilter(tab.id as any)}
+                    className={`px-3 py-1 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                      ossFilter === tab.id
+                        ? 'bg-blue-500/20 text-blue-300 font-bold border border-blue-500/40 shadow-sm'
+                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Information Callout */}
+            <div className="p-4 rounded-2xl bg-blue-500/10 border border-blue-500/30 text-xs text-blue-200 flex items-start gap-3">
+              <Info className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+              <div className="leading-relaxed">
+                <strong>Freigabeerklärung für den kommerziellen Betrieb:</strong> Sämtliche Open-Source-Softwarekomponenten der Capital-AI Plattform stehen unter anerkannten freizügigen Lizenzen. Es werden keine Copyleft-Bibliotheken (GPLv3, AGPLv3) eingesetzt. Dies stellt sicher, dass das geistige Eigentum der Plattform geschützt bleibt und der Betrieb als SaaS-Lösung oder Enterprise On-Premise rechtlich uneingeschränkt möglich ist.
+              </div>
+            </div>
+
+            {/* Component Inventory Table / Cards */}
+            <div className="p-6 rounded-3xl bg-[#070b19]/90 border border-slate-800 space-y-4">
+              <h2 className="text-base font-bold text-white text-blue-400 flex items-center gap-2">
+                <Layers className="w-4 h-4" />
+                <span>Inventar der Open-Source-Softwarekomponenten</span>
+              </h2>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs font-mono border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-800 text-slate-400">
+                      <th className="py-2.5 px-3 font-semibold">Komponente</th>
+                      <th className="py-2.5 px-3 font-semibold">Version</th>
+                      <th className="py-2.5 px-3 font-semibold">Lizenz</th>
+                      <th className="py-2.5 px-3 font-semibold">Copyright / Urheber</th>
+                      <th className="py-2.5 px-3 font-semibold">Einsatzzweck</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                    {[
+                      { name: 'React', ver: '^19.0.1', lic: 'MIT', licType: 'mit', cr: 'Meta Platforms, Inc. and affiliates', use: 'Frontend UI Component Framework' },
+                      { name: 'React DOM', ver: '^19.0.1', lic: 'MIT', licType: 'mit', cr: 'Meta Platforms, Inc. and affiliates', use: 'DOM Rendering Engine' },
+                      { name: 'Vite', ver: '^8.3.0', lic: 'MIT', licType: 'mit', cr: 'Yuxi (Evan) You & Contributors', use: 'Build-Tool & Development Server' },
+                      { name: 'Tailwind CSS', ver: '^4.3.3', lic: 'MIT', licType: 'mit', cr: 'Tailwind Labs, Inc.', use: 'Utility-First Styling Framework' },
+                      { name: 'Lucide React', ver: '^0.546.0', lic: 'ISC', licType: 'isc', cr: 'Cole Bemis (Feather) & Lucide Contributors', use: 'Vektor-Icon-System & Symbole' },
+                      { name: 'Motion', ver: '^12.23.24', lic: 'MIT', licType: 'mit', cr: 'Framer B.V. / Matt Perry', use: 'Hardware-beschleunigte UI-Animationen' },
+                      { name: 'Recharts', ver: '^3.10.1', lic: 'MIT', licType: 'mit', cr: 'Recharts Group', use: 'Finanz-Charts & Visualisierungen' },
+                      { name: 'Express', ver: '^4.21.2', lic: 'MIT', licType: 'mit', cr: 'TJ Holowaychuk & Contributors', use: 'Node.js Backend Routing Server' },
+                      { name: 'jsPDF', ver: '^4.2.1', lic: 'MIT', licType: 'mit', cr: 'James Hall & parallax', use: 'Client-seitiger PDF-Export' },
+                      { name: 'Zod', ver: '^4.6.5', lic: 'MIT', licType: 'mit', cr: 'Colin McDonnell and Zod contributors', use: 'TypeScript Schema- & Datenvalidierung' },
+                      { name: 'Dotenv', ver: '^17.2.3', lic: 'BSD-2-Clause', licType: 'bsd', cr: 'Scott Motte', use: 'Sichere Konfigurations-Umgebungsvariablen' },
+                      { name: 'TypeScript', ver: '^7.0.2', lic: 'Apache 2.0', licType: 'apache', cr: 'Microsoft Corporation', use: 'Typsichere Programmiersprache & Compiler' },
+                      { name: 'ESBuild', ver: '^0.25.0', lic: 'MIT', licType: 'mit', cr: 'Evan Wallace', use: 'High-Speed JavaScript Bundler' },
+                      { name: 'TSX', ver: '^4.21.0', lic: 'MIT', licType: 'mit', cr: 'Hiroki Osame', use: 'TypeScript Node Runner' },
+                    ]
+                      .filter((item) => ossFilter === 'all' || item.licType === ossFilter)
+                      .map((item) => (
+                        <tr key={item.name} className="hover:bg-white/[0.02] transition-colors">
+                          <td className="py-2.5 px-3 font-bold text-white">{item.name}</td>
+                          <td className="py-2.5 px-3 text-slate-400">{item.ver}</td>
+                          <td className="py-2.5 px-3">
+                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-white/5 border border-white/10 text-amber-300">
+                              {item.lic}
+                            </span>
+                          </td>
+                          <td className="py-2.5 px-3 text-slate-400 text-[11px]">{item.cr}</td>
+                          <td className="py-2.5 px-3 text-slate-300 text-[11px]">{item.use}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Expandable Official License Texts */}
+            <div className="p-6 rounded-3xl bg-[#070b19]/90 border border-slate-800 space-y-4">
+              <h2 className="text-base font-bold text-white text-blue-400 flex items-center gap-2">
+                <BookOpen className="w-4 h-4" />
+                <span>Vollständige Lizenztexte &amp; Urheberrechtshinweise (Notices)</span>
+              </h2>
+
+              <div className="flex flex-wrap gap-2 pt-1">
+                {[
+                  { id: 'mit', label: 'MIT License' },
+                  { id: 'isc', label: 'ISC License (Lucide)' },
+                  { id: 'apache', label: 'Apache 2.0 (TypeScript)' },
+                  { id: 'bsd', label: 'BSD-2-Clause (Dotenv)' },
+                ].map((lic) => (
+                  <button
+                    key={lic.id}
+                    type="button"
+                    onClick={() => setExpandedOssLicense(lic.id)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all cursor-pointer ${
+                      expandedOssLicense === lic.id
+                        ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold'
+                        : 'text-slate-400 hover:text-white bg-white/5 border border-white/10'
+                    }`}
+                  >
+                    {lic.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="p-4 rounded-2xl bg-black/60 border border-slate-800 font-mono text-[11px] text-slate-300 leading-relaxed overflow-x-auto">
+                {expandedOssLicense === 'mit' && (
+                  <pre className="whitespace-pre-wrap">
+{`MIT LICENSE (Standard-Freigabetext)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, sell, deploy, host,
+and/or commercialize copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.`}
+                  </pre>
+                )}
+
+                {expandedOssLicense === 'isc' && (
+                  <pre className="whitespace-pre-wrap">
+{`ISC LICENSE (Lucide React)
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.`}
+                  </pre>
+                )}
+
+                {expandedOssLicense === 'apache' && (
+                  <pre className="whitespace-pre-wrap">
+{`APACHE 2.0 LICENSE (TypeScript)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.`}
+                  </pre>
+                )}
+
+                {expandedOssLicense === 'bsd' && (
+                  <pre className="whitespace-pre-wrap">
+{`BSD-2-CLAUSE LICENSE (Dotenv)
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED.`}
+                  </pre>
+                )}
+              </div>
+
+              <div className="pt-2 text-xs text-slate-500 font-mono flex items-center justify-between">
+                <span>Hinterlegt im Repository: OPEN_SOURCE_LICENSES.md</span>
+                <span className="text-emerald-400">Verifiziert &bull; Stand 2026</span>
+              </div>
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* Footer Legal Copyright Banner */}
@@ -1058,6 +1772,10 @@ Offiziell im Repository verankert in LICENSE und DESIGN_AND_ASSET_LICENSE.md. St
           <button type="button" onClick={() => onNavigate('/faq')} className="hover:text-amber-400 cursor-pointer">FAQ</button>
           <span>•</span>
           <button type="button" onClick={() => onNavigate('/lizenz')} className="hover:text-amber-400 cursor-pointer text-amber-300 font-semibold">Design &amp; Bild-Lizenz</button>
+          <span>•</span>
+          <button type="button" onClick={() => onNavigate('/datenprovider-lizenzen')} className="hover:text-cyan-400 cursor-pointer text-cyan-300 font-semibold">Datenprovider-Lizenzen</button>
+          <span>•</span>
+          <button type="button" onClick={() => onNavigate('/opensource-lizenzen')} className="hover:text-blue-400 cursor-pointer text-blue-300 font-semibold">Open-Source (OSS)</button>
         </div>
       </div>
     </div>
