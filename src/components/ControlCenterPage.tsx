@@ -407,7 +407,7 @@ export const ControlCenterPage: React.FC<ControlCenterPageProps> = ({
         </div>
       </div>
 
-      {/* 2. SUBPAGE SIDEBAR (NACH RECHTS AUFKLAPPBAR) */}
+      {/* 2. SUBPAGE SIDEBAR (AUFKLAPPBAR) */}
       <SubpageSidebarNav
         hubTitle="Control Center"
         items={subpageItems}

@@ -1,24 +1,30 @@
-MIT License with Commercial Production & Design Grant
+MIT License with Commercial Production, Design & Asset Grant
 
 Copyright (c) 2026 Sven Kulessa / Capital-AI Technologies GmbH
 Project: Capital-AI Enterprise Market Intelligence & Data Pipeline Platform
 Licensed User: Sven Kulessa (sven.kulessa@gmail.com)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software, visual design system, UI/UX components, and associated
-documentation and media files (the "Software and Assets"), to deal in the
-Software and Assets without restriction, including without limitation the rights
+of this software, visual design system, UI/UX components, master asset databases,
+and associated documentation and media files (the "Software and Assets"), to deal
+in the Software and Assets without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, sell, deploy, host,
 and/or commercialize copies of the Software and Assets in production, and to
 permit persons to whom the Software and Assets are furnished to do so, subject
 to the following conditions:
 
 1. COMMERCIAL PRODUCTION PERMISSION:
-The visual designs, user interfaces, branding concepts, color architecture,
-data pipelines, algorithmic scoring schemas, and all generated image assets
-located in this repository are explicitly licensed for unrestricted commercial
-and productive operation, including SaaS hosting, enterprise client deployments,
-investor showcases, marketing campaigns, and mobile/web application packaging.
+The visual designs, user interfaces, branding concepts, round glowing action button
+navigation system, slide-in sidebar architectures, color architecture, data pipelines,
+algorithmic scoring schemas, generated image assets, and complete master symbol
+databases located in this repository:
+- Top 500 Krypto-Symbole (src/data/assets/cryptoAssets.ts)
+- Top 500 Aktien-Symbole (src/data/assets/stockAssets.ts)
+- Top 100 Währungspaare / Forex (src/data/assets/forexAssets.ts)
+- Top 100 Rohstoffe / Commodities (src/data/assets/commodityAssets.ts)
+are explicitly licensed for unrestricted commercial and productive operation, including
+SaaS hosting, enterprise client deployments, investor showcases, marketing campaigns,
+and mobile/web application packaging.
 
 2. ASSET & IMAGE CLEARANCE:
 All synthetic and generated image assets (including but not limited to:

@@ -1,8 +1,8 @@
 /**
- * CAPITAL AI — SUBPAGE SIDEBAR NAVIGATION (NACH RECHTS AUFKLAPPBAR)
+ * CAPITAL AI — SUBPAGE SIDEBAR NAVIGATION (AUFKLAPPBARE SIDEBAR)
  * 
  * Ermöglicht in Studio Hub, Learning Portal und Control Center die bequeme
- * Navigation über eine moderne, nach rechts aufklappbare Side-Liste.
+ * Navigation über eine moderne aufklappbare Side-Liste.
  */
 
 import React, { useState, useEffect } from 'react';
@@ -97,10 +97,10 @@ export const SubpageSidebarNav: React.FC<SubpageSidebarNavProps> = ({
             type="button"
             onClick={() => setIsOpen(!isOpen)}
             className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg border text-xs font-bold transition-all cursor-pointer group ${colorStyles.btnBg}`}
-            title={`${hubTitle} Side-Liste nach rechts aufklappen`}
+            title={`${hubTitle} Sidebar aufklappen`}
           >
             <PanelLeftOpen className="w-4 h-4 group-hover:scale-110 transition-transform" />
-            <span>Side-Liste (nach rechts aufklappbar)</span>
+            <span>Sidebar Navigation</span>
             <span className="flex items-center text-[10px] opacity-80 font-mono px-1.5 py-0.5 rounded bg-black/30">
               {items.length} Unterseiten
             </span>
@@ -135,7 +135,7 @@ export const SubpageSidebarNav: React.FC<SubpageSidebarNavProps> = ({
         type="button"
         onClick={() => setIsOpen(true)}
         className={`fixed left-0 top-1/2 -translate-y-1/2 z-30 hidden sm:flex items-center gap-1 py-3 px-1.5 rounded-r-xl border-y border-r shadow-2xl transition-all cursor-pointer group ${colorStyles.floatingBg} hover:pl-2.5`}
-        title={`${hubTitle} Side-Liste nach rechts aufklappen`}
+        title={`${hubTitle} Sidebar aufklappen`}
       >
         <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         <span className="[writing-mode:vertical-rl] rotate-180 text-[10px] font-bold tracking-wider uppercase font-mono py-1">
@@ -152,7 +152,7 @@ export const SubpageSidebarNav: React.FC<SubpageSidebarNavProps> = ({
         />
       )}
 
-      {/* 4. NACH RECHTS AUFKLAPPBARE SIDE-LISTE (DRAWER / PANEL) */}
+      {/* 4. AUFKLAPPBARE SIDE-LISTE (DRAWER / PANEL) */}
       <aside
         className={`fixed top-0 left-0 bottom-0 z-50 w-72 sm:w-84 bg-[#060b1e] border-r border-slate-800 p-4 sm:p-5 flex flex-col justify-between shadow-[0_0_50px_rgba(0,0,0,0.8)] transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
@@ -164,7 +164,7 @@ export const SubpageSidebarNav: React.FC<SubpageSidebarNavProps> = ({
           <div className="flex items-center justify-between pb-3.5 border-b border-slate-800">
             <div>
               <div className="text-[10px] font-mono uppercase tracking-wider text-slate-400">
-                Nach rechts aufgeklappt
+                Sidebar Navigation
               </div>
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 <span className={`w-2 h-2 rounded-full ${colorStyles.dot}`} />

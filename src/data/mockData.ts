@@ -74,7 +74,7 @@ export const CORE_MODULES: CoreModule[] = [
         'Sub-45ms Tick-Normalisierung über autorisierte Provider-Gateways',
       ],
       sampleMetrics: [
-        { label: 'Gescannte Assets', value: '500+', score: 'Echtzeit' },
+        { label: 'Gescannte Assets', value: '1.200+ (Top 500 Krypto & Aktien)', score: 'Echtzeit' },
         { label: 'Ranking-Faktoren', value: '50 Dimensionen', score: 'Quant-Grade' },
         { label: 'Latenz-Schnitt', value: '38 ms', score: 'Sub-45ms' },
         { label: 'BaFin MaRisk Gate', value: 'Aktiv', score: 'Compliant' },

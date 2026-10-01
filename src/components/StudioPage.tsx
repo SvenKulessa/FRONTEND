@@ -201,7 +201,7 @@ export const StudioPage: React.FC<StudioPageProps> = ({
     }, 250);
   };
 
-  // Studio Hub Subpage items for nach rechts aufklappbare Side-Liste
+  // Studio Hub Subpage items für aufklappbare Sidebar
   const subpageItems: SubpageNavItem[] = [
     {
       id: 'architecture',
@@ -398,7 +398,7 @@ export const StudioPage: React.FC<StudioPageProps> = ({
       </div>
 
       {/* ========================================================================= */}
-      {/* 2. SUBPAGE SIDEBAR (NACH RECHTS AUFKLAPPBAR)                              */}
+      {/* 2. SUBPAGE SIDEBAR (AUFKLAPPBAR)                                          */}
       {/* ========================================================================= */}
       <SubpageSidebarNav
         hubTitle="Studio Hub"

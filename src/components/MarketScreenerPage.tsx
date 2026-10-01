@@ -220,7 +220,7 @@ export const MarketScreenerPage: React.FC<MarketScreenerPageProps> = ({
         </div>
       </div>
 
-      {/* 2. SUBPAGE SIDEBAR (NACH RECHTS AUFKLAPPBAR) */}
+      {/* 2. SUBPAGE SIDEBAR (AUFKLAPPBAR) */}
       <SubpageSidebarNav
         hubTitle="Market Screener Hub"
         items={subpageItems}

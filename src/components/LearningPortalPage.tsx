@@ -323,7 +323,7 @@ export const LearningPortalPage: React.FC<LearningPortalPageProps> = ({
         </div>
       </div>
 
-      {/* 2. SUBPAGE SIDEBAR (NACH RECHTS AUFKLAPPBAR) */}
+      {/* 2. SUBPAGE SIDEBAR (AUFKLAPPBAR) */}
       <SubpageSidebarNav
         hubTitle="Learning Portal"
         items={subpageItems}

@@ -62,6 +62,7 @@ import { ASSET_CLASSES } from '../data/mockData';
 import { MainCategory, AssetSubclass } from '../types';
 import { trackLoginClick } from '../utils/analytics';
 import { usePriceAlerts } from '../context/PriceAlertsContext';
+import { HubSidebarDrawer, MainHubId } from './HubSidebarDrawer';
 
 interface HeaderProps {
   currentRoute?: string;
@@ -96,9 +97,16 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [activeSidebarHub, setActiveSidebarHub] = useState<MainHubId>('marketscreener');
   const [expandedHub, setExpandedHub] = useState<string | null>('studio');
   const [expandedClass, setExpandedClass] = useState<MainCategory | null>('KRYPTO');
   const { activeAlertsCount, triggeredAlertsCount } = usePriceAlerts();
+
+  const openHubSidebar = (hubId: MainHubId) => {
+    setActiveSidebarHub(hubId);
+    setIsSidebarOpen(true);
+  };
 
   // Active Hub Calculation for the 4 Reiter
   const isMarketscreenerActive =
@@ -160,66 +168,78 @@ export const Header: React.FC<HeaderProps> = ({
         />
       </div>
 
-      {/* CENTER: DIE 4 HAUPTREITER (Marketscreener, Studio Hub, Learning Portal, Control Center) */}
-      <nav aria-label="Hauptnavigation" className="hidden lg:flex items-center gap-1 p-1 rounded-xl bg-black/40 border border-slate-800/80 shadow-inner">
-        {/* Marketscreener */}
+      {/* CENTER: DIE 4 HAUPTHUBS ALS RUNDE LEUCHTENDE ACTION BUTTONS MIT AUFKLAPPBARER SIDEBAR */}
+      <nav aria-label="Hauptnavigation" className="hidden lg:flex items-center gap-2 p-1.5 rounded-full bg-black/50 border border-slate-800/90 shadow-2xl backdrop-blur-md">
+        {/* 1. Marketscreener Hub Action Button */}
         <button
           type="button"
-          onClick={() => onNavigate?.('/')}
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs transition-all cursor-pointer ${
+          onClick={() => openHubSidebar('marketscreener')}
+          className={`flex items-center gap-2 px-3 py-1 rounded-full border transition-all cursor-pointer group ${
             isMarketscreenerActive
-              ? 'bg-amber-400 text-black font-extrabold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
+              ? 'bg-amber-400/25 border-amber-400 text-white shadow-[0_0_18px_rgba(245,176,20,0.55)] font-bold'
+              : 'bg-white/5 border-amber-400/30 text-slate-300 hover:text-white hover:bg-amber-400/15 hover:border-amber-400/60 shadow-[0_0_10px_rgba(245,176,20,0.15)] font-semibold'
           }`}
-          title="Marketscreener (Echtzeit-Marktdaten & Scorer)"
+          title="Marketscreener Hub Action Button: Aufklappbare Sidebar mit 6 Modulen öffnen"
         >
-          <LineChart className="w-3.5 h-3.5" />
-          <span>Marketscreener</span>
+          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-amber-400/25 border border-amber-400/60 text-amber-300 shadow-[0_0_8px_rgba(245,176,20,0.6)] group-hover:scale-110 transition-transform">
+            <LineChart className="w-3 h-3" />
+          </div>
+          <span className="text-xs">Marketscreener</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
         </button>
 
-        {/* Studio Hub */}
+        {/* 2. Studio Hub Action Button */}
         <button
           type="button"
-          onClick={() => onNavigate?.('/studio')}
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs transition-all cursor-pointer ${
+          onClick={() => openHubSidebar('studio')}
+          className={`flex items-center gap-2 px-3 py-1 rounded-full border transition-all cursor-pointer group ${
             isStudioActive
-              ? 'bg-cyan-500 text-black font-extrabold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
+              ? 'bg-cyan-500/25 border-cyan-400 text-white shadow-[0_0_18px_rgba(6,182,212,0.55)] font-bold'
+              : 'bg-white/5 border-cyan-400/30 text-slate-300 hover:text-white hover:bg-cyan-500/15 hover:border-cyan-400/60 shadow-[0_0_10px_rgba(6,182,212,0.15)] font-semibold'
           }`}
-          title="Studio Hub (7 Module: Architektur, Builder, Blueprints, etc.)"
+          title="Studio Hub Action Button: Aufklappbare Sidebar mit 7 Modulen öffnen"
         >
-          <Building2 className="w-3.5 h-3.5" />
-          <span>Studio Hub</span>
+          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-cyan-500/25 border border-cyan-400/60 text-cyan-300 shadow-[0_0_8px_rgba(6,182,212,0.6)] group-hover:scale-110 transition-transform">
+            <Building2 className="w-3 h-3" />
+          </div>
+          <span className="text-xs">Studio Hub</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
         </button>
 
-        {/* Learning Portal */}
+        {/* 3. Learning Portal Action Button */}
         <button
           type="button"
-          onClick={() => onNavigate?.('/learning')}
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs transition-all cursor-pointer ${
+          onClick={() => openHubSidebar('learning')}
+          className={`flex items-center gap-2 px-3 py-1 rounded-full border transition-all cursor-pointer group ${
             isLearningActive
-              ? 'bg-amber-400 text-black font-extrabold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
+              ? 'bg-amber-400/25 border-amber-300 text-white shadow-[0_0_18px_rgba(249,191,33,0.55)] font-bold'
+              : 'bg-white/5 border-amber-300/30 text-slate-300 hover:text-white hover:bg-amber-400/15 hover:border-amber-300/60 shadow-[0_0_10px_rgba(249,191,33,0.15)] font-semibold'
           }`}
-          title="Learning Portal (Vocabulary, Glossar & Cheat-Sheets)"
+          title="Learning Portal Action Button: Aufklappbare Sidebar mit 3 Modulen öffnen"
         >
-          <BookOpen className="w-3.5 h-3.5" />
-          <span>Learning Portal</span>
+          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-amber-400/25 border border-amber-400/60 text-[#F9BF21] shadow-[0_0_8px_rgba(249,191,33,0.6)] group-hover:scale-110 transition-transform">
+            <BookOpen className="w-3 h-3" />
+          </div>
+          <span className="text-xs">Learning Portal</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#F9BF21] animate-pulse" />
         </button>
 
-        {/* Control Center */}
+        {/* 4. Control Center Action Button */}
         <button
           type="button"
-          onClick={() => onNavigate?.('/control-center')}
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs transition-all cursor-pointer ${
+          onClick={() => openHubSidebar('control-center')}
+          className={`flex items-center gap-2 px-3 py-1 rounded-full border transition-all cursor-pointer group ${
             isControlActive
-              ? 'bg-rose-500 text-white font-extrabold shadow-sm'
-              : 'text-slate-300 hover:text-white hover:bg-white/5 font-medium'
+              ? 'bg-rose-500/25 border-rose-400 text-white shadow-[0_0_18px_rgba(244,63,94,0.55)] font-bold'
+              : 'bg-white/5 border-rose-500/30 text-slate-300 hover:text-white hover:bg-rose-500/15 hover:border-rose-400/60 shadow-[0_0_10px_rgba(244,63,94,0.15)] font-semibold'
           }`}
-          title="Control Center (v1.0 Roadmap, Cockpit, Console & Governance)"
+          title="Control Center Action Button: Aufklappbare Sidebar mit 6 Modulen öffnen"
         >
-          <ShieldCheck className="w-3.5 h-3.5" />
-          <span>Control Center</span>
+          <div className="w-5 h-5 rounded-full flex items-center justify-center bg-rose-500/25 border border-rose-500/60 text-rose-300 shadow-[0_0_8px_rgba(244,63,94,0.6)] group-hover:scale-110 transition-transform">
+            <ShieldCheck className="w-3 h-3" />
+          </div>
+          <span className="text-xs">Control Center</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
         </button>
       </nav>
 
@@ -350,365 +370,103 @@ export const Header: React.FC<HeaderProps> = ({
                   </a>
                 </div>
 
-                {/* Navigation Sections: DIE 4 HAUPTHUBS (GLEICHE GRAFIKARCHITEKTUR WIE ASSETKLASSEN) */}
-                <div className="mt-5 space-y-4">
-                  <div className="space-y-2">
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400/90 px-1 mb-1">
-                      Plattform Hubs &amp; Navigation
-                    </div>
+                {/* Navigation Sections: DIE 4 HAUPTHUBS (RUNDE LEUCHTENDE ACTION BUTTONS MIT AUFKLAPPBARER SIDEBAR) */}
+                <div className="mt-5 space-y-3">
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-amber-400/90 px-1 mb-1">
+                    Plattform Hubs & Navigation
+                  </div>
 
+                  <div className="grid grid-cols-1 gap-2.5">
                     {[
                       {
-                        id: 'marketscreener',
-                        name: 'Market Screener Hub',
-                        color: '#F5B014',
-                        icon: <LineChart className="w-3.5 h-3.5" />,
-                        badge: '5 Module',
-                        tabs: [
-                          {
-                            id: 'screener',
-                            name: 'Multi Asset Screener Terminal',
-                            icon: <LineChart className="w-3.5 h-3.5 text-amber-400" />,
-                            badge: 'Sub-45ms',
-                            shortDesc: 'Echtzeit Cross-Sectional Ranking über alle 5 Haupt-Assetklassen mit 50 Quant-Dimensionen',
-                            tags: ['Aktien', 'Krypto', 'Forex', 'Rohstoffe'],
-                            onClick: () => onNavigate?.('/marketscreener/terminal'),
-                          },
-                          {
-                            id: 'buffett',
-                            name: 'Buffett Value Check',
-                            icon: <Leaf className="w-3.5 h-3.5 text-emerald-400" />,
-                            badge: 'Moat & DCF',
-                            shortDesc: 'Burggraben-Kriterien, ROE > 15% & Margin of Safety nach Warren Buffett',
-                            tags: ['Burggraben', 'DCF', 'FCF Yield'],
-                            onClick: () => onNavigate?.('/marketscreener/buffett'),
-                          },
-                          {
-                            id: 'scorer',
-                            name: 'Enterprise Scorer (0-100)',
-                            icon: <Zap className="w-3.5 h-3.5 text-purple-400" />,
-                            badge: 'Multi-Faktor',
-                            shortDesc: 'Fundamentaldaten, Cashflows & Altman Z-Score Bewertung in einer Kennzahl',
-                            tags: ['Multi-Faktor', 'Z-Score', 'Piotroski'],
-                            onClick: () => onNavigate?.('/marketscreener/scorer'),
-                          },
-                          {
-                            id: 'sector',
-                            name: 'KI-Sektor-Rotation',
-                            icon: <Layers className="w-3.5 h-3.5 text-cyan-400" />,
-                            badge: 'Kapitalfluss',
-                            shortDesc: 'Sektor-Rotations-Radar & institutionelle Liquiditätsströme in Echtzeit',
-                            tags: ['Rotation', 'Makro', 'Kapitalfluss'],
-                            onClick: () => onNavigate?.('/marketscreener/sector'),
-                          },
-                          {
-                            id: 'newsfeed',
-                            name: 'AI Newsfeed',
-                            icon: <Newspaper className="w-3.5 h-3.5 text-[#F87171]" />,
-                            badge: 'NLP-Sentiment',
-                            shortDesc: 'NLP-Sentiment-Impact & kuratierte Marktnachrichten mit Auswirkungs-Score',
-                            tags: ['NLP', 'Sentiment', 'Breaking News'],
-                            onClick: () => onNavigate?.('/marketscreener/newsfeed'),
-                          },
-                          {
-                            id: 'alerts',
-                            name: 'PriceAlerts & Schwellenwerte',
-                            icon: <Bell className="w-3.5 h-3.5 text-amber-400" />,
-                            badge: `${activeAlertsCount} aktiv`,
-                            shortDesc: 'Echtzeit-Preisalarme, Ausbruchssignale & Schwellenwert-Überwachung',
-                            tags: ['Alarme', 'Benachrichtigungen'],
-                            onClick: () => onNavigate?.('/marketscreener/alerts'),
-                          },
-                        ],
+                        id: "marketscreener" as const,
+                        name: "Marketscreener Hub",
+                        color: "#F5B014",
+                        glow: "rgba(245, 176, 20, 0.4)",
+                        icon: <LineChart className="w-4 h-4 text-amber-300" />,
+                        badge: "6 Module",
+                        tagline: "Screener, Buffett, Scorer & AI News",
                       },
                       {
-                        id: 'studio',
-                        name: 'Studio Hub',
-                        color: '#06B6D4',
-                        icon: <Building2 className="w-3.5 h-3.5" />,
-                        badge: '7 Tabs',
-                        tabs: [
-                          {
-                            id: 'architecture',
-                            name: 'Pipeline Architektur',
-                            icon: <Layers className="w-3.5 h-3.5 text-amber-400" />,
-                            badge: '16 Konzepte',
-                            shortDesc: 'Vollständige 5-Ebenen Ingestion-Architektur & BaFin WORM Spezifikation',
-                            tags: ['Layer 1-5', 'BaFin', 'WORM'],
-                            onClick: () => onNavigate?.('/studio/architecture'),
-                          },
-                          {
-                            id: 'blueprints',
-                            name: 'Blueprints & Schemata',
-                            icon: <FileCode className="w-3.5 h-3.5 text-cyan-400" />,
-                            badge: '7 Schemata',
-                            shortDesc: 'Bereitstellbare Integrations-Vorlagen für TradingView, Python & Bloomberg',
-                            tags: ['TradingView', 'Python', 'Pandas'],
-                            onClick: () => onNavigate?.('/studio/blueprints'),
-                          },
-                          {
-                            id: 'builder',
-                            name: 'Pipeline Builder',
-                            icon: <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-400" />,
-                            badge: 'Modular',
-                            shortDesc: 'Interaktiver Konfigurator mit strikter 40 € / Monat Budget-Garantie',
-                            tags: ['Bill of Materials', '40 € Cap'],
-                            onClick: () => onNavigate?.('/studio/builder'),
-                          },
-                          {
-                            id: 'advisor',
-                            name: 'AI Kauf-Berater',
-                            icon: <Bot className="w-3.5 h-3.5 text-purple-400" />,
-                            badge: 'Advisor',
-                            shortDesc: 'KI-gestützter Architekt für Latenz-, Lizenz- & MaRisk-Optimierung',
-                            tags: ['KI-Berater', 'Revenue Assurance'],
-                            onClick: () => onNavigate?.('/studio/advisor'),
-                          },
-                          {
-                            id: 'providers',
-                            name: 'Data & Providers',
-                            icon: <Radio className="w-3.5 h-3.5 text-emerald-400" />,
-                            badge: 'Fleet Health',
-                            shortDesc: 'Latenz- & Ausführungsstatus der autorisierten Provider-Gateways',
-                            tags: ['Kraken', 'Binance', '12Data'],
-                            onClick: () => onNavigate?.('/studio/providers'),
-                          },
-                          {
-                            id: 'analytics',
-                            name: 'Analytics & Scoring',
-                            icon: <BarChart3 className="w-3.5 h-3.5 text-amber-400" />,
-                            badge: '50 Faktoren',
-                            shortDesc: '50-Komponenten Multi-Faktor Engine & Z-Score Berechnung',
-                            tags: ['Z-Score', '50 Quants'],
-                            onClick: () => onNavigate?.('/studio/analytics'),
-                          },
-                          {
-                            id: 'benchmark',
-                            name: 'Benchmark Lab',
-                            icon: <Gauge className="w-3.5 h-3.5 text-cyan-400" />,
-                            badge: 'Sub-45ms',
-                            shortDesc: 'Live Conflation Stress-Testing & deterministisches Schatten-Benchmarking',
-                            tags: ['Conflation', 'Sub-45ms'],
-                            onClick: () => onNavigate?.('/studio/benchmark'),
-                          },
-                        ],
+                        id: "studio" as const,
+                        name: "Studio Hub",
+                        color: "#06B6D4",
+                        glow: "rgba(6, 182, 212, 0.4)",
+                        icon: <Building2 className="w-4 h-4 text-cyan-300" />,
+                        badge: "7 Module",
+                        tagline: "Pipeline Architektur, Builder & Quants",
                       },
                       {
-                        id: 'learning',
-                        name: 'Learning Portal',
-                        color: '#F9BF21',
-                        icon: <BookOpen className="w-3.5 h-3.5" />,
-                        badge: '3 Bereiche',
-                        tabs: [
-                          {
-                            id: 'glossar',
-                            name: 'Market Vocabulary & Glossar',
-                            icon: <BookOpen className="w-3.5 h-3.5 text-amber-400" />,
-                            badge: '480+ Begriffe',
-                            shortDesc: 'Umfassendes Finanz- und Krypto-Lexikon mit praxiserprobten Faustformeln',
-                            tags: ['Lexikon', 'Faustformeln', 'Formeln'],
-                            onClick: () => onNavigate?.('/learning/glossar'),
-                          },
-                          {
-                            id: 'guides',
-                            name: 'Cheat-Sheets & Guides',
-                            icon: <Layers className="w-3.5 h-3.5 text-cyan-400" />,
-                            badge: '4 Guides',
-                            shortDesc: 'Spickzettel für Buffett Value Investing, BaFin WORM & Latenz-Architektur',
-                            tags: ['DCF', 'MaRisk', 'Cheatsheets'],
-                            onClick: () => onNavigate?.('/learning/guides'),
-                          },
-                          {
-                            id: 'quiz',
-                            name: 'Quant & Trader Skill-Check',
-                            icon: <GraduationCap className="w-3.5 h-3.5 text-purple-400" />,
-                            badge: 'Quiz',
-                            shortDesc: 'Interaktiver Wissenstest mit Sofort-Auswertung & Skill-Level Einstufung',
-                            tags: ['Skill-Test', 'Zertifikat'],
-                            onClick: () => onNavigate?.('/learning/quiz'),
-                          },
-                        ],
+                        id: "learning" as const,
+                        name: "Learning Portal",
+                        color: "#F9BF21",
+                        glow: "rgba(249, 191, 33, 0.4)",
+                        icon: <BookOpen className="w-4 h-4 text-[#F9BF21]" />,
+                        badge: "3 Bereiche",
+                        tagline: "480+ Glossar, Cheat-Sheets & Quiz",
                       },
                       {
-                        id: 'control-center',
-                        name: 'Control Center',
-                        color: '#F43F5E',
-                        icon: <ShieldCheck className="w-3.5 h-3.5" />,
-                        badge: '6 Bereiche',
-                        tabs: [
-                          {
-                            id: 'roadmap',
-                            name: 'Roadmap (v1.0 Go-Live)',
-                            icon: <Compass className="w-3.5 h-3.5 text-rose-400" />,
-                            badge: '11 Owner',
-                            shortDesc: 'Navigationsfreundliche Roadmap filterbar nach 11 Projektownern & 5 Phasen',
-                            tags: ['11 Owner', '5 Phasen', 'AP-001..011'],
-                            onClick: () => onNavigate?.('/control-center/roadmap'),
-                          },
-                          {
-                            id: 'console',
-                            name: 'Configurator Console',
-                            icon: <Sliders className="w-3.5 h-3.5 text-rose-400" />,
-                            badge: 'Admin & Audit',
-                            shortDesc: 'Shadow-Run Orchestrierung, 50-Komponenten Health & BaFin Revisionskontrolle',
-                            tags: ['Shadow Run', 'Audit Trail', 'Governance'],
-                            onClick: () => onNavigate?.('/control-center/console'),
-                          },
-                          {
-                            id: 'cockpit',
-                            name: 'Executive Cockpit',
-                            icon: <Activity className="w-3.5 h-3.5 text-amber-400" />,
-                            badge: 'GF & Founder',
-                            shortDesc: 'SLA-Monitoring, MaRisk Compliance-Score & Schnell-Aktionen für Geschäftsführung',
-                            tags: ['GF / Founder', 'MaRisk', 'KPIs'],
-                            onClick: () => onNavigate?.('/control-center/cockpit'),
-                          },
-                          {
-                            id: 'team',
-                            name: 'Team & Rollen',
-                            icon: <Users className="w-3.5 h-3.5 text-cyan-400" />,
-                            badge: '11 Leads',
-                            shortDesc: 'Verantwortlichkeits- und Berechtigungsmatrix aller 11 Projektverantwortlichen',
-                            tags: ['Rollenmatrix', 'Leads'],
-                            onClick: () => onNavigate?.('/control-center/team'),
-                          },
-                          {
-                            id: 'cost_center',
-                            name: 'Cost Center & Finanzen',
-                            icon: <DollarSign className="w-3.5 h-3.5 text-emerald-400" />,
-                            badge: '40 € Cap',
-                            shortDesc: 'AP-006 Budget-Governance & monatliche Kostenkontrolle unter 40 €',
-                            tags: ['Finanzen', 'AP-006', 'Budget-Cap'],
-                            onClick: () => onNavigate?.('/control-center/cost-center'),
-                          },
-                          {
-                            id: 'system',
-                            name: 'Webanwendung & System',
-                            icon: <Server className="w-3.5 h-3.5 text-purple-400" />,
-                            badge: 'Optionen',
-                            shortDesc: 'Feature Flags, Auto-Healing & WORM-Archivierungsstatus für Administratoren',
-                            tags: ['Feature Flags', 'System-Optionen'],
-                            onClick: () => onNavigate?.('/control-center/system'),
-                          },
-                        ],
+                        id: "control-center" as const,
+                        name: "Control Center",
+                        color: "#F43F5E",
+                        glow: "rgba(244, 63, 94, 0.4)",
+                        icon: <ShieldCheck className="w-4 h-4 text-rose-300" />,
+                        badge: "6 Module",
+                        tagline: "Roadmap v1.0, Cockpit, Console & Rollen",
                       },
-                    ].map((hub) => {
-                      const isExpanded = expandedHub === hub.id;
-                      return (
-                        <div
-                          key={hub.id}
-                          className="rounded-xl border border-slate-800/80 bg-[#060c1d]/90 overflow-hidden transition-all"
-                          style={{
-                            borderColor: isExpanded ? `${hub.color}50` : undefined,
-                          }}
-                        >
-                          {/* Hub Header Button */}
-                          <button
-                            type="button"
-                            onClick={() => setExpandedHub(isExpanded ? null : hub.id)}
-                            className="w-full flex items-center justify-between p-2.5 text-left hover:bg-white/5 transition-colors cursor-pointer"
+                    ].map((hub) => (
+                      <button
+                        key={hub.id}
+                        type="button"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          openHubSidebar(hub.id);
+                        }}
+                        className="w-full flex items-center justify-between p-3 rounded-2xl border transition-all cursor-pointer group text-left shadow-md"
+                        style={{
+                          backgroundColor: `${hub.color}14`,
+                          borderColor: `${hub.color}45`,
+                          boxShadow: `0 0 16px ${hub.glow}`,
+                        }}
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div
+                            className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 border shadow-md group-hover:scale-105 transition-transform"
+                            style={{
+                              backgroundColor: `${hub.color}25`,
+                              borderColor: `${hub.color}60`,
+                              boxShadow: `0 0 12px ${hub.glow}`,
+                            }}
                           >
-                            <div className="flex items-center gap-2.5 min-w-0">
-                              <div
-                                className="w-6 h-6 rounded-lg flex items-center justify-center shrink-0 border"
-                                style={{
-                                  backgroundColor: `${hub.color}18`,
-                                  borderColor: `${hub.color}35`,
-                                  color: hub.color,
-                                }}
-                              >
-                                {hub.icon}
-                              </div>
-                              <div className="min-w-0">
-                                <span className="text-[12.5px] font-bold text-white block truncate">
-                                  {hub.name}
-                                </span>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center gap-2 shrink-0">
-                              <span
-                                className="text-[9.5px] font-mono font-bold px-1.5 py-0.5 rounded border"
-                                style={{
-                                  color: hub.color,
-                                  backgroundColor: `${hub.color}10`,
-                                  borderColor: `${hub.color}30`,
-                                }}
-                              >
-                                {hub.badge}
-                              </span>
-                              <ChevronDown
-                                className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
-                                  isExpanded ? 'rotate-180 text-white' : ''
-                                }`}
-                              />
-                            </div>
-                          </button>
-
-                          {/* Sub-tabs List Accordion */}
-                          <AnimatePresence initial={false}>
-                            {isExpanded && (
-                              <motion.div
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: 'auto', opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.2 }}
-                                className="overflow-hidden border-t border-slate-800/60 bg-black/25"
-                              >
-                                <div className="p-2 space-y-1.5">
-                                  {hub.tabs.map((tab) => (
-                                    <div
-                                      key={tab.id}
-                                      onClick={() => {
-                                        setIsMenuOpen(false);
-                                        tab.onClick();
-                                      }}
-                                      className="p-2 rounded-lg bg-slate-900/70 hover:bg-slate-800/90 border border-slate-800/80 hover:border-slate-700 transition-all cursor-pointer group"
-                                    >
-                                      <div className="flex items-center justify-between">
-                                        <span className="text-[11.5px] font-bold text-slate-200 group-hover:text-amber-300 transition-colors flex items-center gap-2">
-                                          <span className="text-slate-500 font-mono text-[10px]">↳</span>
-                                          {tab.icon}
-                                          <span>{tab.name}</span>
-                                        </span>
-                                        {tab.badge && (
-                                          <span
-                                            className="text-[9.5px] font-mono font-bold px-1 rounded border"
-                                            style={{
-                                              color: hub.color,
-                                              backgroundColor: `${hub.color}15`,
-                                              borderColor: `${hub.color}30`,
-                                            }}
-                                          >
-                                            {tab.badge}
-                                          </span>
-                                        )}
-                                      </div>
-                                      <p className="text-[10px] text-slate-400 mt-0.5 leading-snug line-clamp-2 pl-4">
-                                        {tab.shortDesc}
-                                      </p>
-                                      {tab.tags && (
-                                        <div className="flex items-center gap-1 mt-1.5 flex-wrap pl-4">
-                                          {tab.tags.map((tag) => (
-                                            <span
-                                              key={tag}
-                                              className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/5 border border-white/5 text-slate-300"
-                                            >
-                                              {tag}
-                                            </span>
-                                          ))}
-                                        </div>
-                                      )}
-                                    </div>
-                                  ))}
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
+                            {hub.icon}
+                          </div>
+                          <div className="min-w-0">
+                            <span className="text-xs font-bold text-white block truncate group-hover:text-amber-300 transition-colors">
+                              {hub.name}
+                            </span>
+                            <span className="text-[10px] text-slate-400 block truncate">
+                              {hub.tagline}
+                            </span>
+                          </div>
                         </div>
-                      );
-                    })}
+
+                        <div className="flex items-center gap-1.5 shrink-0 pl-2">
+                          <span
+                            className="text-[9.5px] font-mono font-bold px-1.5 py-0.5 rounded border"
+                            style={{
+                              color: hub.color,
+                              backgroundColor: `${hub.color}15`,
+                              borderColor: `${hub.color}35`,
+                            }}
+                          >
+                            {hub.badge}
+                          </span>
+                          <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                        </div>
+                      </button>
+                    ))}
                   </div>
+                </div>
 
                   {/* SECTION 5: SYSTEM & MEHR */}
                   <div className="pt-2 border-t border-slate-800/80">
@@ -881,7 +639,6 @@ export const Header: React.FC<HeaderProps> = ({
                     </div>
                   </div>
                 </div>
-              </div>
 
               {/* Drawer Bottom */}
               <div className="p-5 border-t border-slate-800/80 bg-[#060914]">
@@ -962,6 +719,16 @@ export const Header: React.FC<HeaderProps> = ({
           </>
         )}
       </AnimatePresence>
+
+      {/* AUFKLAPPBARE SIDEBAR FÜR DIE 4 HAUPTHUBS (MARKETSCREENER, STUDIO, LEARNING, CONTROL CENTER) */}
+      <HubSidebarDrawer
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+        activeHubId={activeSidebarHub}
+        onSelectHub={(hub) => setActiveSidebarHub(hub)}
+        onNavigate={onNavigate}
+        currentPath={currentRoute}
+      />
     </header>
   );
 };

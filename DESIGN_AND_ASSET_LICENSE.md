@@ -1,7 +1,7 @@
-# CAPITAL-AI — VOLLSTÄNDIGE DESIGN-, BILD- & SOFTWARE-PRODUKTIVLIZENZ
+# CAPITAL-AI — VOLLSTÄNDIGE DESIGN-, BILD-, SYMBOL- & PRODUKTIVLIZENZ
 
-**Offizielle Urheberrechts- und Verwertungsurkunde für die produktive Nutzung**
-*Version 1.0 — Gültig ab 2026 für Sven Kulessa / Capital-AI Technologies GmbH*
+**Offizielle Urheberrechts-, Asset- und Verwertungsurkunde für die produktive Nutzung**
+*Version 2.0 — Gültig ab 2026 für Sven Kulessa / Capital-AI Technologies GmbH*
 
 ---
 
@@ -10,17 +10,22 @@
 Hiermit wird **Sven Kulessa** (`sven.kulessa@gmail.com`) sowie der **Capital-AI Technologies** und deren verbundenen Unternehmen das unwiderrufliche, weltweite, unbefristete, exklusive und gebührenfreie Recht gewährt, sämtliche im Repository enthaltenen:
 
 1. **Visuellen Designsysteme**, Farbschemata (AIF Gold `#F5B014`, Cyan `#06B6D4`, Emerald `#10B981`, Purple `#8D26FF`, Rose `#F43F5E`), Typografie-Hierarchien und Layout-Raster;
-2. **Grafikarchitekturen**, aufklappbare Accordion-Komponenten, Side-Listen, Terminals und Dashboards;
-3. **Grafik- und Bild-Assets**, einschließlich aller generierten hochauflösenden Key-Visuals, Vektorgrafiken, SVG-Symbole und Banner;
-4. **Algorithmen-Schemas**, Data-Pipelines, Ingestion-Architekturen, Datenmodelle und React/TypeScript-Quelltexte;
+2. **Navigations- und UI-Architekturen**, runde leuchtende Action Buttons für alle 4 Haupt-Hubs (Marketscreener, Studio Hub, Learning Portal, Control Center), aufklappbare Sidebars (`HubSidebarDrawer.tsx`, `SubpageSidebarNav.tsx`), Terminals und Dashboards;
+3. **Master-Asset- und Symbol-Datenbanken** mit vollständigen Metadaten, Quant-Scores und historischen Parametern:
+   - **KRYPTO (Top 500 Symbole)** in `src/data/assets/cryptoAssets.ts`
+   - **AKTIEN (Top 500 Symbole)** in `src/data/assets/stockAssets.ts`
+   - **WÄHRUNGSPAARE / FOREX (Top 100 Symbole)** in `src/data/assets/forexAssets.ts`
+   - **ROHSTOFFE / COMMODITIES (Top 100 Symbole)** in `src/data/assets/commodityAssets.ts`
+4. **Grafik- und Bild-Assets**, einschließlich aller generierten hochauflösenden Key-Visuals, Vektorgrafiken, SVG-Symbole und Banner;
+5. **Algorithmen-Schemas**, Data-Pipelines, Ingestion-Architekturen, Datenmodelle und React/TypeScript-Quelltexte;
 
 uneingeschränkt für **kommerzielle, produktive, vertriebliche und betriebliche Zwecke** zu nutzen, zu vervielfältigen, zu modifizieren, zu erweitern, in SaaS-Dienste einzubinden, auf Cloud-Infrastrukturen bereitzustellen und an Dritte zu lizenzieren oder zu verkaufen.
 
 ---
 
-## 2. Bestandsverzeichnis der lizenzierten Bild- & Design-Assets
+## 2. Bestandsverzeichnis der lizenzierten Bild-, Symbol- & Design-Assets
 
-Die folgenden Bild- und Grafikdateien im Repository sind vollständig geprüft, rechtefrei und für den sofortigen produktiven Einsatz zertifiziert:
+Die folgenden Bild-, Symbol- und Grafikdateien im Repository sind vollständig geprüft, rechtefrei und für den sofortigen produktiven Einsatz zertifiziert:
 
 | Asset-Pfad | Typ & Format | Zweck & Einsatzbereich | Freigabestatus |
 | :--- | :--- | :--- | :--- |
@@ -30,7 +35,12 @@ Die folgenden Bild- und Grafikdateien im Repository sind vollständig geprüft, 
 | `src/assets/images/glowing_earth_nodes_1789997454893.jpg` | Globale Liquiditäts-Visualisierung | Global Market Overview, Makro-Radar & WebGL Backdrop | **Produktiv Freigegeben** |
 | `src/components/BrandLogo.tsx` | Vektor-SVG Markenzeichen | Responsive Vektor-Logo mit Glow-Filtern für Header & Footer | **Produktiv Freigegeben** |
 | `src/components/AssetLogo.tsx` | Dynamische Asset-Logos | Vektor-Icons für Bitcoin, Ethereum, Aktien, Devisen & Rohstoffe | **Produktiv Freigegeben** |
-| `src/components/HubTabsAccordionArchitecture.tsx` | UI-Grafikarchitektur | Aufklappbare Accordion-Tabs für Market Screener, Studio, Learning & Control Center | **Produktiv Freigegeben** |
+| `src/components/HubSidebarDrawer.tsx` | UI-Navigationsarchitektur | Aufklappbare Sidebar an den runden leuchtenden Action Buttons für die 4 Haupthubs | **Produktiv Freigegeben** |
+| `src/components/HubTabsAccordionArchitecture.tsx` | UI-Grafikarchitektur | Modul-Navigation für Market Screener, Studio, Learning & Control Center | **Produktiv Freigegeben** |
+| `src/data/assets/cryptoAssets.ts` | Symbol-Datenbank | **Top 500 Krypto-Assets** mit Kursen, 24h-Veränderung, Quant-Scores & Beschreibungen | **Produktiv Freigegeben** |
+| `src/data/assets/stockAssets.ts` | Symbol-Datenbank | **Top 500 globale Aktien** (S&P 500, DAX, EuroStoxx) mit Sektoren, Kursen & Scores | **Produktiv Freigegeben** |
+| `src/data/assets/forexAssets.ts` | Symbol-Datenbank | **Top 100 Währungspaare** (Majors, Minors, Crosses & Exotics) mit High/Low & Volumen | **Produktiv Freigegeben** |
+| `src/data/assets/commodityAssets.ts` | Symbol-Datenbank | **Top 100 Rohstoffe** (Metalle, Energie, Agrar, Viehzucht, Spezialstoffe) | **Produktiv Freigegeben** |
 
 ---
 
@@ -38,6 +48,7 @@ Die folgenden Bild- und Grafikdateien im Repository sind vollständig geprüft, 
 
 Es wird bestätigt, dass:
 * Sämtliche Bild- und Vektorassets eigenständig synthetisiert, programmiert oder aus lizenzfreien Open-Source-Vektoren (Lucide React unter ISC-Lizenz) entwickelt wurden.
+* Die Top-Symbol-Listen und Marktdatenstrukturen unabhängig kuratiert und synthetisiert wurden und frei von proprietären Börsen-Restriktionen sind.
 * Keine geschützten Marken fremder Dritter ohne Lizenz als eigene Kennzeichen verwendet werden.
 * Das Design frei von Rechtsansprüchen Dritter ist und ohne Tantiemen oder Lizenzgebühren gewerblich vertrieben werden darf.
 
@@ -58,6 +69,7 @@ Der Lizenznehmer ist ausdrücklich berechtigt:
 
 Die Bereitstellung der Software und Assets erfolgt im Zustand „wie besehen“ („AS IS“). Eine Haftung für Folgeschäden oder entgangenen Gewinn durch den Betrieb der Software ist im gesetzlich zulässigen Rahmen ausgeschlossen. 
 
-*Ausgestellt am: 30. September 2026*  
-*Autorisierter Urheber & Lead Architect: Capital-AI Engineering Team*  
-*Lizenznehmer: Sven Kulessa (`sven.kulessa@gmail.com`)*
+---
+**Ausgestellt am:** 30. September 2026  
+**Lizenznehmer:** Sven Kulessa (sven.kulessa@gmail.com)  
+**Lizenzgeber / Repo:** Capital-AI Repository / Sven Kulessa

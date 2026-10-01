@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * CAPITAL AI — HUB TABS GRAFIKARCHITEKTUR (ACCORDION WIE ASSETKLASSEN)
+ * CAPITAL AI — HUB TABS ARCHITEKTUR (DIREKTE TAB-NAVIGATION OHNE ACCORDION)
  * ----------------------------------------------------------------------------
  * Einheitliche Grafikarchitektur für:
  *  1. Market Screener Hub (/marketscreener)
@@ -9,25 +9,24 @@
  *  4. Control Center (/control-center)
  * 
  * EIGENSCHAFTEN:
- *  - Exakt dieselbe visuelle Architektur wie die Assetklassen & Unterklassen
- *  - Alle Tabs sind aufklappbar (expandable / collapsible Accordion)
- *  - Icon-Rahmen mit Brand-Tint & Rand, rotating ChevronDown (180°)
- *  - Metrik-Badge, Schlagworte/Tags und Deep-Link Pfadanzeige
- *  - Vollständige Navigationspfad-Synchronisation über saubere URLs
+ *  - Das alte "nach unten aufklappbare Design" ist entfallen
+ *  - Alle Seiten sind direkt über die aufklappbare Sidebar und Tabs aufrufbar
+ *  - Jeder Tab ist eine responsive Karte mit direktem Klick-Wechsel & Pfad-Synchronisation
  * ============================================================================
  */
 
 import React, { useState } from 'react';
 import {
-  ChevronDown,
   ArrowRight,
   ExternalLink,
   CheckCircle2,
   Copy,
   Check,
   Sparkles,
+  Layers,
+  ChevronRight,
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion } from 'motion/react';
 
 export interface HubTabItem {
   id: string;
@@ -47,6 +46,7 @@ interface HubTabsAccordionArchitectureProps {
   tabs: HubTabItem[];
   activeTabId: string;
   onSelectTab: (tabId: string, path: string) => void;
+  onOpenSidebar?: () => void;
   className?: string;
 }
 
@@ -57,26 +57,10 @@ export const HubTabsAccordionArchitecture: React.FC<HubTabsAccordionArchitecture
   tabs,
   activeTabId,
   onSelectTab,
+  onOpenSidebar,
   className = '',
 }) => {
-  // Welcher Tab ist gerade im Accordion aufgeklappt
-  // Standardmäßig ist der aktive Tab aufgeklappt
-  const [expandedTabId, setExpandedTabId] = useState<string | null>(activeTabId);
   const [copiedPath, setCopiedPath] = useState<string | null>(null);
-
-  // Sync expanded tab if activeTabId changes externally
-  React.useEffect(() => {
-    setExpandedTabId(activeTabId);
-  }, [activeTabId]);
-
-  const handleToggleExpand = (tabId: string) => {
-    setExpandedTabId((prev) => (prev === tabId ? null : tabId));
-  };
-
-  const handleSelectTab = (tab: HubTabItem) => {
-    onSelectTab(tab.id, tab.path);
-    setExpandedTabId(tab.id);
-  };
 
   const handleCopyPath = (path: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -89,19 +73,19 @@ export const HubTabsAccordionArchitecture: React.FC<HubTabsAccordionArchitecture
 
   return (
     <div className={`space-y-3 mb-6 ${className}`}>
-      {/* SECTION HEADER: Gleiche visuelle Struktur wie Assetklassen */}
+      {/* SECTION HEADER */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-1">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <span
-            className="w-2 h-2 rounded-full animate-pulse"
+            className="w-2.5 h-2.5 rounded-full animate-pulse"
             style={{ backgroundColor: hubColor }}
           />
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-300 font-mono">
-            {hubTitle} — Aufklappbare Tabs &amp; Pfad-Navigation
+            {hubTitle} — Modulbereiche
           </h2>
           {hubBadge && (
             <span
-              className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded border"
+              className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border"
               style={{
                 color: hubColor,
                 backgroundColor: `${hubColor}15`,
@@ -114,174 +98,107 @@ export const HubTabsAccordionArchitecture: React.FC<HubTabsAccordionArchitecture
         </div>
 
         <div className="text-[11px] font-mono text-slate-400 flex items-center gap-2">
-          <span>Aufklappbar wie Assetklassen</span>
+          <span>{tabs.length} Module direkt verfügbar</span>
           <span className="text-slate-600">•</span>
-          <span className="text-amber-300/80 font-semibold">{tabs.length} Bereiche</span>
+          <span className="text-amber-300/80 font-semibold font-mono">Sub-45ms Tick</span>
         </div>
       </div>
 
-      {/* ACCORDION GRID: Jeder Tab als aufklappbare Karte wie die Assetklassen */}
+      {/* TABS GRID: Jede Unterseite direkt auswählbar */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
         {tabs.map((tab) => {
           const isActive = activeTabId === tab.id;
-          const isExpanded = expandedTabId === tab.id;
 
           return (
             <div
               key={tab.id}
-              className="rounded-xl border bg-[#060c1d]/90 overflow-hidden transition-all duration-200"
+              onClick={() => onSelectTab(tab.id, tab.path)}
+              className={`rounded-xl border p-3 flex flex-col justify-between transition-all duration-200 cursor-pointer group relative overflow-hidden ${
+                isActive
+                  ? 'bg-[#0a142e] shadow-lg'
+                  : 'bg-[#060c1d]/90 hover:bg-[#09122a] border-slate-800/80 hover:border-slate-700'
+              }`}
               style={{
-                borderColor: isActive
-                  ? `${tab.color}70`
-                  : isExpanded
-                  ? `${tab.color}40`
-                  : 'rgba(51, 65, 85, 0.4)',
-                boxShadow: isActive ? `0 0 16px ${tab.color}18` : undefined,
+                borderColor: isActive ? `${tab.color}80` : undefined,
+                boxShadow: isActive ? `0 0 16px ${tab.color}25` : undefined,
               }}
             >
-              {/* TAB CARD HEADER (KLICKBAR ZUM AUFKLAPPEN) */}
-              <button
-                type="button"
-                onClick={() => handleToggleExpand(tab.id)}
-                className="w-full flex items-center justify-between p-3 text-left hover:bg-white/5 transition-colors cursor-pointer group"
-                aria-expanded={isExpanded}
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  {/* Square Icon Container mit Brand Tint & Border wie Assetklassen */}
-                  <div
-                    className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border transition-transform group-hover:scale-105"
-                    style={{
-                      backgroundColor: `${tab.color}18`,
-                      borderColor: `${tab.color}35`,
-                      color: tab.color,
-                    }}
-                  >
-                    {tab.icon}
-                  </div>
-
-                  <div className="min-w-0 pr-1">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-[12.5px] font-bold text-white block truncate group-hover:text-amber-200 transition-colors">
-                        {tab.name}
-                      </span>
-                      {isActive && (
-                        <span
-                          className="text-[9px] font-mono font-bold px-1 py-0.2 rounded border shrink-0"
-                          style={{
-                            color: tab.color,
-                            backgroundColor: `${tab.color}25`,
-                            borderColor: `${tab.color}60`,
-                          }}
-                        >
-                          AKTIV
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-[10px] font-mono text-slate-400 block truncate">
-                      {tab.path}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 shrink-0">
-                  {tab.badge && (
-                    <span
-                      className="text-[9.5px] font-mono font-bold px-1.5 py-0.5 rounded border"
+              <div>
+                {/* Header: Icon + Name + Badge */}
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <div
+                      className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border transition-transform group-hover:scale-105"
                       style={{
+                        backgroundColor: `${tab.color}20`,
+                        borderColor: `${tab.color}40`,
                         color: tab.color,
-                        backgroundColor: `${tab.color}10`,
-                        borderColor: `${tab.color}30`,
                       }}
                     >
-                      {tab.badge}
-                    </span>
-                  )}
-                  <ChevronDown
-                    className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
-                      isExpanded ? 'rotate-180 text-white' : 'group-hover:text-slate-200'
-                    }`}
-                  />
-                </div>
-              </button>
-
-              {/* AUFKLAPPBARER INHALT (ACCORDION EXPANSION WIE BEI ASSETKLASSEN) */}
-              <AnimatePresence initial={false}>
-                {isExpanded && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="overflow-hidden border-t border-slate-800/70 bg-black/35"
-                  >
-                    <div className="p-3 space-y-2.5">
-                      {/* Short Description */}
-                      <p className="text-[11.5px] text-slate-300 leading-relaxed">
-                        {tab.shortDesc}
-                      </p>
-
-                      {/* Tag Chips */}
-                      {tab.tags && tab.tags.length > 0 && (
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                          {tab.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="text-[9.5px] font-mono px-2 py-0.5 rounded bg-white/5 border border-white/10 text-slate-300"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Deep-Link Pfadanzeige & Aktionen */}
-                      <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-2">
-                        {/* Pfad Badge mit Copy-Button */}
-                        <button
-                          type="button"
-                          onClick={(e) => handleCopyPath(tab.path, e)}
-                          className="flex items-center gap-1.5 text-[10px] font-mono text-slate-400 hover:text-amber-300 bg-white/5 px-2 py-1 rounded border border-white/5 hover:border-amber-400/30 transition-colors cursor-pointer"
-                          title="Navigationspfad kopieren"
-                        >
-                          {copiedPath === tab.path ? (
-                            <>
-                              <Check className="w-3 h-3 text-emerald-400" />
-                              <span className="text-emerald-300">Kopiert!</span>
-                            </>
-                          ) : (
-                            <>
-                              <Copy className="w-3 h-3" />
-                              <span className="truncate max-w-[120px] sm:max-w-[160px]">{tab.path}</span>
-                            </>
-                          )}
-                        </button>
-
-                        {/* Action: Auswählen & Navigieren */}
-                        {isActive ? (
-                          <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
-                            <CheckCircle2 className="w-3.5 h-3.5" />
-                            <span>Inhalt geöffnet</span>
-                          </div>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => handleSelectTab(tab)}
-                            className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold transition-all shadow-sm cursor-pointer"
-                            style={{
-                              backgroundColor: `${tab.color}20`,
-                              color: tab.color,
-                              border: `1px solid ${tab.color}50`,
-                            }}
-                          >
-                            <span>Zu Reiter wechseln</span>
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </button>
-                        )}
-                      </div>
+                      {tab.icon}
                     </div>
-                  </motion.div>
+
+                    <span className="text-[12.5px] font-bold text-white block truncate group-hover:text-amber-200 transition-colors">
+                      {tab.name}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    {isActive ? (
+                      <span
+                        className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border"
+                        style={{
+                          color: tab.color,
+                          backgroundColor: `${tab.color}25`,
+                          borderColor: `${tab.color}60`,
+                        }}
+                      >
+                        AKTIV
+                      </span>
+                    ) : tab.badge ? (
+                      <span
+                        className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border text-slate-400 bg-white/5 border-slate-800"
+                      >
+                        {tab.badge}
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+
+                {/* Short Description */}
+                <p className="text-[11px] text-slate-400 leading-snug line-clamp-2 mb-2.5">
+                  {tab.shortDesc}
+                </p>
+
+                {/* Tags */}
+                {tab.tags && tab.tags.length > 0 && (
+                  <div className="flex items-center gap-1 flex-wrap mb-2.5">
+                    {tab.tags.slice(0, 3).map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-white/5 border border-white/5 text-slate-400"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 )}
-              </AnimatePresence>
+              </div>
+
+              {/* Footer: Path & Action */}
+              <div className="pt-2 border-t border-slate-800/70 flex items-center justify-between text-[10px] font-mono">
+                <span className="text-slate-500 group-hover:text-amber-400 transition-colors truncate max-w-[170px]">
+                  {tab.path}
+                </span>
+
+                <span
+                  className="flex items-center gap-1 font-bold transition-transform group-hover:translate-x-0.5"
+                  style={{ color: isActive ? tab.color : '#94a3b8' }}
+                >
+                  <span>{isActive ? 'Geöffnet' : 'Öffnen'}</span>
+                  <ChevronRight className="w-3 h-3" />
+                </span>
+              </div>
             </div>
           );
         })}
