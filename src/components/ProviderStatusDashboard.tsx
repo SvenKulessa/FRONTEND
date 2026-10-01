@@ -49,7 +49,10 @@ import {
   Scale,
   FileText,
   BookOpen,
+  Award,
 } from 'lucide-react';
+import { LicenseDocumentModal } from './LicenseDocumentModal';
+import { CertificateProviderKey } from '../utils/licenseCertificatePdf';
 import {
   PROVIDER_REGISTRY,
   ProviderContract,
@@ -86,6 +89,8 @@ export const ProviderStatusDashboard: React.FC<ProviderStatusDashboardProps> = (
   const [selectedProviderId, setSelectedProviderId] = useState<string>('binance_market_data');
   const [isAutoPingActive, setIsAutoPingActive] = useState<boolean>(true);
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
+  const [certModalProvider, setCertModalProvider] = useState<CertificateProviderKey>('master');
 
   // Live Audit & Ping Event Logs
   const [logs, setLogs] = useState<
@@ -1508,7 +1513,18 @@ export const ProviderStatusDashboard: React.FC<ProviderStatusDashboardProps> = (
 
               <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-slate-400">
                 <span>Rate Limit: 15-20 req/s</span>
-                <span className="text-purple-300">San Francisco / Dublin</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCertModalProvider('kraken');
+                    setIsCertModalOpen(true);
+                  }}
+                  className="px-2 py-0.5 rounded-lg bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/30 text-[10px] font-bold transition-all flex items-center gap-1 cursor-pointer"
+                  title="Formales Zertifikat für Kraken anzeigen & als PDF exportieren"
+                >
+                  <Award className="w-3 h-3 text-amber-400" />
+                  <span>Zertifikat (PDF)</span>
+                </button>
               </div>
             </div>
 
@@ -1548,7 +1564,18 @@ export const ProviderStatusDashboard: React.FC<ProviderStatusDashboardProps> = (
 
               <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-slate-400">
                 <span>Weight: 1.200 req/min</span>
-                <span className="text-amber-300">Global Open Data</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCertModalProvider('binance');
+                    setIsCertModalOpen(true);
+                  }}
+                  className="px-2 py-0.5 rounded-lg bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/30 text-[10px] font-bold transition-all flex items-center gap-1 cursor-pointer"
+                  title="Formales Zertifikat für Binance anzeigen & als PDF exportieren"
+                >
+                  <Award className="w-3 h-3 text-amber-400" />
+                  <span>Zertifikat (PDF)</span>
+                </button>
               </div>
             </div>
 
@@ -1588,7 +1615,18 @@ export const ProviderStatusDashboard: React.FC<ProviderStatusDashboardProps> = (
 
               <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-slate-400">
                 <span>Coverage: 250+ Börsen</span>
-                <span className="text-cyan-300">Singapur / Global</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCertModalProvider('twelve');
+                    setIsCertModalOpen(true);
+                  }}
+                  className="px-2 py-0.5 rounded-lg bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/30 text-[10px] font-bold transition-all flex items-center gap-1 cursor-pointer"
+                  title="Formales Zertifikat für Twelve Data anzeigen & als PDF exportieren"
+                >
+                  <Award className="w-3 h-3 text-amber-400" />
+                  <span>Zertifikat (PDF)</span>
+                </button>
               </div>
             </div>
 
@@ -1628,7 +1666,18 @@ export const ProviderStatusDashboard: React.FC<ProviderStatusDashboardProps> = (
 
               <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] font-mono text-slate-400">
                 <span>Depth: Full Tick Level</span>
-                <span className="text-emerald-300">Boston, MA, USA</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCertModalProvider('polygon');
+                    setIsCertModalOpen(true);
+                  }}
+                  className="px-2 py-0.5 rounded-lg bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/30 text-[10px] font-bold transition-all flex items-center gap-1 cursor-pointer"
+                  title="Formales Zertifikat für Polygon.io anzeigen & als PDF exportieren"
+                >
+                  <Award className="w-3 h-3 text-amber-400" />
+                  <span>Zertifikat (PDF)</span>
+                </button>
               </div>
             </div>
           </div>
@@ -1649,6 +1698,17 @@ export const ProviderStatusDashboard: React.FC<ProviderStatusDashboardProps> = (
               <span className="text-xs font-mono text-slate-300 px-3 py-1.5 rounded-xl bg-white/5 border border-slate-800 hidden sm:inline-block">
                 MIT • Apache 2.0 • ISC
               </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setCertModalProvider('master');
+                  setIsCertModalOpen(true);
+                }}
+                className="px-3.5 py-1.5 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/40 text-xs font-bold transition-all cursor-pointer shadow-sm flex items-center gap-1.5"
+              >
+                <Award className="w-3.5 h-3.5 text-amber-400" />
+                <span>Zertifikat (PDF)</span>
+              </button>
               <a
                 href="/datenprovider-lizenzen"
                 onClick={(e) => {
@@ -1666,6 +1726,13 @@ export const ProviderStatusDashboard: React.FC<ProviderStatusDashboardProps> = (
           </div>
         </div>
       )}
+
+      {/* FORMALES LIZENZ-ZERTIFIKAT MODAL */}
+      <LicenseDocumentModal
+        isOpen={isCertModalOpen}
+        onClose={() => setIsCertModalOpen(false)}
+        initialProvider={certModalProvider}
+      />
     </div>
   );
 };

@@ -31,6 +31,8 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BrandLogo } from './BrandLogo';
+import { LicenseDocumentModal } from './LicenseDocumentModal';
+import { CertificateProviderKey } from '../utils/licenseCertificatePdf';
 
 export type LegalRoute =
   | '/faq'
@@ -54,6 +56,13 @@ export const LegalAndFaqPages: React.FC<LegalPagesProps> = ({ route, onNavigate 
   const [providerFilter, setProviderFilter] = useState<'all' | 'kraken' | 'binance' | 'twelve' | 'polygon' | 'bafin'>('all');
   const [ossFilter, setOssFilter] = useState<'all' | 'mit' | 'isc' | 'apache' | 'bsd'>('all');
   const [expandedOssLicense, setExpandedOssLicense] = useState<string | null>('mit');
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
+  const [certModalProvider, setCertModalProvider] = useState<CertificateProviderKey>('master');
+
+  const handleOpenCertModal = (providerKey: CertificateProviderKey = 'master') => {
+    setCertModalProvider(providerKey);
+    setIsCertModalOpen(true);
+  };
 
   // Print handler for legal document export
   const handlePrint = () => {
@@ -1179,18 +1188,26 @@ Offiziell im Repository verankert in OPEN_SOURCE_LICENSES.md.`;
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
+                    onClick={() => handleOpenCertModal('master')}
+                    className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-extrabold text-xs transition-all flex items-center gap-1.5 cursor-pointer shadow-[0_0_15px_rgba(245,176,20,0.3)]"
+                  >
+                    <Award className="w-3.5 h-3.5 text-black" />
+                    <span>Formales Zertifikat &amp; PDF</span>
+                  </button>
+                  <button
+                    type="button"
                     onClick={handlePrint}
                     className="px-3 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-semibold border border-white/10 transition-all flex items-center gap-1.5 cursor-pointer"
                   >
                     <Printer className="w-3.5 h-3.5" />
-                    <span>Drucken / PDF</span>
+                    <span>Drucken</span>
                   </button>
                   <button
                     type="button"
                     onClick={handleCopyTemplate}
                     className="px-3 py-1.5 rounded-xl bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 text-xs font-bold border border-cyan-500/40 transition-all flex items-center gap-1.5 cursor-pointer"
                   >
-                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5 text-cyan-400" />}
                     <span>{copied ? 'Kopiert!' : 'Dossier kopieren'}</span>
                   </button>
                 </div>
@@ -1275,6 +1292,14 @@ Offiziell im Repository verankert in OPEN_SOURCE_LICENSES.md.`;
                   <div className="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
                     <span className="text-slate-500">Jurisdiktion: San Francisco, CA / Dublin (Payward Ireland Ltd.)</span>
                     <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenCertModal('kraken')}
+                        className="px-2.5 py-1 rounded-lg bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/40 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                      >
+                        <Award className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Zertifikat (PDF)</span>
+                      </button>
                       <a href="https://docs.kraken.com/rest/" target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline flex items-center gap-1">
                         <span>API Docs</span>
                         <ExternalLink className="w-3 h-3" />
@@ -1331,6 +1356,14 @@ Offiziell im Repository verankert in OPEN_SOURCE_LICENSES.md.`;
                   <div className="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
                     <span className="text-slate-500">Quelle: Binance Public Data Vision &bull; BAM Trading Services</span>
                     <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenCertModal('binance')}
+                        className="px-2.5 py-1 rounded-lg bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/40 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                      >
+                        <Award className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Zertifikat (PDF)</span>
+                      </button>
                       <a href="https://data.binance.vision/" target="_blank" rel="noreferrer" className="text-amber-400 hover:underline flex items-center gap-1">
                         <span>data.binance.vision</span>
                         <ExternalLink className="w-3 h-3" />
@@ -1391,6 +1424,14 @@ Offiziell im Repository verankert in OPEN_SOURCE_LICENSES.md.`;
                   <div className="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
                     <span className="text-slate-500">Jurisdiktion: Singapur &bull; 250+ Börsen weltweit</span>
                     <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenCertModal('twelve')}
+                        className="px-2.5 py-1 rounded-lg bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/40 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                      >
+                        <Award className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Zertifikat (PDF)</span>
+                      </button>
                       <a href="https://twelvedata.com/terms-of-service" target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline flex items-center gap-1">
                         <span>Terms of Service</span>
                         <ExternalLink className="w-3 h-3" />
@@ -1451,6 +1492,14 @@ Offiziell im Repository verankert in OPEN_SOURCE_LICENSES.md.`;
                   <div className="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
                     <span className="text-slate-500">Jurisdiktion: Boston, MA, USA &bull; FINRA TRF / OTC</span>
                     <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenCertModal('polygon')}
+                        className="px-2.5 py-1 rounded-lg bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/40 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                      >
+                        <Award className="w-3.5 h-3.5 text-amber-400" />
+                        <span>Zertifikat (PDF)</span>
+                      </button>
                       <a href="https://massive.com/terms" target="_blank" rel="noreferrer" className="text-emerald-400 hover:underline flex items-center gap-1">
                         <span>Massive Terms</span>
                         <ExternalLink className="w-3 h-3" />
@@ -1496,6 +1545,18 @@ Offiziell im Repository verankert in OPEN_SOURCE_LICENSES.md.`;
                     <p>
                       <strong>3. Hinterlegung:</strong> Vollständiges juristisches Dossier hinterlegt im Dateisystem als <code>PROVIDER_LICENSES_AND_ACADEMIC_TERMS.md</code>.
                     </p>
+                  </div>
+
+                  <div className="pt-3 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+                    <span className="text-slate-500">Prüfstandard: BaFin MaRisk AT 7.2 &bull; WORM Compliance</span>
+                    <button
+                      type="button"
+                      onClick={() => handleOpenCertModal('master')}
+                      className="px-3 py-1.5 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/40 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                    >
+                      <Award className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Master-Zertifikat herunterladen (PDF)</span>
+                    </button>
                   </div>
                 </div>
               )}
@@ -1778,6 +1839,13 @@ DISCLAIMED.`}
           <button type="button" onClick={() => onNavigate('/opensource-lizenzen')} className="hover:text-blue-400 cursor-pointer text-blue-300 font-semibold">Open-Source (OSS)</button>
         </div>
       </div>
+
+      {/* FORMALES LIZENZ-ZERTIFIKAT MODAL (FORSCHUNG & LEHRE) */}
+      <LicenseDocumentModal
+        isOpen={isCertModalOpen}
+        onClose={() => setIsCertModalOpen(false)}
+        initialProvider={certModalProvider}
+      />
     </div>
   );
 };
