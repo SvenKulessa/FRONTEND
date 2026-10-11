@@ -58,6 +58,8 @@ import { MarketScreenerPage, MarketScreenerTab } from './components/MarketScreen
 import { MarketscreenerModal } from './components/MarketscreenerModal';
 import { EnterpriseScorerDashboard } from './components/EnterpriseScorerDashboard';
 import { ScreenerTable } from './components/ScreenerTable';
+import { FloatingGlobeWidget } from './components/globe/FloatingGlobeWidget';
+import { GlobeCockpitModal } from './components/globe/GlobeCockpitModal';
 
 export const LEGAL_ROUTES: LegalRoute[] = [
   '/faq',
@@ -85,7 +87,9 @@ export function resolveStudioTab(path: string): StudioTabKey {
   if (p.includes('builder') || p.includes('konfigurator')) return 'builder';
   if (p.includes('advisor') || p.includes('berater')) return 'advisor';
   if (p.includes('provider') || p.includes('fleet')) return 'providers';
-  if (p.includes('analytic') || p.includes('scoring')) return 'analytics';
+  if (p.includes('language') || p.includes('sprache') || p.includes('stack') || p.includes('code')) return 'languages';
+  if (p.includes('analytic') || p.includes('scoring') || p.includes('faktor')) return 'scoring';
+  if (p.includes('cost') || p.includes('kosten') || p.includes('intervall') || p.includes('budget') || p.includes('zeit')) return 'costs';
   if (p.includes('benchmark')) return 'benchmark';
   return 'architecture';
 }
@@ -292,6 +296,12 @@ export function resolveAppRoute(rawPath: string): string {
     clean === '/benchmark' ||
     clean === '/benchmark-lab' ||
     clean === '/analytics' ||
+    clean === '/scoring' ||
+    clean === '/scorer' ||
+    clean === '/languages' ||
+    clean === '/programmiersprachen' ||
+    clean === '/costs' ||
+    clean === '/zeitintervalle' ||
     clean === '/founder' ||
     clean === '/founder-hub' ||
     clean === '/founder-suite' ||
@@ -361,6 +371,10 @@ function AppContent() {
     subclass: AssetSubclass;
     category: MainCategory;
   } | null>(null);
+
+  // Modulare rotierende Hero-Erde (Abkoppelbar & Cockpit)
+  const [isGlobeDetached, setIsGlobeDetached] = useState<boolean>(false);
+  const [isGlobeCockpitOpen, setIsGlobeCockpitOpen] = useState<boolean>(false);
 
   // Analysis Modal initial state for shared query parameters
   const [analysisInitialTab, setAnalysisInitialTab] = useState<'asset' | 'sector'>('asset');
@@ -819,10 +833,13 @@ function AppContent() {
               }}
             />
 
-            {/* Hero Section */}
+            {/* Hero Section mit modularer, abkoppelbarer rotierender Erde */}
             <Hero
               onStartAnalysis={() => setIsAnalysisOpen(true)}
               onExploreProduct={() => setIsProductTourOpen(true)}
+              isGlobeDetached={isGlobeDetached}
+              onToggleGlobeDetach={() => setIsGlobeDetached((prev) => !prev)}
+              onOpenGlobeCockpit={() => setIsGlobeCockpitOpen(true)}
             />
 
             {/* 4 Feature Key Pillars */}
@@ -900,6 +917,7 @@ function AppContent() {
       <ProductTourModal
         isOpen={isProductTourOpen}
         onClose={() => setIsProductTourOpen(false)}
+        onNavigateToRoute={(route) => navigateTo(route)}
         onStartAnalysis={() => {
           setIsProductTourOpen(false);
           setIsAnalysisOpen(true);
@@ -1078,6 +1096,22 @@ function AppContent() {
           setMarketCategoryFilter('ALLE');
           setIsAllMarketsOpen(true);
         }}
+      />
+
+      {/* Modulare abkoppelbare rotierende Hero-Erde (Schwebendes PiP-Widget) */}
+      <FloatingGlobeWidget
+        isOpen={isGlobeDetached}
+        onDockBackToHero={() => setIsGlobeDetached(false)}
+        onOpenCockpit={() => setIsGlobeCockpitOpen(true)}
+      />
+
+      {/* Vollbild Telemetrie-Cockpit Modal der rotierenden Erde */}
+      <GlobeCockpitModal
+        isOpen={isGlobeCockpitOpen}
+        onClose={() => setIsGlobeCockpitOpen(false)}
+        isDetached={isGlobeDetached}
+        onDockBackToHero={() => setIsGlobeDetached(false)}
+        onDetachFromHero={() => setIsGlobeDetached(true)}
       />
     </div>
   );

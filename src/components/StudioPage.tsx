@@ -44,6 +44,8 @@ import {
   FileText,
   TrendingUp,
   PieChart,
+  Terminal,
+  Award,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { DATA_CONCEPTS, STUDIO_BLUEPRINTS, DataConcept, StudioBlueprint } from '../data/studioData';
@@ -55,16 +57,24 @@ import { ScoringEngineService } from '../services/scoringEngine';
 import { PipelineConfiguratorService } from '../services/pipelineConfigurator';
 import { SubpageSidebarNav, SubpageNavItem } from './SubpageSidebarNav';
 import { HubTabsAccordionArchitecture, HubTabItem } from './HubTabsAccordionArchitecture';
+import { StudioArchitectureSection } from './studio/StudioArchitectureSection';
+import { StudioLanguagesSection } from './studio/StudioLanguagesSection';
+import { StudioProvidersSection } from './studio/StudioProvidersSection';
+import { StudioScoringSection } from './studio/StudioScoringSection';
+import { StudioCostsTimeSection } from './studio/StudioCostsTimeSection';
 
 export type StudioTabKey =
   | 'architecture'
+  | 'languages'
+  | 'providers'
+  | 'scoring'
+  | 'costs'
   | 'blueprints'
   | 'builder'
   | 'advisor'
-  | 'providers'
-  | 'analytics'
   | 'benchmark'
-  | 'console';
+  | 'console'
+  | 'analytics';
 
 export interface StudioPageProps {
   onBackToHome?: () => void;
@@ -208,20 +218,48 @@ export const StudioPage: React.FC<StudioPageProps> = ({
       label: 'Pipeline Architektur',
       icon: <Layers className="w-4 h-4 text-amber-400" />,
       badge: '16 Konzepte',
-      desc: 'Vollständige Ingestion-Spezifikation',
+      desc: '5-Ebenen Ingestion & BaFin WORM',
+    },
+    {
+      id: 'languages',
+      label: 'Programmiersprachen',
+      icon: <Terminal className="w-4 h-4 text-sky-400" />,
+      badge: '6 Sprachen',
+      desc: 'Python, TS, Go, Rust, SQL, PineScript',
+    },
+    {
+      id: 'providers',
+      label: 'Dataprovider & Feeds',
+      icon: <Radio className="w-4 h-4 text-emerald-400" />,
+      badge: '4 Gateways',
+      desc: 'Kraken, Binance, Twelve, Polygon',
+    },
+    {
+      id: 'scoring',
+      label: 'Scoring & Analysetools',
+      icon: <BarChart3 className="w-4 h-4 text-amber-400" />,
+      badge: '50 Faktoren',
+      desc: 'Master-Score, Z-Score, Buffett Moat',
+    },
+    {
+      id: 'costs',
+      label: 'Zeitintervalle & Kosten',
+      icon: <Clock className="w-4 h-4 text-cyan-400" />,
+      badge: '40 € Cap',
+      desc: 'Tick bis Historisch, Conflation-Savings',
     },
     {
       id: 'blueprints',
-      label: 'Blueprints',
+      label: 'Blueprints & Schemata',
       icon: <FileCode className="w-4 h-4 text-cyan-400" />,
-      badge: '7 Schemata',
+      badge: '7 Vorlagen',
       desc: 'TradingView, Python & Bloomberg',
     },
     {
       id: 'builder',
       label: 'Pipeline Builder',
       icon: <SlidersHorizontal className="w-4 h-4 text-emerald-400" />,
-      badge: 'Modular',
+      badge: 'BOM Tool',
       desc: '5-Ebenen Konfigurator & BoM',
     },
     {
@@ -230,20 +268,6 @@ export const StudioPage: React.FC<StudioPageProps> = ({
       icon: <Bot className="w-4 h-4 text-purple-400" />,
       badge: 'Advisor',
       desc: 'MaRisk- & Latenz-Optimierung',
-    },
-    {
-      id: 'providers',
-      label: 'Data & Providers',
-      icon: <Radio className="w-4 h-4 text-emerald-400" />,
-      badge: 'Fleet Health',
-      desc: 'Tier 1 bis Tier 4 Gateway Status',
-    },
-    {
-      id: 'analytics',
-      label: 'Analytics & Scoring',
-      icon: <BarChart3 className="w-4 h-4 text-amber-400" />,
-      badge: '50 Faktoren',
-      desc: 'Multi-Faktor & Z-Scores',
     },
     {
       id: 'benchmark',
@@ -259,12 +283,52 @@ export const StudioPage: React.FC<StudioPageProps> = ({
     {
       id: 'architecture',
       name: 'Pipeline Architektur',
-      shortDesc: 'Vollständige 5-Ebenen Ingestion-Architektur & BaFin WORM Spezifikation mit 16 Data-Konzepten.',
+      shortDesc: '5-Ebenen Ingestion-Architektur, BaFin WORM Spezifikation & 16 Datenkonzepte.',
       icon: <Layers className="w-4 h-4 text-amber-400" />,
       color: '#F5B014',
       badge: '16 Konzepte',
       tags: ['Layer 1-5', 'BaFin WORM', 'Ringpuffer', 'Conflation'],
       path: '/studio/architecture',
+    },
+    {
+      id: 'languages',
+      name: 'Programmiersprachen',
+      shortDesc: 'Multi-Language Tech-Stack: Python 3.11, TypeScript, Go, Rust, SQL & PineScript.',
+      icon: <Terminal className="w-4 h-4 text-sky-400" />,
+      color: '#38BDF8',
+      badge: '6 Sprachen',
+      tags: ['Python 3.11', 'Rust L2/L3', 'Golang Ingress', 'TypeScript UI'],
+      path: '/studio/languages',
+    },
+    {
+      id: 'providers',
+      name: 'Dataprovider & Feeds',
+      shortDesc: 'Autorisierte Gateways: Kraken, Binance, Twelve Data, Polygon & Makro-Feeds.',
+      icon: <Radio className="w-4 h-4 text-emerald-400" />,
+      color: '#10B981',
+      badge: '4 Gateways',
+      tags: ['Kraken', 'Binance', 'TwelveData', 'Polygon / Massive'],
+      path: '/studio/providers',
+    },
+    {
+      id: 'scoring',
+      name: 'Scoring & Analysetools',
+      shortDesc: 'Master 0–100 Rating, Altman Z-Score, Buffett Moat, Piotroski & Sandbox.',
+      icon: <BarChart3 className="w-4 h-4 text-amber-400" />,
+      color: '#F5B014',
+      badge: '50 Faktoren',
+      tags: ['Enterprise Score', 'Altman Z-Score', 'Buffett Check', 'Piotroski'],
+      path: '/studio/scoring',
+    },
+    {
+      id: 'costs',
+      name: 'Zeitintervalle & Kosten',
+      shortDesc: 'Sub-45ms bis Historisch, 40 € / Mo Budget-Garantie & Conflation-Sparrechner.',
+      icon: <Clock className="w-4 h-4 text-cyan-400" />,
+      color: '#06B6D4',
+      badge: '40 € Cap',
+      tags: ['Tick-by-Tick', '40 € Budget', '88,4% Conflation', 'TCO Matrix'],
+      path: '/studio/costs',
     },
     {
       id: 'blueprints',
@@ -282,7 +346,7 @@ export const StudioPage: React.FC<StudioPageProps> = ({
       shortDesc: 'Interaktiver Konfigurator mit strikter 40 € / Monat Budget-Garantie (AP-006).',
       icon: <SlidersHorizontal className="w-4 h-4 text-emerald-400" />,
       color: '#10B981',
-      badge: '40 € Cap',
+      badge: 'BOM Tool',
       tags: ['BOM Konfigurator', '40 € Cap', 'Cost Breakdown'],
       path: '/studio/builder',
     },
@@ -295,26 +359,6 @@ export const StudioPage: React.FC<StudioPageProps> = ({
       badge: 'Advisor',
       tags: ['KI-Berater', 'Revenue Assurance', 'Latency Advisor'],
       path: '/studio/advisor',
-    },
-    {
-      id: 'providers',
-      name: 'Data & Providers',
-      shortDesc: 'Latenz- & Ausführungsstatus der autorisierten Provider-Gateways mit Health-Monitoring.',
-      icon: <Radio className="w-4 h-4 text-emerald-400" />,
-      color: '#10B981',
-      badge: 'Fleet Health',
-      tags: ['Kraken', 'Binance', 'TwelveData', 'Latenz-Monitor'],
-      path: '/studio/providers',
-    },
-    {
-      id: 'analytics',
-      name: 'Analytics & Scoring',
-      shortDesc: '50-Komponenten Multi-Faktor Engine & Z-Score Berechnung mit BaFin Audit Trail.',
-      icon: <BarChart3 className="w-4 h-4 text-amber-400" />,
-      color: '#F5B014',
-      badge: '50 Faktoren',
-      tags: ['Z-Score', '50 Quants', 'Scoring Engine'],
-      path: '/studio/analytics',
     },
     {
       id: 'benchmark',
@@ -347,11 +391,13 @@ export const StudioPage: React.FC<StudioPageProps> = ({
             </span>
             <span className="text-amber-400 font-medium">
               {activeTab === 'architecture' && 'Pipeline Architektur'}
+              {activeTab === 'languages' && 'Programmiersprachen & Tech-Stack'}
+              {activeTab === 'providers' && 'Dataprovider & Feeds'}
+              {(activeTab === 'scoring' || activeTab === 'analytics') && 'Scoring & Analysetools'}
+              {activeTab === 'costs' && 'Zeitintervalle & Kosten-Matrix'}
               {activeTab === 'blueprints' && 'Blueprints'}
               {activeTab === 'builder' && 'Pipeline Builder'}
               {activeTab === 'advisor' && 'AI Kauf-Berater'}
-              {activeTab === 'providers' && 'Data & Providers'}
-              {activeTab === 'analytics' && 'Analytics & Scoring'}
               {activeTab === 'benchmark' && 'Benchmark Lab'}
               {activeTab === 'console' && 'Configurator Console'}
             </span>
@@ -424,356 +470,14 @@ export const StudioPage: React.FC<StudioPageProps> = ({
       />
 
       {/* ========================================================================= */}
-      {/* TAB CONTENT 1: PIPELINE ARCHITEKTUR (All 16 Data Concepts)                */}
+      {/* TAB CONTENT 1: PIPELINE ARCHITEKTUR (5 Ebenen & 16 Datenkonzepte)         */}
       {/* ========================================================================= */}
-      {activeTab === 'architecture' && (
-        <div className="space-y-6">
-          {/* Header Banner for Pipeline Architecture */}
-          <div className="p-6 rounded-2xl bg-gradient-to-r from-amber-500/10 via-[#0d1530] to-cyan-500/10 border border-amber-500/30">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2 text-xs font-mono text-amber-400 mb-1">
-                  <Shield className="w-3.5 h-3.5" />
-                  <span>VOLLSTÄNDIGE ARCHITEKTUR-SPEZIFIKATION • 16 DATENKONZEPTE</span>
-                </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                  Pipeline Architektur &amp; Marktdaten-Konzepte
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-3xl leading-relaxed">
-                  Über die klassischen Tiers 1 bis 4 hinausgehend: Die 16 kanonischen Datenarchitektur-Muster
-                  für hochperformante, ausfallsichere und BaFin-konforme Finanzmarkt-Intelligence im Capital-AI System.
-                </p>
-              </div>
+      {activeTab === 'architecture' && <StudioArchitectureSection />}
 
-              {/* View Toggle & Count Badge */}
-              <div className="flex items-center gap-3 shrink-0">
-                <span className="text-xs font-mono px-3 py-1.5 rounded-lg bg-amber-400/20 text-amber-300 border border-amber-400/40">
-                  16 / 16 Konzepte Aktiv
-                </span>
-                <div className="flex items-center p-1 rounded-lg bg-black/40 border border-slate-700">
-                  <button
-                    type="button"
-                    onClick={() => setViewMode('cards')}
-                    className={`px-2.5 py-1 text-xs rounded transition-colors ${
-                      viewMode === 'cards'
-                        ? 'bg-amber-400 text-black font-bold'
-                        : 'text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    Karten
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setViewMode('table')}
-                    className={`px-2.5 py-1 text-xs rounded transition-colors ${
-                      viewMode === 'table'
-                        ? 'bg-amber-400 text-black font-bold'
-                        : 'text-slate-400 hover:text-white'
-                    }`}
-                  >
-                    Tabelle
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Search and Category Filter */}
-            <div className="mt-5 pt-5 border-t border-slate-800/80 flex flex-col md:flex-row items-center justify-between gap-3">
-              <div className="relative w-full md:w-96">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  type="text"
-                  placeholder="Datenkonzept, Zweck oder CAPITAL-AI Beispiel suchen..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 rounded-xl bg-black/50 border border-slate-700/80 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400/60"
-                />
-              </div>
-
-              <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto scrollbar-none pb-1 md:pb-0">
-                <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0 mr-1" />
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    type="button"
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`px-2.5 py-1 rounded-lg text-[11px] font-medium whitespace-nowrap transition-colors ${
-                      selectedCategory === cat
-                        ? 'bg-amber-400 text-black font-bold'
-                        : 'bg-white/5 text-slate-300 hover:text-white hover:bg-white/10'
-                    }`}
-                  >
-                    {cat === 'all' ? 'Alle Kategorien (16)' : cat}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* TABLE VIEW (Exact mapping requested: Datenkonzept | Zweck | Typisches CAPITAL-AI-Beispiel) */}
-          {viewMode === 'table' ? (
-            <div className="rounded-xl border border-slate-800 bg-[#090e21] overflow-hidden shadow-2xl">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="border-b border-slate-800 bg-slate-900/80 text-xs font-mono uppercase text-slate-400">
-                      <th className="py-3.5 px-4 w-12 text-center">#</th>
-                      <th className="py-3.5 px-4 min-w-[200px]">Datenkonzept</th>
-                      <th className="py-3.5 px-4 min-w-[260px]">Zweck</th>
-                      <th className="py-3.5 px-4 min-w-[300px]">Typisches CAPITAL-AI-Beispiel</th>
-                      <th className="py-3.5 px-4 min-w-[120px]">Latenz</th>
-                      <th className="py-3.5 px-4 text-right">Details</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800/60 text-xs">
-                    {filteredConcepts.map((item) => (
-                      <React.Fragment key={item.id}>
-                        <tr
-                          onClick={() =>
-                            setExpandedConceptId(
-                              expandedConceptId === item.id ? null : item.id
-                            )
-                          }
-                          className={`hover:bg-white/5 transition-colors cursor-pointer ${
-                            expandedConceptId === item.id ? 'bg-amber-400/5' : ''
-                          }`}
-                        >
-                          <td className="py-3.5 px-4 text-center font-mono text-slate-500 font-bold">
-                            {item.id}
-                          </td>
-                          <td className="py-3.5 px-4">
-                            <div className="font-bold text-white flex items-center gap-2">
-                              <span>{item.name}</span>
-                              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
-                                {item.category}
-                              </span>
-                            </div>
-                          </td>
-                          <td className="py-3.5 px-4 text-slate-300 font-medium">
-                            {item.purpose}
-                          </td>
-                          <td className="py-3.5 px-4 font-mono text-amber-300 font-semibold">
-                            {item.example}
-                          </td>
-                          <td className="py-3.5 px-4 font-mono text-emerald-400">
-                            {item.latencyTarget}
-                          </td>
-                          <td className="py-3.5 px-4 text-right">
-                            <span className="text-cyan-400 hover:text-cyan-300 font-mono text-xs inline-flex items-center gap-1">
-                              {expandedConceptId === item.id ? 'Schließen' : 'Öffnen'}
-                              <ChevronRight
-                                className={`w-3.5 h-3.5 transition-transform ${
-                                  expandedConceptId === item.id ? 'rotate-90' : ''
-                                }`}
-                              />
-                            </span>
-                          </td>
-                        </tr>
-
-                        {/* Expanded details row */}
-                        {expandedConceptId === item.id && (
-                          <tr className="bg-[#0c122a] border-b border-amber-500/20">
-                            <td colSpan={6} className="p-5">
-                              <div className="space-y-4">
-                                <div>
-                                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
-                                    Technische Erläuterung &amp; Funktionsweise
-                                  </h4>
-                                  <p className="text-xs text-slate-200 leading-relaxed">
-                                    {item.details}
-                                  </p>
-                                </div>
-
-                                {/* Flow & Compliance Grid */}
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                  <div className="p-3 rounded-lg bg-black/40 border border-slate-800">
-                                    <div className="text-[11px] font-mono text-slate-400 mb-1">
-                                      BaFin / Compliance
-                                    </div>
-                                    <div className="text-xs text-emerald-300 font-medium">
-                                      {item.bafinCompliance}
-                                    </div>
-                                  </div>
-                                  <div className="p-3 rounded-lg bg-black/40 border border-slate-800">
-                                    <div className="text-[11px] font-mono text-slate-400 mb-1">
-                                      Kosten- &amp; Bandbreiteneffekt
-                                    </div>
-                                    <div className="text-xs text-cyan-300 font-medium">
-                                      {item.costImpact}
-                                    </div>
-                                  </div>
-                                  <div className="p-3 rounded-lg bg-black/40 border border-slate-800">
-                                    <div className="text-[11px] font-mono text-slate-400 mb-1">
-                                      Latenz-SLA
-                                    </div>
-                                    <div className="text-xs text-amber-300 font-mono font-bold">
-                                      {item.latencyTarget}
-                                    </div>
-                                  </div>
-                                </div>
-
-                                {/* Code Contract Preview */}
-                                <div>
-                                  <div className="flex items-center justify-between text-xs font-mono text-slate-400 mb-1">
-                                    <span>Code Contract (AP-001 Spezifikation)</span>
-                                    <button
-                                      type="button"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleCopy(item.contractCodeSnippet, `tbl-${item.id}`);
-                                      }}
-                                      className="text-amber-400 hover:text-white flex items-center gap-1 cursor-pointer"
-                                    >
-                                      {copiedSnippet === `tbl-${item.id}` ? (
-                                        <>
-                                          <Check className="w-3.5 h-3.5 text-emerald-400" />
-                                          <span className="text-emerald-400">Kopiert!</span>
-                                        </>
-                                      ) : (
-                                        <>
-                                          <Copy className="w-3.5 h-3.5" />
-                                          <span>Snippet kopieren</span>
-                                        </>
-                                      )}
-                                    </button>
-                                  </div>
-                                  <pre className="p-3 rounded-lg bg-black/70 border border-slate-800 font-mono text-[11px] text-emerald-400 overflow-x-auto">
-                                    {item.contractCodeSnippet}
-                                  </pre>
-                                </div>
-                              </div>
-                            </td>
-                          </tr>
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          ) : (
-            /* CARDS VIEW (Interactive 16 Concept Cards) */
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredConcepts.map((item) => (
-                <div
-                  key={item.id}
-                  className={`p-5 rounded-xl border transition-all ${
-                    expandedConceptId === item.id
-                      ? 'bg-gradient-to-b from-[#0f1738] to-[#090e21] border-amber-400/50 shadow-lg shadow-amber-500/5'
-                      : 'bg-[#090e21] border-slate-800 hover:border-slate-700'
-                  }`}
-                >
-                  {/* Card Header */}
-                  <div className="flex items-start justify-between gap-3 mb-2.5">
-                    <div className="flex items-center gap-2.5">
-                      <span className="w-7 h-7 rounded-lg bg-amber-400/15 border border-amber-400/30 text-amber-300 font-mono font-bold text-xs flex items-center justify-center shrink-0">
-                        {item.id}
-                      </span>
-                      <div>
-                        <h3 className="text-sm font-bold text-white">{item.name}</h3>
-                        <span className="text-[10px] font-mono text-cyan-400">
-                          {item.category}
-                        </span>
-                      </div>
-                    </div>
-                    <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-                      {item.latencyTarget}
-                    </span>
-                  </div>
-
-                  {/* Zweck */}
-                  <div className="mb-2">
-                    <div className="text-[10px] font-mono uppercase text-slate-400">Zweck:</div>
-                    <div className="text-xs text-slate-200 font-medium">{item.purpose}</div>
-                  </div>
-
-                  {/* Typisches CAPITAL-AI-Beispiel */}
-                  <div className="p-2.5 rounded-lg bg-black/50 border border-slate-800/80 mb-3">
-                    <div className="text-[10px] font-mono uppercase text-amber-400/90 mb-0.5">
-                      Typisches CAPITAL-AI-Beispiel:
-                    </div>
-                    <div className="text-xs font-mono font-bold text-amber-300 break-words">
-                      {item.example}
-                    </div>
-                  </div>
-
-                  {/* Visual Flow Indicator */}
-                  <div className="flex flex-wrap items-center gap-1.5 mb-3 text-[10px] font-mono text-slate-400">
-                    {item.visualFlow.map((step, idx) => (
-                      <React.Fragment key={idx}>
-                        <span className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-slate-300">
-                          {step}
-                        </span>
-                        {idx < item.visualFlow.length - 1 && (
-                          <span className="text-cyan-400">→</span>
-                        )}
-                      </React.Fragment>
-                    ))}
-                  </div>
-
-                  {/* Details Toggle */}
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setExpandedConceptId(expandedConceptId === item.id ? null : item.id)
-                    }
-                    className="w-full flex items-center justify-between py-1.5 px-3 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-semibold text-cyan-300 transition-colors cursor-pointer"
-                  >
-                    <span>
-                      {expandedConceptId === item.id ? 'Technische Details verbergen' : 'Architektur-Details & Code'}
-                    </span>
-                    <ChevronRight
-                      className={`w-3.5 h-3.5 transition-transform ${
-                        expandedConceptId === item.id ? 'rotate-90' : ''
-                      }`}
-                    />
-                  </button>
-
-                  {/* Expandable Body */}
-                  {expandedConceptId === item.id && (
-                    <div className="mt-3 pt-3 border-t border-slate-800 space-y-3">
-                      <p className="text-xs text-slate-300 leading-relaxed">{item.details}</p>
-
-                      <div className="p-2.5 rounded-lg bg-black/40 border border-slate-800 text-[11px] space-y-1">
-                        <div>
-                          <strong className="text-slate-400">BaFin Compliance: </strong>
-                          <span className="text-emerald-300">{item.bafinCompliance}</span>
-                        </div>
-                        <div>
-                          <strong className="text-slate-400">Budget-Wirkung: </strong>
-                          <span className="text-cyan-300">{item.costImpact}</span>
-                        </div>
-                      </div>
-
-                      {/* Code Snippet */}
-                      <div>
-                        <div className="flex items-center justify-between text-[11px] font-mono text-slate-400 mb-1">
-                          <span>Schnittstellen-Vertrag</span>
-                          <button
-                            type="button"
-                            onClick={() => handleCopy(item.contractCodeSnippet, `card-${item.id}`)}
-                            className="text-amber-400 hover:text-white flex items-center gap-1 cursor-pointer"
-                          >
-                            {copiedSnippet === `card-${item.id}` ? (
-                              <Check className="w-3 h-3 text-emerald-400" />
-                            ) : (
-                              <Copy className="w-3 h-3" />
-                            )}
-                            <span>Kopieren</span>
-                          </button>
-                        </div>
-                        <pre className="p-2.5 rounded-lg bg-black/80 border border-slate-800 font-mono text-[10px] text-emerald-400 overflow-x-auto">
-                          {item.contractCodeSnippet}
-                        </pre>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
+      {/* ========================================================================= */}
+      {/* TAB CONTENT 2: PROGRAMMIERSPRACHEN & TECH-STACK                           */}
+      {/* ========================================================================= */}
+      {activeTab === 'languages' && <StudioLanguagesSection />}
 
       {/* ========================================================================= */}
       {/* TAB CONTENT 2: BLUEPRINTS (The 7 Canonical Blueprints)                    */}
@@ -1089,387 +793,19 @@ export const StudioPage: React.FC<StudioPageProps> = ({
       )}
 
       {/* ========================================================================= */}
-      {/* TAB CONTENT 5: DATA & PROVIDERS (Embedded ProviderStatusDashboard)        */}
+      {/* TAB CONTENT 5: DATA & PROVIDERS (Kraken, Binance, Twelve, Polygon, Makro) */}
       {/* ========================================================================= */}
-      {activeTab === 'providers' && (
-        <div>
-          <ProviderStatusDashboard
-            onBackToHome={onBackToHome}
-            onNavigateLogin={onNavigateLogin}
-            onNavigateArchitecture={() => setActiveTab('architecture')}
-          />
-        </div>
-      )}
+      {activeTab === 'providers' && <StudioProvidersSection />}
 
       {/* ========================================================================= */}
-      {/* TAB CONTENT 6: ANALYTICS & SCORING (Math, Evidence & Audit Engine)        */}
+      {/* TAB CONTENT 6: SCORING & ANALYSETOOLS (Enterprise, Altman, Buffett, VaR)  */}
       {/* ========================================================================= */}
-      {activeTab === 'analytics' && (
-        <div className="space-y-6">
-          <div className="p-6 rounded-2xl bg-gradient-to-r from-amber-500/10 via-[#0d1530] to-emerald-500/10 border border-amber-500/30">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <div className="flex items-center gap-2 text-xs font-mono text-amber-400 mb-1">
-                  <BarChart3 className="w-4 h-4" />
-                  <span>SCORING MATHEMATIK &amp; EVIDENCE ENGINE</span>
-                </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-                  Analytics &amp; Scoring Architektur
-                </h2>
-                <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl leading-relaxed">
-                  Mathematische Modelle hinter dem Buffett Value Check, dem Enterprise Multi-Faktor Scorer
-                  und der kryptographischen BaFin Evidence Engine nach AP-002.
-                </p>
-              </div>
+      {(activeTab === 'scoring' || activeTab === 'analytics') && <StudioScoringSection />}
 
-              <div className="p-3 rounded-xl bg-black/40 border border-amber-500/30 text-xs font-mono text-right shrink-0">
-                <div className="text-amber-400 font-bold">100% Zod Type-Safe</div>
-                <div className="text-slate-300">Deterministic Scoring Pipeline</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Three Scoring Pillars */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-5 rounded-xl bg-[#090e21] border border-slate-800 space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <Coins className="w-4 h-4 text-amber-400" />
-                  <span>Buffett Value Check</span>
-                </h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-400/20 text-amber-300">
-                  Value Score 0-100
-                </span>
-              </div>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Berechnet den fundamentalen Burggraben (Economic Moat) anhand von 4 quantitativen Säulen:
-              </p>
-              <ul className="text-xs space-y-1.5 text-slate-400">
-                <li className="flex items-center gap-2">
-                  <span className="text-amber-400 font-mono">1.</span>
-                  <span>10-Jahres ROE &gt; 15% (Eigenkapitalrendite)</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-amber-400 font-mono">2.</span>
-                  <span>Debt/Equity &lt; 0.8 (Geringe Verschuldung)</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-amber-400 font-mono">3.</span>
-                  <span>Free Cash Flow Wachstum &gt; 8% p.a.</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-amber-400 font-mono">4.</span>
-                  <span>Sicherheitsmarge (Margin of Safety) &gt; 25%</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="p-5 rounded-xl bg-[#090e21] border border-slate-800 space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-cyan-400" />
-                  <span>Enterprise Multi-Faktor</span>
-                </h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300">
-                  Quant Score
-                </span>
-              </div>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Kombiniert fundamentale Stärke mit marktnahen Momentum- und Liquiditätsdaten:
-              </p>
-              <ul className="text-xs space-y-1.5 text-slate-400">
-                <li className="flex items-center gap-2">
-                  <span className="text-cyan-400 font-mono">1.</span>
-                  <span>Piotroski F-Score (1 bis 9 Punkte Bilanzqualität)</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-cyan-400 font-mono">2.</span>
-                  <span>Orderbook Liquiditätswand &amp; Spread-Stabilität</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-cyan-400 font-mono">3.</span>
-                  <span>Whale-Akkumulation auf On-Chain / Exchange-Ebene</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-cyan-400 font-mono">4.</span>
-                  <span>Gemini NLP News-Sentiment Divergenz</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="p-5 rounded-xl bg-[#090e21] border border-slate-800 space-y-3">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-white flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-emerald-400" />
-                  <span>Evidence &amp; BaFin Audit</span>
-                </h3>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
-                  AP-002 Compliant
-                </span>
-              </div>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Jeder vergebene Score wird untrennbar mit den zu Grunde liegenden Daten verknüpft:
-              </p>
-              <ul className="text-xs space-y-1.5 text-slate-400">
-                <li className="flex items-center gap-2">
-                  <span className="text-emerald-400 font-mono">1.</span>
-                  <span>SHA-256 Fingerprint über alle Eingangsdaten</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-emerald-400 font-mono">2.</span>
-                  <span>Bitemporaler Zeitstempel (Valid vs. Transaction)</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-emerald-400 font-mono">3.</span>
-                  <span>Revisionssicheres Append-Only Event-Log</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-emerald-400 font-mono">4.</span>
-                  <span>100% Reproduzierbarkeit im Replay-Modus</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          {/* INTERACTIVE SCORING ENGINE SANDBOX (PART 2 CANONICAL FORMULA) */}
-          <div className="p-6 rounded-2xl bg-gradient-to-b from-[#0c1433] to-[#090e21] border border-amber-500/40 shadow-xl space-y-6">
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-slate-800">
-              <div>
-                <div className="flex items-center gap-2 text-xs font-mono text-amber-400 mb-1">
-                  <Cpu className="w-3.5 h-3.5" />
-                  <span>DETERMINISTISCHE FORMEL-SIMULATION • CANONICAL FINAL SCORE MODEL</span>
-                </div>
-                <h3 className="text-lg font-bold text-white">
-                  Live Scoring-Engine &amp; Eligibility-Gate Simulator
-                </h3>
-                <p className="text-xs text-slate-300 mt-0.5">
-                  Testen Sie in Echtzeit, wie Hard-Gates, Konfidenz-Multiplikatoren und dynamische Asset-Klassen-Gewichte den finalen Score bestimmen.
-                </p>
-              </div>
-
-              {/* Live Formula Badge */}
-              <div className="p-3 rounded-xl bg-black/60 border border-slate-800 text-xs font-mono text-slate-300">
-                <span className="text-cyan-400 font-bold">finalRank</span> = eligibilityMultiplier × confidence × (∑ wᵢ·sᵢ) - riskPenalty
-              </div>
-            </div>
-
-            {/* Asset Class Switcher & Hard Gate Controls */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-[11px] font-mono text-slate-400 mb-1">
-                  Asset-Klasse (Gewichts-Profil)
-                </label>
-                <div className="flex items-center gap-1.5 p-1 rounded-xl bg-black/40 border border-slate-800">
-                  {[
-                    { id: 'equity_us', label: 'Aktien US' },
-                    { id: 'crypto', label: 'Krypto' },
-                    { id: 'forex', label: 'Forex/Rohst.' },
-                  ].map((ac) => (
-                    <button
-                      key={ac.id}
-                      type="button"
-                      onClick={() => setSandboxAssetClass(ac.id)}
-                      className={`flex-1 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                        sandboxAssetClass === ac.id
-                          ? 'bg-amber-400 text-black shadow-sm'
-                          : 'text-slate-400 hover:text-white'
-                      }`}
-                    >
-                      {ac.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-mono text-slate-400 mb-1">
-                  Eligibility Hard-Gate Status
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setSandboxEligibility((prev) => !prev)}
-                  className={`w-full py-2 px-3 rounded-xl border font-mono text-xs font-bold transition-all flex items-center justify-between cursor-pointer ${
-                    sandboxEligibility
-                      ? 'bg-emerald-500/15 border-emerald-500/40 text-emerald-300'
-                      : 'bg-rose-500/15 border-rose-500/40 text-rose-300'
-                  }`}
-                >
-                  <span>{sandboxEligibility ? '✓ Gate Bestanden (Multi = 1.0)' : '🚫 Veto Aktiv (Multi = 0.0)'}</span>
-                  <span className="text-[10px] uppercase font-bold underline">Umschalten</span>
-                </button>
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-mono text-slate-400 mb-1">
-                  Daten-Konfidenz ({Math.round(sandboxConfidence * 100)}%)
-                </label>
-                <input
-                  type="range"
-                  min="0.30"
-                  max="1.0"
-                  step="0.05"
-                  value={sandboxConfidence}
-                  onChange={(e) => setSandboxConfidence(parseFloat(e.target.value))}
-                  className="w-full accent-cyan-400 cursor-pointer"
-                />
-              </div>
-            </div>
-
-            {/* Sliders for 6 Sub-Scores */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-              <div className="p-3 rounded-xl bg-black/40 border border-slate-800">
-                <div className="flex justify-between text-[11px] font-mono text-slate-400 mb-1">
-                  <span>Momentum</span>
-                  <span className="text-amber-300 font-bold">{sandboxMomentum}</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={sandboxMomentum}
-                  onChange={(e) => setSandboxMomentum(parseInt(e.target.value, 10))}
-                  className="w-full accent-amber-400 cursor-pointer"
-                />
-                <div className="text-[9px] font-mono text-slate-500 mt-1">
-                  Gewicht: {(sandboxCalculations.weights.weightMomentum * 100).toFixed(0)}%
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-black/40 border border-slate-800">
-                <div className="flex justify-between text-[11px] font-mono text-slate-400 mb-1">
-                  <span>Technik</span>
-                  <span className="text-cyan-300 font-bold">{sandboxTechnical}</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={sandboxTechnical}
-                  onChange={(e) => setSandboxTechnical(parseInt(e.target.value, 10))}
-                  className="w-full accent-cyan-400 cursor-pointer"
-                />
-                <div className="text-[9px] font-mono text-slate-500 mt-1">
-                  Gewicht: {(sandboxCalculations.weights.weightTechnical * 100).toFixed(0)}%
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-black/40 border border-slate-800">
-                <div className="flex justify-between text-[11px] font-mono text-slate-400 mb-1">
-                  <span>Fundamental</span>
-                  <span className="text-emerald-300 font-bold">{sandboxFundamental}</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={sandboxFundamental}
-                  onChange={(e) => setSandboxFundamental(parseInt(e.target.value, 10))}
-                  className="w-full accent-emerald-400 cursor-pointer"
-                />
-                <div className="text-[9px] font-mono text-slate-500 mt-1">
-                  Gewicht: {(sandboxCalculations.weights.weightFundamental * 100).toFixed(0)}%
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-black/40 border border-slate-800">
-                <div className="flex justify-between text-[11px] font-mono text-slate-400 mb-1">
-                  <span>Sentiment</span>
-                  <span className="text-purple-300 font-bold">{sandboxSentiment}</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={sandboxSentiment}
-                  onChange={(e) => setSandboxSentiment(parseInt(e.target.value, 10))}
-                  className="w-full accent-purple-400 cursor-pointer"
-                />
-                <div className="text-[9px] font-mono text-slate-500 mt-1">
-                  Gewicht: {(sandboxCalculations.weights.weightSentiment * 100).toFixed(0)}%
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-black/40 border border-slate-800">
-                <div className="flex justify-between text-[11px] font-mono text-slate-400 mb-1">
-                  <span>Event/Makro</span>
-                  <span className="text-amber-300 font-bold">{sandboxEvent}</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={sandboxEvent}
-                  onChange={(e) => setSandboxEvent(parseInt(e.target.value, 10))}
-                  className="w-full accent-amber-400 cursor-pointer"
-                />
-                <div className="text-[9px] font-mono text-slate-500 mt-1">
-                  Gewicht: {(sandboxCalculations.weights.weightEvent * 100).toFixed(0)}%
-                </div>
-              </div>
-
-              <div className="p-3 rounded-xl bg-black/40 border border-slate-800">
-                <div className="flex justify-between text-[11px] font-mono text-slate-400 mb-1">
-                  <span>Positioning</span>
-                  <span className="text-cyan-300 font-bold">{sandboxPositioning}</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={sandboxPositioning}
-                  onChange={(e) => setSandboxPositioning(parseInt(e.target.value, 10))}
-                  className="w-full accent-cyan-400 cursor-pointer"
-                />
-                <div className="text-[9px] font-mono text-slate-500 mt-1">
-                  Gewicht: {(sandboxCalculations.weights.weightPositioning * 100).toFixed(0)}%
-                </div>
-              </div>
-            </div>
-
-            {/* Calculated Result Panel */}
-            <div className="p-5 rounded-xl bg-black/70 border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-4">
-                <div className="text-center p-3 rounded-xl bg-[#0d1633] border border-amber-500/40 min-w-[100px]">
-                  <div className="text-[10px] font-mono uppercase text-slate-400">Final Score</div>
-                  <div className="text-3xl font-extrabold font-mono text-amber-400">
-                    {sandboxCalculations.finalScore}
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-white">
-                      Rang-Status: {sandboxCalculations.rank !== null ? `#${sandboxCalculations.rank} (Aktiv Gerankt)` : '🚫 Geblockt (Ineligible)'}
-                    </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                      ✓ 11/11 Plausibilitätsregeln OK
-                    </span>
-                  </div>
-                  <div className="text-xs text-slate-400 mt-1 font-mono">
-                    SHA-256 Audit: <span className="text-cyan-300">EVD-SIM-9B4F81A2C304</span> • Model: <span className="text-slate-200">v3.2.0</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Risk Penalty Control */}
-              <div className="flex items-center gap-3 bg-black/40 p-2.5 rounded-xl border border-slate-800">
-                <div className="text-right">
-                  <div className="text-[10px] font-mono text-slate-400">Risiko-Abzug (Penalty)</div>
-                  <div className="text-xs font-mono font-bold text-rose-400">-{sandboxRiskPenalty} Pkt.</div>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="30"
-                  value={sandboxRiskPenalty}
-                  onChange={(e) => setSandboxRiskPenalty(parseInt(e.target.value, 10))}
-                  className="w-24 accent-rose-400 cursor-pointer"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* ========================================================================= */}
+      {/* TAB CONTENT 7: ZEITINTERVALLE, LATENZEN & KOSTEN-MATRIX (AP-006 40 € Cap) */}
+      {/* ========================================================================= */}
+      {activeTab === 'costs' && <StudioCostsTimeSection />}
 
       {/* ========================================================================= */}
       {/* TAB CONTENT 7: BENCHMARK LAB (Live Performance & Budget Verification)     */}

@@ -16,16 +16,25 @@
  */
 
 import React from 'react';
-import { ArrowRight, Play, BarChart2 } from 'lucide-react';
+import { ArrowRight, Play, BarChart2, Globe2, ArrowDownLeft, ExternalLink, Maximize2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import heroEarthImage from '../assets/images/glowing_earth_nodes_1789997454893.jpg';
+import { HeroRotatingGlobe } from './globe/HeroRotatingGlobe';
 
 interface HeroProps {
   onStartAnalysis: () => void;
   onExploreProduct: () => void;
+  isGlobeDetached?: boolean;
+  onToggleGlobeDetach?: () => void;
+  onOpenGlobeCockpit?: () => void;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onStartAnalysis, onExploreProduct }) => {
+export const Hero: React.FC<HeroProps> = ({
+  onStartAnalysis,
+  onExploreProduct,
+  isGlobeDetached = false,
+  onToggleGlobeDetach,
+  onOpenGlobeCockpit,
+}) => {
   return (
     <section className="relative px-5 pt-4 pb-7 overflow-hidden">
       {/* Golden neural light trails mirroring the logo's lateral filaments */}
@@ -71,30 +80,70 @@ export const Hero: React.FC<HeroProps> = ({ onStartAnalysis, onExploreProduct })
         </svg>
       </div>
 
-      {/* Luminous Earth & Network Constellation Background */}
-      <div className="absolute -top-12 -right-20 w-[340px] h-[340px] sm:w-[420px] sm:h-[420px] pointer-events-none select-none z-0">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
-          className="relative w-full h-full"
-        >
-          {/* Earth image with radial fade masks */}
-          <img
-            src={heroEarthImage}
-            alt="Luminous Earth with Global AI Data Nodes"
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover rounded-full mix-blend-screen opacity-90 filter drop-shadow-[0_0_40px_rgba(245,176,20,0.35)]"
-          />
-          {/* Radial atmosphere glow */}
-          <div className="absolute inset-0 rounded-full bg-radial from-transparent via-transparent to-[#02050e] opacity-80" />
-          <div className="absolute -inset-4 bg-gradient-to-l from-transparent via-transparent to-[#02050e] opacity-90" />
-          <div className="absolute -inset-4 bg-gradient-to-t from-[#02050e] via-transparent to-transparent opacity-90" />
-          
-          {/* Ambient golden light bloom */}
-          <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-amber-500/20 rounded-full blur-2xl animate-pulse-slow" />
-          <div className="absolute top-1/2 right-1/3 w-28 h-28 bg-blue-600/15 rounded-full blur-xl" />
-        </motion.div>
+      {/* MODULARE ROTIERENDE HERO-ERDE (DOCKBAR / ABKOPPELBAR) */}
+      <div className="absolute -top-6 -right-12 sm:-right-8 md:right-4 w-[340px] h-[340px] sm:w-[420px] sm:h-[420px] lg:w-[460px] lg:h-[460px] pointer-events-auto z-0">
+        {!isGlobeDetached ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.0, ease: 'easeOut' }}
+            className="relative w-full h-full"
+          >
+            <HeroRotatingGlobe
+              mode="docked"
+              isDetached={false}
+              onToggleDetach={onToggleGlobeDetach}
+              onOpenCockpit={onOpenGlobeCockpit}
+              className="w-full h-full"
+            />
+          </motion.div>
+        ) : (
+          /* DOCKING STATION PLACEHOLDER WENN DIE ERDE ABGEKOPPELT IST */
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-full h-full flex items-center justify-center p-6"
+          >
+            <div className="w-[280px] sm:w-[320px] p-5 rounded-3xl bg-[#070e24]/60 border border-amber-400/30 backdrop-blur-md shadow-2xl flex flex-col items-center text-center space-y-3 relative overflow-hidden group">
+              <div className="absolute inset-0 bg-radial from-amber-400/5 via-transparent to-transparent pointer-events-none" />
+              <div className="w-14 h-14 rounded-2xl bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400 shadow-[0_0_20px_rgba(245,176,20,0.2)]">
+                <Globe2 className="w-7 h-7 animate-spin-slow" />
+              </div>
+              <div>
+                <span className="text-[11px] font-mono text-cyan-400 uppercase tracking-wider font-semibold block mb-0.5">
+                  Docking Station
+                </span>
+                <h4 className="text-sm font-bold text-white">Hero-Erde im Floating-Modus</h4>
+                <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+                  Die rotierende 3D-Erde schwebt nun als interaktives Widget in der rechten Bildschirmecke.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 pt-1 w-full justify-center">
+                {onToggleGlobeDetach && (
+                  <button
+                    type="button"
+                    onClick={onToggleGlobeDetach}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-extrabold text-xs shadow-lg transition-all cursor-pointer"
+                  >
+                    <ArrowDownLeft className="w-3.5 h-3.5" />
+                    <span>In Hero andocken</span>
+                  </button>
+                )}
+                {onOpenGlobeCockpit && (
+                  <button
+                    type="button"
+                    onClick={onOpenGlobeCockpit}
+                    className="p-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-slate-700 transition-colors cursor-pointer"
+                    title="Vollbild Cockpit"
+                  >
+                    <Maximize2 className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        )}
       </div>
 
       {/* Hero Content */}
